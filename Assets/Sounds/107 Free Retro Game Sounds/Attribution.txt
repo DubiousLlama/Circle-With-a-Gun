@@ -1,0 +1,12 @@
+About this sound library
+"107 Free Retro Game Sounds" is a free sound library containing lots of 8-bit-style sound effects and music. This package is designed for indie game developers, but also for filmmakers and music producers.
+
+It is packed with sounds in various categories: shots & explosions, transformation effects, music & score sounds, sweeps, sirens & alarms, noises, blips & beeps as well as drops & jump sounds.
+
+It is very important for me to mention that all sounds from the package are crafted from scratch with virtual synthsizers . I did not sample or record any original sounds from existing games.
+
+The usage of all sounds from this library is regulated by the Creative Commons license CC BY 4.0 . This means: You may use the sounds, edit and redistribute them. Even commercially. The only condition is attribution. You have to give credit and provide a link to the license. Plus, you must indicate if any changes were made.
+
+CC BY-SA 3.0
+
+If you have any further questions, feel free to contact me .
