@@ -13,7 +13,13 @@ public class Shooting : MonoBehaviour
     public float fireRate = 0.1f;
     float fireDelay = 0f;
 
-    private Color bulletColor = new Color(0.8257952f, 0f, 1f);
+    public Color bulletColor = new Color(0.561111f, 0f, 1f, 1f);
+    private AudioManager audioManager;
+
+    private void Start()
+    {
+        audioManager = AudioManager.instance;
+    }
 
     // Update is called once per frame
     void Update()
@@ -30,6 +36,16 @@ public class Shooting : MonoBehaviour
             {
                 Shoot();
                 fireDelay = fireRate;
+
+                if (damage > 20)
+                {
+                    audioManager.PlaySfx("RetroLaser", 0.2f);
+                }
+                else
+                {
+                    audioManager.PlaySfx("Gun");
+                }
+                
             }
         }
     }

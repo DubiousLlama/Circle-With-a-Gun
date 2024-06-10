@@ -683,6 +683,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2465876769330756793, guid: f497f7be98bf44a4bbcb1212d0c2b040, type: 3}
+      propertyPath: damage
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 2465876769330756793, guid: f497f7be98bf44a4bbcb1212d0c2b040, type: 3}
       propertyPath: fireRate
       value: 0.1
       objectReference: {fileID: 0}
@@ -714,7 +718,8 @@ PrefabInstance:
       propertyPath: moveSpeed
       value: 2.9
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5812463366923364760, guid: f497f7be98bf44a4bbcb1212d0c2b040, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: f497f7be98bf44a4bbcb1212d0c2b040, type: 3}
 --- !u!1 &510452371
 GameObject:
@@ -1026,27 +1031,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2465876769330756792, guid: f497f7be98bf44a4bbcb1212d0c2b040, type: 3}
   m_PrefabInstance: {fileID: 510025311}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &742872995
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 742872987}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4a43777988c7504195e4d6245505e77, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  firePoint: {fileID: 1876090701}
-  beamRate: 2.2
-  stopTime: 0.05
-  range: 6.5
-  damage: 100
-  beamRadius: 2
-  beamColor: {r: 0.8257952, g: 0, b: 1, a: 1}
-  rechargeBar: {fileID: 1703521929}
-  stationaryTime: 0
 --- !u!114 &742873002
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1069,6 +1053,27 @@ MonoBehaviour:
   speedDuration: 10
   laserDuration: 10
   x2Duration: 10
+--- !u!114 &742873003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 742872987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b245e9b978a70a4d88de495b9d830d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  firePoint: {fileID: 1876090701}
+  beamRate: 2
+  stopTime: 0.05
+  range: 6.5
+  damage: 100
+  beamRadius: 2.5
+  beamColor: {r: 0.8257952, g: 0, b: 1, a: 1}
+  explosion: {fileID: 139366, guid: b185c1a9cf067374586d095111b15bd1, type: 3}
+  rechargeBar: {fileID: 1703521929}
 --- !u!1 &772361590
 GameObject:
   m_ObjectHideFlags: 0
@@ -1202,7 +1207,7 @@ MonoBehaviour:
   speedPrefab: {fileID: 3677065510083006430, guid: 660f5836b5303ef4eb4f69c304765984, type: 3}
   laserPrefab: {fileID: 1684410095117889730, guid: 840bc781a79acc6469a10c309a9892de, type: 3}
   bombPrefab: {fileID: 4293107596892571966, guid: 20183e52023187c42b9fd1d11b1aab96, type: 3}
-  spawnRate: 10.34
+  spawnRate: 8
 --- !u!1 &942063011
 GameObject:
   m_ObjectHideFlags: 0
@@ -1587,8 +1592,8 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 6dabf836c424631489f65143c0f62731, type: 3}
     volume: 0.5
   - name: Gun
-    clip: {fileID: 8300000, guid: a39938124c78f3b4597562bc589bb6cd, type: 3}
-    volume: 0.5
+    clip: {fileID: 8300000, guid: 6493b77dbb434fc44947e431416dd006, type: 3}
+    volume: 0.15
   - name: Explosion
     clip: {fileID: 8300000, guid: 52f28bbf3160f66419c88818cb6e4a7a, type: 3}
     volume: 0.5
@@ -1625,6 +1630,9 @@ MonoBehaviour:
   - name: WooshLightning
     clip: {fileID: 8300000, guid: 41d1e945e25578141a614391bea287cf, type: 3}
     volume: 0.5
+  - name: beam
+    clip: {fileID: 8300000, guid: 88c611301fc9d4d45b84d3fa75a16062, type: 3}
+    volume: 0.2
   music: []
 --- !u!4 &1052375758
 Transform:

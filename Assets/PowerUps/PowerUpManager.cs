@@ -19,7 +19,7 @@ public class PowerUpManager : MonoBehaviour
     private PlayerHealth playerHealth;
     private PlayerMovement playerMovement;
     private Shooting playerShooting;
-    private NoAimAttacks playerNoAimAttacks;
+    private BeamAttack playerNoAimAttacks;
     private GameObject healthBar;
     private IndicatorController indController;
     private ScoreTracker scoreTracker;
@@ -31,10 +31,8 @@ public class PowerUpManager : MonoBehaviour
     private static float baseRegenRate;
     private static float baseRegenDelay;
     private static float baseSpeed;
-    private static float baseBeamDamage;
-    private static float baseBeamRate;
-    private static float baseBeamRadius;
-    private static float baseShootingDamage;
+    private static int baseShootingDamage;
+    private static float baseShootingSpeed;
     public static Color baseBeamColor;
 
     [Range(1, 20)]
@@ -53,9 +51,9 @@ public class PowerUpManager : MonoBehaviour
         playerHealth = player.GetComponent<PlayerHealth>();
         playerMovement = player.GetComponent<PlayerMovement>();
         playerShooting = player.GetComponent<Shooting>();
-        playerNoAimAttacks = player.GetComponent<NoAimAttacks>();
+
         healthBar = GameObject.Find("HealthBar").transform.GetChild(0).gameObject;
-        baseBeamColor = playerNoAimAttacks.beamColor;
+        baseBeamColor = new Color(0.561111f, 0, 1f, 1f);
         indController = GameObject.Find("PowerUpIndicator").GetComponent<IndicatorController>();
         scoreTracker = GameObject.Find("Score").GetComponent<ScoreTracker>();
 
@@ -73,11 +71,8 @@ public class PowerUpManager : MonoBehaviour
         baseRegenRate = playerHealth.regenRate;
         baseRegenDelay = playerHealth.regenDelay;
         baseSpeed = playerMovement.moveSpeed;
-
-        baseBeamRate = playerNoAimAttacks.beamRate;
-        baseBeamDamage = playerNoAimAttacks.damage;
-        baseBeamRadius = playerNoAimAttacks.beamRadius;
-
+       
+        baseShootingSpeed = playerShooting.fireRate;
         baseShootingDamage = playerShooting.damage;
     }
 
@@ -138,19 +133,17 @@ public class PowerUpManager : MonoBehaviour
         // Laser
         if (powerUpActive[2])
         {
-           playerNoAimAttacks.rechargeBar.transform.GetChild(0).GetComponent<Image>().color = powerUpGreen;
-           playerNoAimAttacks.beamColor = powerUpGreen;
-           playerNoAimAttacks.damage = (int)(baseBeamDamage * 2);
-           playerNoAimAttacks.beamRadius = baseBeamRadius * 1.5f;
+           playerShooting.bulletColor = powerUpGreen;
+           playerShooting.damage = 60;
+           playerShooting.fireRate = 0.08f;
            indController.SetDuration(2, powerUpDurations[2]);
         }
         else
         {
             // Laser Inactive
-            playerNoAimAttacks.damage = (int)baseBeamDamage;
-            playerNoAimAttacks.beamRadius = baseBeamRadius;
-            playerNoAimAttacks.beamColor = baseBeamColor;
-            playerNoAimAttacks.rechargeBar.transform.GetChild(0).GetComponent<Image>().color = baseBeamColor;
+            playerShooting.damage = baseShootingDamage;
+            playerShooting.bulletColor = baseBeamColor;
+            playerShooting.fireRate = baseShootingSpeed;
             indController.SetDuration(2, 0);
 
         }

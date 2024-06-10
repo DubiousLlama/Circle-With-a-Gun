@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Unity.VisualScripting.Member;
 
 public class AudioManager : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class AudioManager : MonoBehaviour
     private List<AudioSource> SfxSources;
 
     private List<AudioSource> MusicSources;
+
+    private AudioSource gunSource;    
 
     void Awake()
     {
@@ -25,14 +28,15 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public void PlaySfx(string name)
+    private void Start()
     {
-        // Create a new GameObject to play the sound
-        GameObject go = new GameObject("SFX");
-        go.name = name;
-        AudioSource source = go.AddComponent<AudioSource>();
-        SfxSources.Add(source);
+        SfxSources = new List<AudioSource>();
+        MusicSources = new List<AudioSource>();
+    }
 
+
+    public void PlaySfx(string name, float vol=-1f)
+    {
         // Find the sound in the array
         Sound s = System.Array.Find(sfx, sound => sound.name == name);
         if (s == null)
@@ -41,13 +45,24 @@ public class AudioManager : MonoBehaviour
             return;
         }
 
+        // Add an AudioSource to the AudioManager GameObject
+        AudioSource source = gameObject.AddComponent<AudioSource>();
+        SfxSources.Add(source);
+
         // Set the source's clip and volume
         source.clip = s.clip;
-        source.volume = s.volume;
+        if (vol == -1) {
+            source.volume = s.volume;
+        }
+        else
+        {
+            source.volume = vol;
+        }
+        
         source.Play();
 
-        // Destroy the GameObject after the clip has finished playing
-        Destroy(go, s.clip.length);
+        // remove the AudioSource after the clip has finished playing
+        Destroy(source, s.clip.length);
     }
 
     public int EndSfx(string name)

@@ -46,6 +46,7 @@ GameObject:
   - component: {fileID: 2465876769330756793}
   - component: {fileID: 2465876769330756790}
   - component: {fileID: 2465876769330756791}
+  - component: {fileID: 5812463366923364760}
   m_Layer: 0
   m_Name: PC
   m_TagString: Player
@@ -171,6 +172,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   firePoint: {fileID: 2465876768257094147}
   bulletPrefab: {fileID: 9117262145020115144, guid: 96de4c1abebe4c840b2ae4f07469d1f5, type: 3}
+  damage: 20
   bulletForce: 20
   fireRate: 0.08
 --- !u!58 &2465876769330756790
@@ -207,3 +209,24 @@ MonoBehaviour:
   regenDelay: 2
   sliderController: {fileID: 0}
   gameOverScreen: {fileID: 0}
+--- !u!114 &5812463366923364760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2465876769330756796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b245e9b978a70a4d88de495b9d830d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  firePoint: {fileID: 0}
+  beamRate: 2
+  stopTime: 0.1
+  range: 6.5
+  damage: 100
+  beamRadius: 2
+  beamColor: {r: 0.8257952, g: 0, b: 1, a: 1}
+  explosion: {fileID: 0}
+  rechargeBar: {fileID: 0}
