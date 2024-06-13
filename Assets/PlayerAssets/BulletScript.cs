@@ -18,6 +18,10 @@ public class BulletScript : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (collision.gameObject.layer == 8)
+        {
+            return;
+        }
 
         EnemyHealth enemy = collision.gameObject.GetComponent<EnemyHealth>();
 

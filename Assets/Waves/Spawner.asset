@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7011c630e29cb7478c38ae91db22fc8, type: 3}
+  m_Name: Spawner
+  m_EditorClassIdentifier: 
+  groups:
+  - enemy: {fileID: 3908111154662281100, guid: 189f9d659cfcbef409f811e7e5a721c5, type: 3}
+    count: 3
+    spawnOffset: {x: 20, y: 0}
+    groupSpread: 1
+  - enemy: {fileID: 5362832273410236654, guid: a8f0c85d70e5eea43a9b3ebfe01044ff, type: 3}
+    count: 1
+    spawnOffset: {x: 20, y: 0}
+    groupSpread: 1
+  - enemy: {fileID: 3908111154662281100, guid: 189f9d659cfcbef409f811e7e5a721c5, type: 3}
+    count: 3
+    spawnOffset: {x: 20, y: 0}
+    groupSpread: 1
+  - enemy: {fileID: 5362832273410236654, guid: a8f0c85d70e5eea43a9b3ebfe01044ff, type: 3}
+    count: 1
+    spawnOffset: {x: 20, y: 0}
+    groupSpread: 1
+  - enemy: {fileID: 3908111154662281100, guid: 189f9d659cfcbef409f811e7e5a721c5, type: 3}
+    count: 3
+    spawnOffset: {x: 20, y: 0}
+    groupSpread: 1
+  - enemy: {fileID: 5362832273410236654, guid: a8f0c85d70e5eea43a9b3ebfe01044ff, type: 3}
+    count: 1
+    spawnOffset: {x: 20, y: 0}
+    groupSpread: 1
+  - enemy: {fileID: 3908111154662281100, guid: 189f9d659cfcbef409f811e7e5a721c5, type: 3}
+    count: 3
+    spawnOffset: {x: 20, y: 0}
+    groupSpread: 1
+  - enemy: {fileID: 5362832273410236654, guid: a8f0c85d70e5eea43a9b3ebfe01044ff, type: 3}
+    count: 1
+    spawnOffset: {x: 20, y: 0}
+    groupSpread: 1
+  - enemy: {fileID: 3908111154662281100, guid: 189f9d659cfcbef409f811e7e5a721c5, type: 3}
+    count: 3
+    spawnOffset: {x: 20, y: 0}
+    groupSpread: 1
+  - enemy: {fileID: 5362832273410236654, guid: a8f0c85d70e5eea43a9b3ebfe01044ff, type: 3}
+    count: 1
+    spawnOffset: {x: 20, y: 0}
+    groupSpread: 1
+  - enemy: {fileID: 3908111154662281100, guid: 189f9d659cfcbef409f811e7e5a721c5, type: 3}
+    count: 3
+    spawnOffset: {x: 20, y: 0}
+    groupSpread: 1
+  - enemy: {fileID: 4009117033137057281, guid: a0ffe119acc13ec4cb246a0a9754a094, type: 3}
+    count: 1
+    spawnOffset: {x: 20, y: 0}
+    groupSpread: 1
+  - enemy: {fileID: 3908111154662281100, guid: 189f9d659cfcbef409f811e7e5a721c5, type: 3}
+    count: 3
+    spawnOffset: {x: 20, y: 0}
+    groupSpread: 1
+  - enemy: {fileID: 4009117033137057281, guid: a0ffe119acc13ec4cb246a0a9754a094, type: 3}
+    count: 1
+    spawnOffset: {x: 20, y: 0}
+    groupSpread: 1
+  - enemy: {fileID: 3908111154662281100, guid: 189f9d659cfcbef409f811e7e5a721c5, type: 3}
+    count: 3
+    spawnOffset: {x: 20, y: 0}
+    groupSpread: 1
+  - enemy: {fileID: 4009117033137057281, guid: a0ffe119acc13ec4cb246a0a9754a094, type: 3}
+    count: 1
+    spawnOffset: {x: 20, y: 0}
+    groupSpread: 1
+  ongoing: 1
+  groupsAtATime: 2
+  rate: 2

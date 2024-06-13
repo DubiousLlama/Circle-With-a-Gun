@@ -19,7 +19,7 @@ public class SpawnScript : MonoBehaviour
     [Range (1, 10)]
     public float spawnTriangleRate = 3f;
 
-    [Range(3, 20)]
+    [Range(3, 30)]
     public float spawnOctoRate = 3f;
 
     [Range(8, 20)]
@@ -47,7 +47,7 @@ public class SpawnScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        difficulty += Time.deltaTime * 0.007f + Mathf.Pow(Time.deltaTime, 2f) * 0.00005f;
+        difficulty += Time.deltaTime * 0.005f;
 
 
         spawnTimer -= (Time.deltaTime * difficulty);

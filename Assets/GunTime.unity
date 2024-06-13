@@ -1146,6 +1146,7 @@ GameObject:
   - component: {fileID: 894957483}
   - component: {fileID: 894957482}
   - component: {fileID: 894957484}
+  - component: {fileID: 894957485}
   m_Layer: 0
   m_Name: EnemySpawner
   m_TagString: Untagged
@@ -1208,6 +1209,31 @@ MonoBehaviour:
   laserPrefab: {fileID: 1684410095117889730, guid: 840bc781a79acc6469a10c309a9892de, type: 3}
   bombPrefab: {fileID: 4293107596892571966, guid: 20183e52023187c42b9fd1d11b1aab96, type: 3}
   spawnRate: 8
+--- !u!114 &894957485
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 894957481}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7001ee74d2078134ca33c26bf037479c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pool1:
+  - name: 
+    groups: []
+    ongoing: 0
+    groupsAtATime: 0
+    rate: 0
+  pool1time: 0
+  pool2: []
+  pool2time: 0
+  pool3: []
+  pool3time: 0
+  pool4: []
+  pool4time: 0
 --- !u!1 &942063011
 GameObject:
   m_ObjectHideFlags: 0
