@@ -35,12 +35,14 @@ public class BeamAttack : MonoBehaviour
     public GameObject rechargeBar;
     private RechargeBarController barController;
     private AudioManager audioManager;
+    PlayerStats playerStats;
 
     void Start()
     {
         barController = rechargeBar.GetComponent<RechargeBarController>();
         barController.SetMaxRecharge(beamRate);
         audioManager = AudioManager.instance;
+        playerStats = GetComponent<PlayerStats>();
     }
 
 
@@ -110,7 +112,7 @@ public class BeamAttack : MonoBehaviour
 
         // Summon an explosion at the point of impact
         GameObject e = Instantiate(explosion, loc, Quaternion.identity);
-        e.transform.localScale = new Vector3(beamRadius*0.4f, beamRadius*0.4f, 1);
+        e.transform.localScale = new Vector3(beamRadius*0.3f*playerStats.ExplosionRadius(), beamRadius*0.3f*playerStats.ExplosionRadius(), 1);
 
         Destroy(e, 0.5f);
 
@@ -124,7 +126,7 @@ public class BeamAttack : MonoBehaviour
         foreach (GameObject foe in foes)
         {
             float distance = Vector3.Distance(foe.transform.position, loc);
-            if (distance < beamRadius)
+            if (distance < beamRadius * playerStats.ExplosionRadius())
             {
                 int d = distanceToDamage(distance);
                 foe.GetComponent<EnemyHealth>().TakeDamage(d);
@@ -153,23 +155,23 @@ public class BeamAttack : MonoBehaviour
     {
         if (distance < 1)
         {
-            return damage;
+            return (int)(damage * playerStats.ExplosionDamage());
         }
         else if (distance < 1.5f)
         {
-            return (int)(damage * 0.8f);
+            return (int)(damage * playerStats.ExplosionDamage() * 0.8f);
         }
         else if (distance < 2f)
         {
-            return (int)(damage * 0.6f);
+            return (int)(damage * playerStats.ExplosionDamage() * 0.6f);
         }
         else if (distance < 2.5f)
         {
-            return (int)(damage * 0.4f);
+            return (int)(damage * playerStats.ExplosionDamage() * 0.4f);
         }
         else
         {
-            return (int)(damage * 0.2f);
+            return (int)(damage * playerStats.ExplosionDamage() * 0.2f);
         }
     }
     private void DrawBeam(Vector3 location)

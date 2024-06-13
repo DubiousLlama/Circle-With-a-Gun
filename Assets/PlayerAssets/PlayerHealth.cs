@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerHealth : MonoBehaviour
 {
     public float health = 0f;
-    public float maxHealth = 1000f;
+    public float startingMaxHealth = 1000f;
     public float regenRate = 50f;
 
     public float regenDelay = 2f;
@@ -15,16 +15,19 @@ public class PlayerHealth : MonoBehaviour
     private float regenTimer = 0f;
 
     private ScoreTracker scoreTracker;
-
+    private PlayerStats playerStats;
     private bool gameOver = false;
+
+    private float maxHealth = 1000f;
 
     // Start is called before the first frame update
     void Start()
     {
-        health += maxHealth;
+        health += startingMaxHealth;
         gameOverScreen.SetActive(false);
 
         scoreTracker = GameObject.Find("Score").GetComponent<ScoreTracker>();
+        playerStats = GetComponent<PlayerStats>();
     }
 
     
@@ -36,6 +39,8 @@ public class PlayerHealth : MonoBehaviour
 
     void Update()
     {
+        maxHealth = startingMaxHealth * playerStats.MaxHealth();
+
         if (regenTimer < regenDelay)
         {
             regenTimer += Time.deltaTime;
@@ -43,13 +48,14 @@ public class PlayerHealth : MonoBehaviour
 
         if (health < maxHealth && regenTimer > regenDelay)
         {
-            health += regenRate * Time.deltaTime;
+            health += regenRate * playerStats.RegenRate() * Time.deltaTime;
         }
         if (health > maxHealth)
         {
             health = maxHealth;
         }
         sliderController.SetHealth((int)health);
+        sliderController.SetMaxHealth((int)maxHealth);
 
         if (health <= 0)
         {

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class PowerUpTrigger : MonoBehaviour
 {
@@ -8,12 +9,21 @@ public class PowerUpTrigger : MonoBehaviour
 
     public GameObject explosion;
 
+    PlayerStats playerStats;
+    PowerUpManager powerUpManager;
 
     void OnTriggerEnter2D (Collider2D collision)
     {
         if (collision.gameObject.tag == "Player")
         { 
-            PowerUpManager powerUpManager = collision.gameObject.GetComponent<PowerUpManager>();
+            if (powerUpManager == null )
+            {
+                powerUpManager = collision.gameObject.GetComponent<PowerUpManager>();
+            }
+            if (playerStats == null)
+            {
+                playerStats = collision.gameObject.GetComponent<PlayerStats>();
+            }
                 
             Debug.Log("Power Up Triggered: " + powerUpName);
 
@@ -21,18 +31,23 @@ public class PowerUpTrigger : MonoBehaviour
             {
                 case "Speed":
                     powerUpManager.ActivatePowerUp(powerUpName);
+                    playerStats.ImproveSpeed();
                     AudioManager.instance.PlaySfx("Score1", 0.25f);
                     break;
                 case "Regen":
                     powerUpManager.ActivatePowerUp(powerUpName);
+                    playerStats.ImproveHealth();
                     AudioManager.instance.PlaySfx("Score3", 0.25f);
                     break;
                 case "Laser":
                     powerUpManager.ActivatePowerUp(powerUpName);
+                    playerStats.ImproveDamage();
                     AudioManager.instance.PlaySfx("Score2", 0.25f);
                     break;
                 case "Bomb":
                     Bomb();
+                    playerStats.ImproveExplosions();
+                    powerUpManager.ActivatePowerUp(powerUpName);
                     GameObject b = Instantiate(explosion, transform.position, Quaternion.identity);
                     b.transform.localScale = new Vector3(9*0.4f, 9 * 0.4f, 1);
                     Destroy(b, 0.5f);
@@ -55,9 +70,15 @@ public class PowerUpTrigger : MonoBehaviour
         foreach (GameObject enemy in enemies)
         {
 
-            // Figure out if the enemy is within 4 units of the bomb
+            // Figure out if the enemy is within 9 units of the bomb
             float distance = Vector2.Distance(enemy.transform.position, transform.position);
             
+            if (distance <= 5f)
+            {
+                EnemyHealth enemyHealth = enemy.GetComponent<EnemyHealth>();
+                enemyHealth.TakeDamage(100);
+            }
+
             if (distance <= 9f)
             {
                 EnemyHealth enemyHealth = enemy.GetComponent<EnemyHealth>();

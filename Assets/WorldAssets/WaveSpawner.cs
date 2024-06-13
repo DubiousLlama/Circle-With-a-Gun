@@ -32,6 +32,8 @@ public class WaveSpawner : MonoBehaviour
     GameObject player;
     RectTransform playArea;
 
+    public float difficulty = 1f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -53,8 +55,9 @@ public class WaveSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        difficulty += Time.deltaTime * 0.008f;
         time += Time.deltaTime;
-        timeSinceLastWave += Time.deltaTime;
+        timeSinceLastWave += Time.deltaTime * difficulty;
 
         List<Wave> curpool = pools[pool1time];
 

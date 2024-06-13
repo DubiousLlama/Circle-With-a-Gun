@@ -15,10 +15,12 @@ public class Shooting : MonoBehaviour
 
     public Color bulletColor = new Color(0.561111f, 0f, 1f, 1f);
     private AudioManager audioManager;
+    PlayerStats playerStats;
 
     private void Start()
     {
         audioManager = AudioManager.instance;
+        playerStats = GetComponent<PlayerStats>();
     }
 
     // Update is called once per frame
@@ -58,7 +60,7 @@ public class Shooting : MonoBehaviour
         SpriteRenderer sr = bullet.GetComponent<SpriteRenderer>();
 
         sr.color = bulletColor;
-        bs.damage = damage;
+        bs.damage = (int)(damage * playerStats.Damage());
 
         rb.AddForce(firePoint.up*bulletForce, ForceMode2D.Impulse);
     }

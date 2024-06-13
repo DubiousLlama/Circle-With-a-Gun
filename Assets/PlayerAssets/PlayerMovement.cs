@@ -11,9 +11,9 @@ public class PlayerMovement : MonoBehaviour
     Vector2 movement;
     Vector2 mousePos;
 
-    private float force;
-
     ICollection<string> slowIDs = new List<string>();
+
+    PlayerStats playerStats;
 
     // Update is called once per frame
     void Update()
@@ -23,29 +23,31 @@ public class PlayerMovement : MonoBehaviour
 
         mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
 
+        playerStats = GetComponent<PlayerStats>();
+
+        rb = GetComponent<Rigidbody2D>();
+
 
 
     }
 
     void FixedUpdate() {
 
-        if (rb.velocity.magnitude < moveSpeed)
+        if (playerStats == null)
         {
-            force = moveSpeed*1.25f;
+            playerStats = GetComponent<PlayerStats>();
         }
-        else
+        if (rb == null)
         {
-            force = moveSpeed + 1f;
+            rb = GetComponent<Rigidbody2D>();
         }
-       
-        rb.AddForce(movement.normalized*moveSpeed);
+
+        rb.AddForce(movement.normalized * moveSpeed * playerStats.Speed());
 
         Vector2 LookDir = mousePos - rb.position;
         float angle = Mathf.Atan2(LookDir.y, LookDir.x) * Mathf.Rad2Deg + 90f;
 
         rb.rotation = angle;
-
-
     }
 
     public void Slow(float slowAmount, string slowID, float slowDuration)
