@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d7011c630e29cb7478c38ae91db22fc8, type: 3}
-  m_Name: YellowSpear
+  m_Name: Trapz
   m_EditorClassIdentifier: 
   groups:
-  - enemy: {fileID: 5362832273410236654, guid: a8f0c85d70e5eea43a9b3ebfe01044ff, type: 3}
-    count: 3
-    spawnOffset: {x: 4, y: 4}
+  - enemy: {fileID: 8760996535251935041, guid: cf464622199f6d34295ad2135903f268, type: 3}
+    count: 1
+    spawnOffset: {x: 0, y: 10}
     groupSpread: 0
-  - enemy: {fileID: 5362832273410236654, guid: a8f0c85d70e5eea43a9b3ebfe01044ff, type: 3}
-    count: 3
-    spawnOffset: {x: 8, y: 8}
+  - enemy: {fileID: 8760996535251935041, guid: cf464622199f6d34295ad2135903f268, type: 3}
+    count: 1
+    spawnOffset: {x: -10, y: 0}
     groupSpread: 0
-  - enemy: {fileID: 5362832273410236654, guid: a8f0c85d70e5eea43a9b3ebfe01044ff, type: 3}
-    count: 3
-    spawnOffset: {x: 12, y: 12}
+  - enemy: {fileID: 8760996535251935041, guid: cf464622199f6d34295ad2135903f268, type: 3}
+    count: 1
+    spawnOffset: {x: 10, y: 0}
     groupSpread: 0
   ongoing: 0
   groupsAtATime: 0

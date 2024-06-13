@@ -365,3 +365,4 @@ MonoBehaviour:
   attackWindup: 0.72
   attackLead: 6.77
   AoE: {fileID: 7689974939620339548, guid: b55be56b49a42df429d9ec51a44562d7, type: 3}
+  projectile: {fileID: 2971247994198581576, guid: acd387138de5e56439a4c32e5bffdcbb, type: 3}

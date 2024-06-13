@@ -6,8 +6,18 @@ using System.Text.RegularExpressions;
 public class WaveSpawner : MonoBehaviour
 {
     [Header("Settings")]
+    public float difficulty = 1f;
+
+    [Range(0f, 0.1f)]
+    public float difficultyIncrease = 0.008f;
+
+    [Range(5f, 20f)]
     public float timeBetweenWaves = 10f;
+
+    [Range(0f, 5f)]
     public float timeVariance = 2f;
+
+    [Range(0f, 5f)]
     public float distanceVariance = 1f;
     
 
@@ -32,8 +42,6 @@ public class WaveSpawner : MonoBehaviour
     GameObject player;
     RectTransform playArea;
 
-    public float difficulty = 1f;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -55,7 +63,7 @@ public class WaveSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        difficulty += Time.deltaTime * 0.008f;
+        difficulty += Time.deltaTime * difficultyIncrease;
         time += Time.deltaTime;
         timeSinceLastWave += Time.deltaTime * difficulty;
 
@@ -141,7 +149,7 @@ public class WaveSpawner : MonoBehaviour
             }
 
             Vector3 spawnPosition = new Vector3(
-                                            player.transform.position.x + group.spawnOffset.x + Random.Range(-distanceVariance, distanceVariance),
+                                            player.transform.position.x + (group.spawnOffset.x + Random.Range(-distanceVariance, distanceVariance)),
                                             player.transform.position.y + group.spawnOffset.y + Random.Range(-distanceVariance, distanceVariance),
                                             0);
 
@@ -149,10 +157,8 @@ public class WaveSpawner : MonoBehaviour
             {
                 for (int tries = 0; tries < 4; tries++)
                 {
-                    spawnPosition = new Vector3(
-                                            spawnPosition.x + Random.Range(-group.groupSpread + tries, group.groupSpread + tries),
-                                            spawnPosition.y + Random.Range(-group.groupSpread + tries, group.groupSpread + tries),
-                                            0);
+                    Vector3 offset = Random.insideUnitCircle*(group.groupSpread+tries);
+                    spawnPosition += offset;
 
                     if (Spawn(group.enemy, spawnPosition))
                     {
@@ -175,6 +181,12 @@ public class WaveSpawner : MonoBehaviour
 
         // Check if the enemy is within the play area
         if (!playArea.rect.Contains(new Vector2(spawnPosition.x, spawnPosition.y) - (Vector2)playArea.position))
+        {
+            return false;
+        }
+
+        // Check if the enemy is within 4 units of the player
+        if (Vector2.Distance(spawnPosition, player.transform.position) < 4)
         {
             return false;
         }

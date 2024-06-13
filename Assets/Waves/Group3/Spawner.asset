@@ -13,67 +13,67 @@ MonoBehaviour:
   m_Name: Spawner
   m_EditorClassIdentifier: 
   groups:
-  - enemy: {fileID: 3908111154662281100, guid: 189f9d659cfcbef409f811e7e5a721c5, type: 3}
+  - enemy: {fileID: 3908111154662281100, guid: 8a156f7f3cfc65642b1d3fc1899f27bb, type: 3}
     count: 3
     spawnOffset: {x: 20, y: 0}
     groupSpread: 1
-  - enemy: {fileID: 5362832273410236654, guid: a8f0c85d70e5eea43a9b3ebfe01044ff, type: 3}
+  - enemy: {fileID: 5362832273410236654, guid: e6fdd261559adf04f818215264ef2333, type: 3}
     count: 1
     spawnOffset: {x: 20, y: 0}
     groupSpread: 1
-  - enemy: {fileID: 3908111154662281100, guid: 189f9d659cfcbef409f811e7e5a721c5, type: 3}
+  - enemy: {fileID: 3908111154662281100, guid: 8a156f7f3cfc65642b1d3fc1899f27bb, type: 3}
     count: 3
     spawnOffset: {x: 20, y: 0}
     groupSpread: 1
-  - enemy: {fileID: 5362832273410236654, guid: a8f0c85d70e5eea43a9b3ebfe01044ff, type: 3}
+  - enemy: {fileID: 4009117033137057281, guid: 840aa63fb05ef6f4a8e3aa29597ad30b, type: 3}
     count: 1
     spawnOffset: {x: 20, y: 0}
     groupSpread: 1
-  - enemy: {fileID: 3908111154662281100, guid: 189f9d659cfcbef409f811e7e5a721c5, type: 3}
+  - enemy: {fileID: 3908111154662281100, guid: 8a156f7f3cfc65642b1d3fc1899f27bb, type: 3}
     count: 3
     spawnOffset: {x: 20, y: 0}
     groupSpread: 1
-  - enemy: {fileID: 5362832273410236654, guid: a8f0c85d70e5eea43a9b3ebfe01044ff, type: 3}
+  - enemy: {fileID: 5362832273410236654, guid: e6fdd261559adf04f818215264ef2333, type: 3}
     count: 1
     spawnOffset: {x: 20, y: 0}
     groupSpread: 1
-  - enemy: {fileID: 3908111154662281100, guid: 189f9d659cfcbef409f811e7e5a721c5, type: 3}
+  - enemy: {fileID: 3908111154662281100, guid: 8a156f7f3cfc65642b1d3fc1899f27bb, type: 3}
     count: 3
     spawnOffset: {x: 20, y: 0}
     groupSpread: 1
-  - enemy: {fileID: 5362832273410236654, guid: a8f0c85d70e5eea43a9b3ebfe01044ff, type: 3}
+  - enemy: {fileID: 5362832273410236654, guid: e6fdd261559adf04f818215264ef2333, type: 3}
     count: 1
     spawnOffset: {x: 20, y: 0}
     groupSpread: 1
-  - enemy: {fileID: 3908111154662281100, guid: 189f9d659cfcbef409f811e7e5a721c5, type: 3}
+  - enemy: {fileID: 3908111154662281100, guid: 8a156f7f3cfc65642b1d3fc1899f27bb, type: 3}
     count: 3
     spawnOffset: {x: 20, y: 0}
     groupSpread: 1
-  - enemy: {fileID: 5362832273410236654, guid: a8f0c85d70e5eea43a9b3ebfe01044ff, type: 3}
+  - enemy: {fileID: 4009117033137057281, guid: 840aa63fb05ef6f4a8e3aa29597ad30b, type: 3}
     count: 1
     spawnOffset: {x: 20, y: 0}
     groupSpread: 1
-  - enemy: {fileID: 3908111154662281100, guid: 189f9d659cfcbef409f811e7e5a721c5, type: 3}
+  - enemy: {fileID: 5362832273410236654, guid: e6fdd261559adf04f818215264ef2333, type: 3}
     count: 3
     spawnOffset: {x: 20, y: 0}
     groupSpread: 1
-  - enemy: {fileID: 4009117033137057281, guid: a0ffe119acc13ec4cb246a0a9754a094, type: 3}
+  - enemy: {fileID: 3908111154662281100, guid: 8a156f7f3cfc65642b1d3fc1899f27bb, type: 3}
     count: 1
     spawnOffset: {x: 20, y: 0}
     groupSpread: 1
-  - enemy: {fileID: 3908111154662281100, guid: 189f9d659cfcbef409f811e7e5a721c5, type: 3}
+  - enemy: {fileID: 3908111154662281100, guid: 8a156f7f3cfc65642b1d3fc1899f27bb, type: 3}
     count: 3
     spawnOffset: {x: 20, y: 0}
     groupSpread: 1
-  - enemy: {fileID: 4009117033137057281, guid: a0ffe119acc13ec4cb246a0a9754a094, type: 3}
+  - enemy: {fileID: 3908111154662281100, guid: 8a156f7f3cfc65642b1d3fc1899f27bb, type: 3}
     count: 1
     spawnOffset: {x: 20, y: 0}
     groupSpread: 1
-  - enemy: {fileID: 3908111154662281100, guid: 189f9d659cfcbef409f811e7e5a721c5, type: 3}
+  - enemy: {fileID: 5362832273410236654, guid: e6fdd261559adf04f818215264ef2333, type: 3}
     count: 3
     spawnOffset: {x: 20, y: 0}
     groupSpread: 1
-  - enemy: {fileID: 4009117033137057281, guid: a0ffe119acc13ec4cb246a0a9754a094, type: 3}
+  - enemy: {fileID: 4009117033137057281, guid: 840aa63fb05ef6f4a8e3aa29597ad30b, type: 3}
     count: 1
     spawnOffset: {x: 20, y: 0}
     groupSpread: 1

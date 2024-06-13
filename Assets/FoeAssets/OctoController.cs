@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class OctoController : MonoBehaviour
@@ -15,6 +16,7 @@ public class OctoController : MonoBehaviour
     public float attackLead;
 
     public GameObject AoE;
+    public GameObject projectile;
 
     GameObject player;
     Pathfinding.AIPath pathfinding;
@@ -64,8 +66,7 @@ public class OctoController : MonoBehaviour
 
             target = GetOctoTarget();
 
-            Attack();
-            Invoke("Attack", 1f);
+            StartCoroutine(Attack(target));
 
             attackingFor = 0;
             attackRecharge = 0;
@@ -103,11 +104,6 @@ public class OctoController : MonoBehaviour
         }
     }
 
-    private void Attack() {
-        GameObject CurrentAoE = Instantiate(AoE, target, Quaternion.identity);
-        Destroy(CurrentAoE, 3.417f);
-    }
-
     private void EnablePathfinding()
     {
         pathfinding.enabled = true;
@@ -134,6 +130,34 @@ public class OctoController : MonoBehaviour
         ledSpot.z = 2;
 
         return ledSpot;
+    }
+
+    private IEnumerator Attack(Vector3 target)
+    {
+        Vector3 OctoPos = transform.position;
+        Vector3 direction = (target - OctoPos).normalized;
+        Vector3 projectilePos = OctoPos + direction * 0.5f;
+
+        while (projectilePos != target)
+        {
+            // Instantiate a projectile
+            GameObject CurrentProjectile = Instantiate(projectile, projectilePos, Quaternion.identity);
+            
+            // Rotate the projectile to a random X angle
+
+            CurrentProjectile.transform.Rotate(0, 0, Random.Range(-360, 360));
+            // StartCoroutine(FadeOut(CurrentProjectile));
+            Destroy(CurrentProjectile, 2f);
+
+            projectilePos = Vector3.MoveTowards(projectilePos, target, 0.3f);
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        GameObject CurrentAoE = Instantiate(AoE, target, Quaternion.identity);
+        Destroy(CurrentAoE, 3.417f);
+        yield return new WaitForSeconds(1f);
+        CurrentAoE = Instantiate(AoE, target, Quaternion.identity);
+        Destroy(CurrentAoE, 3.417f);
     }
 
 }

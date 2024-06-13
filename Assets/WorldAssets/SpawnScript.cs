@@ -5,10 +5,18 @@ using System;
 
 public class SpawnScript : MonoBehaviour
 {
+    [Header("Enemy Prefabs")]
     public GameObject squarePrefab;
     public GameObject trianglePrefab;
     public GameObject octoPrefab;
+    public GameObject trapzPrefab;
     public RectTransform playArea;
+
+    [Header("Settings")]
+    public float difficulty = 1f;
+
+    [Range(0f, 0.1f)]
+    public float difficultyIncrease = 0.008f;
 
     [Range(1, 10)]
     public float spawnRate = 2f;
@@ -19,8 +27,11 @@ public class SpawnScript : MonoBehaviour
     [Range (1, 10)]
     public float spawnTriangleRate = 3f;
 
-    [Range(3, 30)]
+    [Range(8, 30)]
     public float spawnOctoRate = 3f;
+
+    [Range(5, 20)]
+    public float spawnTrapzRate = 10f;
 
     [Range(8, 20)]
     public float spawnRange = 10f;
@@ -32,10 +43,8 @@ public class SpawnScript : MonoBehaviour
     private float spawnGroupTimer = 0f;
     private float spawnTriangleTimer = 0f;
     private float spawnOctoTimer = 0f;
+    private float spawnTrapzTimer = 0f;
 
-    // Prevent this from being modified
-    [ContextStatic]
-    public float difficulty = 1f;
     private GameObject player;
 
     private void Start()
@@ -47,13 +56,14 @@ public class SpawnScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        difficulty += Time.deltaTime * 0.005f;
+        difficulty += Time.deltaTime * difficultyIncrease;
 
 
         spawnTimer -= (Time.deltaTime * difficulty);
         spawnGroupTimer -= (Time.deltaTime * difficulty);
         spawnTriangleTimer -= (Time.deltaTime * difficulty);
         spawnOctoTimer -= (Time.deltaTime * difficulty);
+        spawnTrapzTimer -= (Time.deltaTime * difficulty);
 
         if (spawnTimer <= 0)
         {
@@ -71,19 +81,25 @@ public class SpawnScript : MonoBehaviour
             spawnGroupTimer = spawnGroupRate + randomDelay;
         }
 
-        if (spawnTriangleTimer <= 0)
+        if (spawnTriangleTimer <= 0 && difficulty > 1.1f)
         {
             SpawnEnemy(trianglePrefab);
             float randomDelay = UnityEngine.Random.Range(-1 * spawnRateVariation * spawnTriangleRate, spawnRateVariation * spawnTriangleRate);
             spawnTriangleTimer = spawnTriangleRate + randomDelay;
         }
-        if (spawnOctoTimer <= 0)
+        if (spawnOctoTimer <= 0 && difficulty > 1.3f)
         {
             SpawnEnemy(octoPrefab);
             float randomDelay = UnityEngine.Random.Range(-1 * spawnRateVariation * spawnOctoRate, spawnRateVariation * spawnOctoRate);
             spawnOctoTimer = spawnOctoRate + (randomDelay * 2);
         }
-        
+        if (spawnTrapzTimer <= 0 && difficulty > 1.6f)
+        {
+            SpawnEnemy(trapzPrefab);
+            float randomDelay = UnityEngine.Random.Range(-1 * spawnRateVariation * spawnOctoRate, spawnRateVariation * spawnOctoRate);
+            spawnTrapzTimer = spawnTrapzRate + (randomDelay * 2);
+        }
+
     }
 
     void SpawnEnemy(GameObject enemy, int i = 0)
