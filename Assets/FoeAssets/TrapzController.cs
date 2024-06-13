@@ -23,7 +23,8 @@ public class TrapzController : MonoBehaviour
     // Internal variables
     TrapzState state;
     float recharge;
-    private Vector3 pathfindingTarget;
+    AudioManager audioManager;
+
 
     // Start is called before the first frame update
     void Start()
@@ -33,6 +34,8 @@ public class TrapzController : MonoBehaviour
         state = TrapzState.moving;
         pathfinding = GetComponent<Pathfinding.AIPath>();
         firePoint = gameObject.transform.Find("FirePoint").gameObject;
+
+        audioManager = AudioManager.instance;
     }
 
     // Update is called once per frame
@@ -54,6 +57,7 @@ public class TrapzController : MonoBehaviour
                 {
                     state = TrapzState.poweringUp;
                     recharge = attackWindup;
+                    audioManager.PlaySfx("ChargeUp");
                 }
                 break;
             case TrapzState.poweringUp:

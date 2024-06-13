@@ -9,9 +9,9 @@ public class AudioManager : MonoBehaviour
     
     public static AudioManager instance;
 
-    private List<AudioSource> SfxSources;
+    private AudioSource SfxSource;
 
-    private List<AudioSource> MusicSources;
+    private AudioSource MusicSource;
 
     private AudioSource gunSource;    
 
@@ -30,8 +30,9 @@ public class AudioManager : MonoBehaviour
 
     private void Start()
     {
-        SfxSources = new List<AudioSource>();
-        MusicSources = new List<AudioSource>();
+        SfxSource = gameObject.AddComponent<AudioSource>();
+        MusicSource = gameObject.AddComponent<AudioSource>();
+        gunSource = gameObject.AddComponent<AudioSource>();
     }
 
 
@@ -45,51 +46,11 @@ public class AudioManager : MonoBehaviour
             return;
         }
 
-        // Add an AudioSource to the AudioManager GameObject
-        AudioSource source = gameObject.AddComponent<AudioSource>();
-        SfxSources.Add(source);
-
         // Set the source's clip and volume
-        source.clip = s.clip;
-        if (vol == -1) {
-            source.volume = s.volume;
-        }
-        else
-        {
-            source.volume = vol;
-        }
-        
-        source.Play();
-
-        // remove the AudioSource after the clip has finished playing
-        Destroy(source, s.clip.length);
+        SfxSource.PlayOneShot(s.clip, vol == -1 ? s.volume : vol);
     }
 
-    public int EndSfx(string name)
-    {
-        int count = 0;
-        foreach (AudioSource source in SfxSources)
-        {
-            if (source.name == name)
-            {
-                source.Stop();
-                count++;
-            }
-        }
-        return count;
-    }
 
-    public void EndAll()
-    {
-        foreach (AudioSource source in SfxSources)
-        {
-            source.Stop();
-        }
-        foreach (AudioSource source in MusicSources)
-        {
-            source.Stop();
-        }
-    }
 
     public void PlayMusic(string name, float fadeOutTime = 3f, float fadeInTime = -1)
     {
@@ -106,27 +67,19 @@ public class AudioManager : MonoBehaviour
             fadeInTime = fadeOutTime / 2;
         }
 
-        GameObject go = new GameObject("SFX");
-        go.name = name;
-        AudioSource source = go.AddComponent<AudioSource>();
-        MusicSources.Add(source);
-
         // Fade out the current music, if applicable.
-        if (MusicSources.Count > 1)
+        if (MusicSource.isPlaying)
         {
-            StartCoroutine(FadeOut(MusicSources[1], fadeOutTime));
+            StartCoroutine(FadeOut(MusicSource, fadeOutTime));
         }
 
         // Instantiate a new AudioSource to play the new music
-        source = gameObject.AddComponent<AudioSource>();
-        source.clip = s.clip;
-        source.volume = s.volume;
-
-        // Destroy the GameObject after the clip has finished playing
-        Destroy(go, s.clip.length);
+        MusicSource = gameObject.AddComponent<AudioSource>();
+        MusicSource.clip = s.clip;
+        MusicSource.volume = s.volume;
 
         // Fade in the new music
-        StartCoroutine(FadeIn(source, fadeInTime));
+        StartCoroutine(FadeIn(MusicSource, fadeInTime));
     }
 
     private IEnumerator FadeOut(AudioSource source, float fadeTime, bool destroySource = true)

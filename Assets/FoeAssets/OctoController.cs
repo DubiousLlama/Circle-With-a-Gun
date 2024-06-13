@@ -19,6 +19,7 @@ public class OctoController : MonoBehaviour
     public GameObject projectile;
 
     GameObject player;
+    AudioManager audioManager;
     Pathfinding.AIPath pathfinding;
     private string state;
     private float attackRecharge = 0;
@@ -32,6 +33,7 @@ public class OctoController : MonoBehaviour
         player = GameObject.Find("PC");
         pathfinding = GetComponent<Pathfinding.AIPath>();
         state = "pathfinding";
+        audioManager = AudioManager.instance;
 
         if (pathfinding == null)
         {
@@ -65,7 +67,7 @@ public class OctoController : MonoBehaviour
         {
 
             target = GetOctoTarget();
-
+            audioManager.PlaySfx("Woosh");
             StartCoroutine(Attack(target));
 
             attackingFor = 0;

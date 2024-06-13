@@ -1168,10 +1168,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   difficulty: 1
-  difficultyIncrease: 0.005
+  difficultyIncrease: 0.002
   timeBetweenWaves: 12
-  timeVariance: 2.5
-  distanceVariance: 1.5
+  timeVariance: 3
+  distanceVariance: 1
   pool1:
   - {fileID: 11400000, guid: bd61417eb3da6f54d8d99cc32b833852, type: 2}
   - {fileID: 11400000, guid: ad0a31a7832948c4c909f70009edc5e2, type: 2}
@@ -1645,6 +1645,27 @@ MonoBehaviour:
   - name: beam
     clip: {fileID: 8300000, guid: 88c611301fc9d4d45b84d3fa75a16062, type: 3}
     volume: 0.2
+  - name: ChargeUp
+    clip: {fileID: 8300000, guid: 51f27e4f8b119814e8452154e94a45da, type: 3}
+    volume: 0.1
+  - name: Woosh
+    clip: {fileID: 8300000, guid: 51f27e4f8b119814e8452154e94a45da, type: 3}
+    volume: 0.1
+  - name: damage1
+    clip: {fileID: 8300000, guid: e968a61c94ccce14daa699379eb511e7, type: 3}
+    volume: 0.3
+  - name: damage2
+    clip: {fileID: 8300000, guid: 5b41a24bf08a9b24a9c80f00f9c77908, type: 3}
+    volume: 0.3
+  - name: damage3
+    clip: {fileID: 8300000, guid: 15d7c65475d9d0f4983a32716e0d0b2d, type: 3}
+    volume: 0.3
+  - name: damage4
+    clip: {fileID: 8300000, guid: 2e54ac2047c3e87409b150d70c2493a5, type: 3}
+    volume: 0.3
+  - name: damage5
+    clip: {fileID: 8300000, guid: a9483640ff3306c41b1743b97f39bf04, type: 3}
+    volume: 0.3
   music: []
 --- !u!4 &1052375758
 Transform:

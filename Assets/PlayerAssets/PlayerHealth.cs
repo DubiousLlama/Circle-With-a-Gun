@@ -20,6 +20,8 @@ public class PlayerHealth : MonoBehaviour
 
     private float maxHealth = 1000f;
 
+    AudioManager audioManager;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -28,11 +30,14 @@ public class PlayerHealth : MonoBehaviour
 
         scoreTracker = GameObject.Find("Score").GetComponent<ScoreTracker>();
         playerStats = GetComponent<PlayerStats>();
+
+        audioManager = AudioManager.instance;
     }
 
-    
     public void Damage(float damage)
     {
+        string damageToUse = "damage" + 3.ToString();
+        audioManager.PlaySfx(damageToUse);
         health -= damage;
         regenTimer = 0f;
     }
