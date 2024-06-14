@@ -7,7 +7,7 @@ public class LineController : MonoBehaviour
     private LineRenderer lr;
     private Transform[] points;
     
-    private float age = 0f;
+    private float age;
 
     private void Awake()
     {
@@ -18,36 +18,23 @@ public class LineController : MonoBehaviour
         }
     }
 
-    public void SetUpLine(Transform[] points)
+    private void Start()
     {
-        lr.positionCount = points.Length;
-        this.points = points;
+        age = 0;
     }
 
-    [System.Obsolete]
+    public void SetUpLine(Vector3 from, Vector3 to)
+    {
+        lr.positionCount = 2;
+        lr.SetPosition(0, from);
+        lr.SetPosition(1, to);
+    }
+
+    [System.Obsolete] // SetWidth is obsolete
     private void Update()
     {
         age+= Time.deltaTime;
 
-        if (age > 1f)
-        {
-            Destroy(gameObject);
-        }
-
-        if (points == null)
-        {
-            return;
-        }
-        for (int i = 0; i < points.Length; i++)
-        {
-            if (points[i] == null)
-            {
-                Destroy(gameObject);
-                return;
-            }
-            lr.SetPosition(i, points[i].position);
-        }
-
-        lr.SetWidth(0.2f * age, 0.1f *age);
+        lr.SetWidth(0.2f * age, 0.1f * age);
     }
 }

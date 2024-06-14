@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.U2D;
 
 public class EnemyDamage : MonoBehaviour
 {
@@ -21,6 +23,9 @@ public class EnemyDamage : MonoBehaviour
     private GameObject attackLine1;
     private GameObject attackLine2;
 
+    private Vector3 line1from = new Vector3();
+    private Vector3 line2from = new Vector3();
+
     private float colorChangeTimer = 0f;
 
     void Start()
@@ -36,10 +41,12 @@ public class EnemyDamage : MonoBehaviour
 
         float distance = Vector3.Distance(player.GetComponent<Transform>().position, transform.position);
 
+
         if (distance <= attackRange + 0.5f)
         {
             inRangeTimer += Time.deltaTime;
         }
+
         else
         {
             inRangeTimer = 0;
@@ -57,32 +64,32 @@ public class EnemyDamage : MonoBehaviour
         {
             fireDelay -= Time.deltaTime;
         }
+
         if (colorChangeTimer > 0)
         {
             colorChangeTimer -= Time.deltaTime;
         }
+
         if (colorChangeTimer <= 0)
         {
             gameObject.GetComponent<SpriteRenderer>().color = Color.white;
         }
 
-        if (inRangeTimer > 0.1f && isAttacking == false && fireDelay <= mustBeInRangeFor)
+        if (isAttacking == false && inRangeTimer > 0.1f && fireDelay <= mustBeInRangeFor)
         {
             isAttacking = true;
-            Transform[] twoClosest = getTwoClosest();
-
-            Transform[] line1 = new Transform[2];
-            line1[0] = twoClosest[0];
-            line1[1] = player.GetComponent<Transform>();
-            Transform[] line2 = new Transform[2];
-            line2[0] = twoClosest[1];
-            line2[1] = player.GetComponent<Transform>();
 
             attackLine1 = Instantiate(LineRenderer, transform.position, Quaternion.identity);
             attackLine2 = Instantiate(LineRenderer, transform.position, Quaternion.identity);
+        }
 
-            attackLine1.GetComponent<LineController>().SetUpLine(line1);
-            attackLine2.GetComponent<LineController>().SetUpLine(line2);
+        if (isAttacking)
+        {
+            line1from = GetCorner(0);
+            line2from = GetCorner(1);
+
+            attackLine1.GetComponent<LineController>().SetUpLine(line1from, player.transform.position);
+            attackLine2.GetComponent<LineController>().SetUpLine(line2from, player.transform.position);
         }
 
 
@@ -96,11 +103,14 @@ public class EnemyDamage : MonoBehaviour
 
             gameObject.GetComponent<SpriteRenderer>().color = new Color(0.7f, 0.03f, 0.15f);
             colorChangeTimer = 0.2f;
-
-            
-
         }
         
+    }
+
+    private void OnDisable()
+    {
+        Destroy(attackLine1);
+        Destroy(attackLine2);
     }
 
     void Attack()
@@ -109,47 +119,18 @@ public class EnemyDamage : MonoBehaviour
         fireDelay = attackSpeed;
     }
 
-    private Transform[] getTwoClosest()
+    // Rank all corners by closeness to the player. Return the corner with the given rank
+    private Vector3 GetCorner(int closenessRank)
     {
-        // Identify the two closest corners of the enemy
-        Transform[] transform_list = gameObject.transform.GetChild(1).GetComponentsInChildren<Transform>();
-        float[] cornerDistances = new float[transform_list.Length];
+        SortedList<float, Transform> cornerDistances = new SortedList<float, Transform>();
+        Transform[] corners = gameObject.transform.GetChild(1).GetComponentsInChildren<Transform>();
 
-
-        for (int i = 0; i < transform_list.Length; i++)
+        // This strange little bit of code is because the first element is the parent's transform
+        for (int i = 1; i < corners.Length; i++)
         {
-            cornerDistances[i] = (Vector3.Distance(player.GetComponent<Transform>().position, transform_list[i].position));
+            cornerDistances.Add(Vector3.Distance(player.transform.position, corners[i].position), corners[i]);
         }
-
-        // Get the indices of the two smallest elements of cornerDistances
-        int[] indices = new int[2];
-        float biggest = 0;
-        float secondBiggest = 0;
-
-        for (int i = 0; i < cornerDistances.Length; i++)
-        {
-            
-            if (cornerDistances[i] > biggest)
-            {
-                indices[1] = indices[0];
-                secondBiggest = biggest;
-                indices[0] = i;
-                biggest = cornerDistances[i];
-            }
-
-            else if (cornerDistances[i] > secondBiggest)
-            {
-                indices[1] = i;
-                secondBiggest = cornerDistances[i];
-            }
-        }
-
-
-        Transform[] twoClosest = new Transform[2];
-        twoClosest[0] = transform_list[indices[0]];
-        twoClosest[1] = transform_list[indices[1]];
-
-
-        return twoClosest;
+        
+        return cornerDistances.Values[closenessRank].position;
     }
 }

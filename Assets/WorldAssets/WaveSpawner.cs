@@ -90,7 +90,7 @@ public class WaveSpawner : MonoBehaviour
         if (timeSinceLastWave > timeBetweenWaves)
         {
             timeSinceLastWave = 0 + Random.Range(-timeVariance, timeVariance);
-            Wave wave = curpool[Random.Range(0, curpool.Count - 1)];
+            Wave wave = curpool[Random.Range(0, curpool.Count)];
             Debug.Log("Spawning wave: " + wave.name);
 
             if (wave.ongoing)
@@ -173,7 +173,7 @@ public class WaveSpawner : MonoBehaviour
     bool Spawn(GameObject enemy, Vector3 spawnPosition)
     {
         // Check if the spawn position intersects with any other colliders
-        Collider2D hitCollider = Physics2D.OverlapPoint(spawnPosition);
+        Collider2D hitCollider = Physics2D.OverlapCircle(spawnPosition, 0.3f);
         if (hitCollider != null && hitCollider.gameObject.tag != "PowerUp")
         {
             return false;

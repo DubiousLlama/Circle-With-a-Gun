@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 355998285933668187}
-  - component: {fileID: 4596596213855249916}
+  - component: {fileID: 3766437015163661725}
   m_Layer: 10
   m_Name: BulletCollider
   m_TagString: Untagged
@@ -25,14 +25,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3481724767313286845}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.1560398, y: -1.15604, z: -0.01022528}
+  m_LocalPosition: {x: -1.1560398, y: -0.34, z: -0.01022528}
   m_LocalScale: {x: 2.5, y: 2.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8760996535251935044}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!60 &4596596213855249916
+--- !u!60 &3766437015163661725
 PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -57,11 +57,11 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: -0.14610788, y: 0.9555324}
-      - {x: -0.65248835, y: -0.014961392}
-      - {x: 0.21898425, y: -0.027657807}
-      - {x: 1.5978352, y: -0.021305144}
-      - {x: 1.0908117, y: 0.9442685}
+    - - {x: -0.15110616, y: 0.62695676}
+      - {x: -0.6582886, y: -0.3473504}
+      - {x: 0.4274593, y: -0.36042067}
+      - {x: 1.5794194, y: -0.35097644}
+      - {x: 1.0927185, y: 0.6301178}
 --- !u!1 &3693294129899547651
 GameObject:
   m_ObjectHideFlags: 0

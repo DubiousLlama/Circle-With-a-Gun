@@ -19,17 +19,22 @@ public class PowerUpSpawner : MonoBehaviour
     private int type;
     private Vector2 spawnLocation;
 
+    GameObject player;
+
     // Start is called before the first frame update
     void Start()
     {
         playArea = GameObject.Find("PlayArea").GetComponent<RectTransform>();
+        player = GameObject.Find("PC");
 
         if (playArea == null)
         {
             Debug.LogError("PlayArea not found");
         }
-
-        Debug.Log(playArea.rect.position);
+        if (player == null)
+        {
+            Debug.LogError("Player not found");
+        }
     }
 
     // Update is called once per frame
@@ -40,7 +45,7 @@ public class PowerUpSpawner : MonoBehaviour
         if (spawnTimer >= spawnRate)
         {
             spawnTimer = 0f;
-            type = Random.Range(0, 5);
+            type = Random.Range(0, 4);
             SpawnPowerUp(type);
         }
     }
@@ -53,7 +58,7 @@ public class PowerUpSpawner : MonoBehaviour
             return;
         }
 
-        if (type < 0 || type > 4)
+        if (type < 0 || type > 3)
         {
             Debug.LogError("Invalid PowerUp Type");
             return;
@@ -72,20 +77,28 @@ public class PowerUpSpawner : MonoBehaviour
         }
         #endif
 
-       // Check if the spawn location is within view of the camera
-       //Vector3 screenPoint = Camera.main.WorldToViewportPoint(spawnLocation);
-       // if (!(screenPoint.z < 0 || screenPoint.x < 0 || screenPoint.x > 1 || screenPoint.y < 0 || screenPoint.y > 1))
-       // {
-       //     Debug.Log("PowerUp is within view of the camera");
-       //     SpawnPowerUp(type);
-       //     return;
-       // }
-
         // Check if the spawn loaction overlaps with another powerup
         Collider2D collider = Physics2D.OverlapCircle(spawnLocation, 1f,LayerMask.NameToLayer("PowerUp"));
         if (collider != null)
         {
             Debug.Log("PowerUp overlaps with another powerup");
+            SpawnPowerUp(type, j+=1);
+            return;
+        }
+
+        // check if the spawn location overlaps with an Obstacle
+        collider = Physics2D.OverlapCircle(spawnLocation, 1f, LayerMask.NameToLayer("Obstacle"));
+        if (collider != null)
+        {
+            Debug.Log("PowerUp overlaps with an obstacle");
+            SpawnPowerUp(type, j+=1);
+            return;
+        }
+
+        // Check if the location is within 4 units of the player
+        if (Vector2.Distance(spawnLocation, player.transform.position) < 4)
+        {
+            Debug.Log("PowerUp is too close to the player");
             SpawnPowerUp(type, j+=1);
             return;
         }
@@ -104,9 +117,6 @@ public class PowerUpSpawner : MonoBehaviour
                 Instantiate(laserPrefab, v3, Quaternion.identity);
                 break;
             case 3:
-                // Instantiate(x2Prefab, v3, Quaternion.identity);
-                break;
-            case 4:
                 Instantiate(bombPrefab, v3, Quaternion.identity);
                 break;
             default:

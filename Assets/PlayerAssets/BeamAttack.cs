@@ -161,11 +161,11 @@ public class BeamAttack : MonoBehaviour
         {
             return (int)(damage * playerStats.ExplosionDamage() * 0.8f);
         }
-        else if (distance < 2f)
+        else if (distance < 2.5f)
         {
             return (int)(damage * playerStats.ExplosionDamage() * 0.6f);
         }
-        else if (distance < 2.5f)
+        else if (distance < 3f)
         {
             return (int)(damage * playerStats.ExplosionDamage() * 0.4f);
         }
@@ -216,6 +216,13 @@ public class BeamAttack : MonoBehaviour
         float angle = Vector3.Angle(direction, directionToFoe);
 
         if (angle > 45)
+        {
+            return false;
+        }
+
+        // Draw a raycast to the foe, and make sure it is unobstructed
+        RaycastHit2D hit = Physics2D.Raycast(firePoint.position, directionToFoe, range);
+        if (hit.collider != null && hit.collider.gameObject.tag != "Foe")
         {
             return false;
         }
