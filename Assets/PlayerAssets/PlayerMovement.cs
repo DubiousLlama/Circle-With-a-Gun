@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -7,9 +8,11 @@ public class PlayerMovement : MonoBehaviour
     public float moveSpeed = 5f;
     public Rigidbody2D rb;
     public Camera cam;
+    public Joystick movementJoystick;
+    public Joystick directionJoystick;
 
     Vector2 movement;
-    Vector2 mousePos;
+    Vector2 lookDir;
 
     ICollection<string> slowIDs = new List<string>();
 
@@ -18,17 +21,28 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        movement.x = Input.GetAxisRaw("Horizontal");
-        movement.y = Input.GetAxisRaw("Vertical");
-
-        mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
-
         playerStats = GetComponent<PlayerStats>();
 
         rb = GetComponent<Rigidbody2D>();
 
 
-
+        if (Platform.IsMobile())
+        {
+            movement.x = movementJoystick.Horizontal;
+            movement.y = movementJoystick.Vertical;
+            if (directionJoystick.Horizontal != 0 || directionJoystick.Vertical != 0)
+            {
+                lookDir.x = directionJoystick.Horizontal;
+                lookDir.y = directionJoystick.Vertical;
+            }
+        }
+        else
+        {
+            movement.x = Input.GetAxisRaw("Horizontal");
+            movement.y = Input.GetAxisRaw("Vertical");
+            Vector2 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+            lookDir = mousePos - rb.position;
+        }
     }
 
     void FixedUpdate() {
@@ -44,8 +58,7 @@ public class PlayerMovement : MonoBehaviour
 
         rb.AddForce(movement.normalized * moveSpeed * playerStats.Speed());
 
-        Vector2 LookDir = mousePos - rb.position;
-        float angle = Mathf.Atan2(LookDir.y, LookDir.x) * Mathf.Rad2Deg + 90f;
+        float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg + 90f;
 
         rb.rotation = angle;
     }
