@@ -25,21 +25,24 @@ public class PlayerMovement : MonoBehaviour
 
         rb = GetComponent<Rigidbody2D>();
 
-
-        if (Platform.IsMobile())
+        if (movementJoystick.Horizontal != 0 || movementJoystick.Vertical != 0)
         {
             movement.x = movementJoystick.Horizontal;
             movement.y = movementJoystick.Vertical;
-            if (directionJoystick.Horizontal != 0 || directionJoystick.Vertical != 0)
-            {
-                lookDir.x = directionJoystick.Horizontal;
-                lookDir.y = directionJoystick.Vertical;
-            }
         }
         else
         {
             movement.x = Input.GetAxisRaw("Horizontal");
             movement.y = Input.GetAxisRaw("Vertical");
+        }
+
+        if (directionJoystick.Horizontal != 0 || directionJoystick.Vertical != 0)
+        {
+            lookDir.x = directionJoystick.Horizontal;
+            lookDir.y = directionJoystick.Vertical;
+        }
+        else
+        {
             Vector2 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
             lookDir = mousePos - rb.position;
         }
