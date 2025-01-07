@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.EventSystems;
 
 public class Shooting : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class Shooting : MonoBehaviour
     public Color bulletColor = new Color(0.561111f, 0f, 1f, 1f);
     private AudioManager audioManager;
     PlayerStats playerStats;
+    private bool shouldFire = false;
 
     private void Start()
     {
@@ -31,8 +33,12 @@ public class Shooting : MonoBehaviour
             fireDelay -= Time.deltaTime;
         }
 
+        if (Platform.IsDesktop()) {
+            shouldFire = Input.GetButton("Fire1");
+        }
+
         // The charachter should shoot automatically while Fire1 is pressed
-        if (Input.GetButton("Fire1"))
+        if (shouldFire)
         {
             if (fireDelay <= 0)
             {
@@ -50,6 +56,16 @@ public class Shooting : MonoBehaviour
                 
             }
         }
+    } 
+
+    public void OnPointerDown()
+    {
+        shouldFire = true;
+    }
+
+    public void OnPointerUp()
+    {
+        shouldFire = false;
     }
 
     void Shoot()
