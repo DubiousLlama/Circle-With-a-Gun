@@ -8,7 +8,7 @@ public class TimerButton : MonoBehaviour
 {
     [Tooltip("The duration of the timer in seconds")]
     public float duration = 10.0f;
-    public TMP_Text timerText;
+    public TMP_Text text;
     public Image fill;
     public Button button;
 
@@ -21,13 +21,13 @@ public class TimerButton : MonoBehaviour
         if (isRunning)
         {
             timeLeft -= Time.deltaTime;
-            timerText.text = timeLeft.ToString("F0");
+            text.text = timeLeft.ToString("F0");
             fill.fillAmount = timeLeft / duration;
             if (timeLeft <= 0)
             {
                 isRunning = false;
                 button.interactable = true;
-                timerText.text = "0";
+                text.text = "0";
                 fill.fillAmount = 0.0f;
             }
         }
