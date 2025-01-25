@@ -13,7 +13,9 @@ public class AudioManager : MonoBehaviour
 
     private AudioSource MusicSource;
 
-    private AudioSource gunSource;    
+    private AudioSource gunSource;
+
+    private int currentSong = 0;
 
     void Awake()
     {
@@ -33,8 +35,23 @@ public class AudioManager : MonoBehaviour
         SfxSource = gameObject.AddComponent<AudioSource>();
         MusicSource = gameObject.AddComponent<AudioSource>();
         gunSource = gameObject.AddComponent<AudioSource>();
+
     }
 
+    public void Update()
+    {
+        QueueMusic();
+    }
+
+    public void QueueMusic()
+    {
+        // Whenever the music ends, play a new song
+        if (!MusicSource.isPlaying)
+        {
+            currentSong = (currentSong + 1) % music.Length;
+            PlayMusic(music[currentSong].name);
+        }
+    }
 
     public void PlaySfx(string name, float vol=-1f)
     {

@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class RapidFire : Weapon
 {
-    public int damage = 20; //Will all weapons need a damage value? I'm assuming so for now
+    public int damage = 20;
 
     [Range(10, 40)]
     public float bulletForce = 20f;
