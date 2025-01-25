@@ -11,7 +11,7 @@ public class Shooting : MonoBehaviour
 
     public int damage = 20;
     public float bulletForce = 20f;
-    public float fireRate = 0.1f;
+    public float fireRate = 1f;
     float fireDelay = 0f;
 
     public Color bulletColor = new Color(0.561111f, 0f, 1f, 1f);

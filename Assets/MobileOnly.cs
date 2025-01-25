@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
+[ExecuteInEditMode]
 public class MobileOnly : MonoBehaviour
 {
     void Awake()
