@@ -35,7 +35,7 @@ public class Platform
             case RuntimePlatform.WindowsEditor:
             case RuntimePlatform.OSXEditor:
             case RuntimePlatform.LinuxEditor:
-                return PlatformType.Desktop;
+                return PlatformType.Mobile;
 
             default:
                 Debug.LogWarning("Unknown platform. Defaulting to Desktop.");

@@ -4,18 +4,25 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class TimerButton : MonoBehaviour
+public class WeaponButton : MonoBehaviour
 {
     [Tooltip("The duration of the timer in seconds")]
     public float duration = 10.0f;
     public TMP_Text text;
     public Image fill;
     public Button button;
+    public WeaponType weaponType;
+    private WeaponsManager weaponsManager;
+    private Weapon weapon;
 
     private float timeLeft;
     private bool isRunning = false;
 
-    // Update is called once per frame
+    void Start()
+    {
+        weaponsManager = GameObject.Find("PC").GetComponent<WeaponsManager>();
+    }
+
     void Update()
     {
         if (isRunning)
@@ -31,16 +38,28 @@ public class TimerButton : MonoBehaviour
                 fill.fillAmount = 0.0f;
             }
         }
+
+        if (weaponType == WeaponType.Primary) {
+            weapon = weaponsManager.primaryWeapon;
+        } else {
+            weapon = weaponsManager.secondaryWeapon;
+        }
+
+        button.interactable = weapon != null && weapon.cooldownRemaining <= 0;
+
+        if (weapon == null || !weapon.isTemporary) {
+            text.text = "";
+            fill.fillAmount = 1.0f;
+        }
     }
 
-    public void OnClick()
+    public void OnPointerDown()
     {
-        if (isRunning)
-        {
-            return;
-        }
-        timeLeft = duration;
-        isRunning = true;
-        button.interactable = false;
+        weapon?.OnPointerDown();
+    }
+
+    public void OnPointerUp()
+    {
+        weapon?.OnPointerUp();
     }
 }

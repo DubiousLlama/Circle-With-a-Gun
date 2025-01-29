@@ -24,9 +24,10 @@ public class LightningStrike : Weapon
         // Modify base class variables as needed
         cooldown = 1f;
         isAutomatic = false;
+        weaponType = WeaponType.Secondary;
     }
 
-    public override void Fire()
+    protected override void Fire()
     {
         Quaternion rot = firePoint.rotation * Quaternion.Euler(0, 0, 90);
 

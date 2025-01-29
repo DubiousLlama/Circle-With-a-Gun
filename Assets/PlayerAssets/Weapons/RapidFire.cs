@@ -29,9 +29,10 @@ public class RapidFire : Weapon
         // Modify base class variables as needed
         cooldown = 0.1f;
         isAutomatic = true;
+        weaponType = WeaponType.Primary;
     }
 
-    public override void Fire()
+    protected override void Fire()
     {
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
