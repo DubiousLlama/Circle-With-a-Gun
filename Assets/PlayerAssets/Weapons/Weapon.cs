@@ -27,6 +27,8 @@ public class Weapon : MonoBehaviour
         audioManager = AudioManager.instance;
         playerStats = GetComponent<PlayerStats>();
         firePoint = transform.Find("FirePoint");
+
+        lifetimeRemaining = lifetime;
     }
 
     public void OnPointerDown()
@@ -42,6 +44,11 @@ public class Weapon : MonoBehaviour
     protected virtual void Fire() // Override this method to implement fire behavior for each weapon
     {
         Debug.Log("No weapon fire behavior implemented");
+    }
+
+    public bool CanFire()
+    {
+        return cooldownRemaining <= 0 && (isTemporary ? lifetimeRemaining > 0 : true);
     }
 
     // Update is called once per frame
@@ -66,7 +73,7 @@ public class Weapon : MonoBehaviour
 
         if (isFiring)
         {
-            if (cooldownRemaining <= 0)
+            if (CanFire())
             {
                 Fire();
                 cooldownRemaining = cooldown;

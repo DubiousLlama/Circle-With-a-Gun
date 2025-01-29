@@ -17,6 +17,8 @@ public class RapidFire : Weapon
 
     public new void Start()
     {
+        lifetime = 10f;
+
         base.Start();
 
         bulletPrefab = Resources.Load<GameObject>("Bullet");
@@ -30,6 +32,7 @@ public class RapidFire : Weapon
         cooldown = 0.1f;
         isAutomatic = true;
         weaponType = WeaponType.Primary;
+        isTemporary = true;
     }
 
     protected override void Fire()
