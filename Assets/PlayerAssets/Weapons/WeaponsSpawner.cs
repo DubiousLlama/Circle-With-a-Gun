@@ -6,8 +6,7 @@ public class WeaponsSpawner : MonoBehaviour
 {
     private RectTransform playArea;
     
-    public GameObject[] weapons;
-    public GameObject weaponItem;
+    public GameObject[] weaponItems;
 
     [Range(0.01f, 20)]
     public float spawnRate = 10f;
@@ -31,9 +30,6 @@ public class WeaponsSpawner : MonoBehaviour
         {
             Debug.LogError("Player not found");
         }
-
-        // Spawn a weapon
-        SpawnWeapon(weapons[0]);
     }
 
     // Update is called once per frame
@@ -45,13 +41,13 @@ public class WeaponsSpawner : MonoBehaviour
         {
             spawnTimer = 0f;
             // TODO Scott: Make this a weighted random based on the rarity of the weapon
-            int index = Random.Range(0, weapons.Length);
-            GameObject weaponPrefab = weapons[index];
-            SpawnWeapon(weaponPrefab);
+            int index = Random.Range(0, weaponItems.Length);
+            GameObject weaponItemPrefab = weaponItems[index];
+            SpawnWeapon(weaponItemPrefab);
         }
     }
 
-    private void SpawnWeapon(GameObject weaponPrefab, int j = 0)
+    private void SpawnWeapon(GameObject weaponItemPrefab, int j = 0)
     {
         if (j > 10)
         {
@@ -77,7 +73,7 @@ public class WeaponsSpawner : MonoBehaviour
         if (collider != null)
         {
             Debug.Log("Weapon overlaps with another PowerUp");
-            SpawnWeapon(weaponPrefab, j+=1);
+            SpawnWeapon(weaponItemPrefab, j+=1);
             return;
         }
 
@@ -86,7 +82,7 @@ public class WeaponsSpawner : MonoBehaviour
         if (collider != null)
         {
             Debug.Log("Weapon overlaps with another WeaponItem");
-            SpawnWeapon(weaponPrefab, j+=1);
+            SpawnWeapon(weaponItemPrefab, j+=1);
             return;
         }
 
@@ -95,7 +91,7 @@ public class WeaponsSpawner : MonoBehaviour
         if (collider != null)
         {
             Debug.Log("WeaponItem overlaps with an obstacle");
-            SpawnWeapon(weaponPrefab, j+=1);
+            SpawnWeapon(weaponItemPrefab, j+=1);
             return;
         }
 
@@ -103,13 +99,12 @@ public class WeaponsSpawner : MonoBehaviour
         if (Vector2.Distance(spawnLocation, player.transform.position) < 4)
         {
             Debug.Log("WeaponItem is too close to the player");
-            SpawnWeapon(weaponPrefab, j+=1);
+            SpawnWeapon(weaponItemPrefab, j+=1);
             return;
         }
 
         Vector3 v3 = new Vector3(spawnLocation.x, spawnLocation.y, 5);
 
-        GameObject weaponItemInstance = Instantiate(weaponItem, v3, Quaternion.identity);
-        weaponItemInstance.GetComponent<WeaponItem>().weaponPrefab = weaponPrefab;
+        Instantiate(weaponItemPrefab, v3, Quaternion.identity);
     }
 }

@@ -5,7 +5,6 @@ using UnityEngine.Rendering;
 
 public class WeaponItem : MonoBehaviour
 {
-    [HideInInspector]
     public GameObject weaponPrefab;
 
     void OnTriggerEnter2D (Collider2D collision)
