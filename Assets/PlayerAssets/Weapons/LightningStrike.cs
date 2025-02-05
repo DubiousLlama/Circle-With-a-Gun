@@ -10,6 +10,18 @@ public class LightningStrike : Weapon
     GameObject strikePrefab;
     private string sfx = "Lightning";
 
+    public new void Awake()
+    { 
+        base.Awake();
+
+        // Modify base class variables as needed
+        lifetime = 10f;
+        cooldown = 1f;
+        isAutomatic = false;
+        isTemporary = true;
+        weaponType = WeaponType.Secondary;
+    }
+
     public new void Start()
     {
         base.Start();
@@ -20,11 +32,6 @@ public class LightningStrike : Weapon
         {
             Debug.LogError("Strike prefab not found");
         }
-
-        // Modify base class variables as needed
-        cooldown = 1f;
-        isAutomatic = false;
-        weaponType = WeaponType.Secondary;
     }
 
     protected override void Fire()

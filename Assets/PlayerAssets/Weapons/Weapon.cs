@@ -21,12 +21,14 @@ public class Weapon : MonoBehaviour
 
     protected bool isFiring = false;
 
+    protected void Awake() {}
+
     // Start is called before the first frame update
     protected void Start()
     {
         audioManager = AudioManager.instance;
-        playerStats = GetComponent<PlayerStats>();
-        firePoint = transform.Find("FirePoint");
+        playerStats = transform.parent.GetComponent<PlayerStats>();
+        firePoint = transform.parent.Find("FirePoint");
 
         lifetimeRemaining = lifetime;
     }
@@ -87,7 +89,6 @@ public class Weapon : MonoBehaviour
 
     private void Expire()
     {
-        Debug.Log("No weapon expiration behavior implemented");
-        // SCOTT: Once you have weapon switching enabled, implement this method so that the player is restored to the default weapon upon expiration
+        Destroy(gameObject);
     }
 }

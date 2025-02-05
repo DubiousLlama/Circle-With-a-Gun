@@ -7,6 +7,8 @@ TagManager:
   - Obstacle
   - Wall
   - Foe
+  - PowerUp
+  - WeaponItem
   layers:
   - Default
   - TransparentFX

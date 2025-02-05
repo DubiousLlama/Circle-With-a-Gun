@@ -11,6 +11,8 @@ public class WeaponsManager : MonoBehaviour
     [HideInInspector]
     public Weapon secondaryWeapon;
 
+    public GameObject defaultPrimaryWeapon;
+
     private GameObject player;
 
     void Start()
@@ -48,7 +50,7 @@ public class WeaponsManager : MonoBehaviour
 
     private void UpdateWeapons()
     {
-        Weapon[] weapons = player.GetComponents<Weapon>();
+        Weapon[] weapons = player.transform.GetComponentsInChildren<Weapon>();
         foreach (Weapon weapon in weapons)
         {
             if (weapon.weaponType == WeaponType.Primary)
@@ -58,6 +60,31 @@ public class WeaponsManager : MonoBehaviour
             if (weapon.weaponType == WeaponType.Secondary)
             {
                 secondaryWeapon = weapon;
+            }
+        }
+
+        if (primaryWeapon == null)
+        {
+            GameObject weaponInstance = Instantiate(defaultPrimaryWeapon, player.transform);
+            primaryWeapon = weaponInstance.GetComponent<Weapon>();
+        }
+    }
+
+    public void AddWeapon(GameObject weaponPrefab)
+    {
+        GameObject weaponInstance = Instantiate(weaponPrefab, player.transform);
+        Weapon weapon = weaponInstance.GetComponent<Weapon>();
+        if (weapon.weaponType == WeaponType.Primary)
+        {
+            if (primaryWeapon != null)
+            {
+                Destroy(primaryWeapon.gameObject);
+            }
+        } else if (weapon.weaponType == WeaponType.Secondary)
+        {
+            if (secondaryWeapon != null)
+            {
+                Destroy(secondaryWeapon.gameObject);
             }
         }
     }
