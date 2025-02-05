@@ -1148,14 +1148,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1935641815, guid: c8b91edf6d6d9d1479e0ad6d14d272f1, type: 3}
-      propertyPath: primaryWeapon
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1935641815, guid: c8b91edf6d6d9d1479e0ad6d14d272f1, type: 3}
-      propertyPath: defaultPrimaryWeapon
-      value: 
-      objectReference: {fileID: 2920370379373296382, guid: e476e74bf2b64400bbb44cb96742abf3, type: 3}
     - target: {fileID: 6332708186182667632, guid: c8b91edf6d6d9d1479e0ad6d14d272f1, type: 3}
       propertyPath: cam
       value: 
@@ -1413,7 +1405,6 @@ GameObject:
   m_Component:
   - component: {fileID: 894957483}
   - component: {fileID: 894957487}
-  - component: {fileID: 894957484}
   - component: {fileID: 894957485}
   - component: {fileID: 894957486}
   m_Layer: 0
@@ -1438,23 +1429,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &894957484
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 894957481}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 48435e226509dbb4e998d49651b8497c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  regenPrefab: {fileID: 8153874603629096597, guid: 0892c2dd894162c438497773895727f5, type: 3}
-  speedPrefab: {fileID: 3677065510083006430, guid: 660f5836b5303ef4eb4f69c304765984, type: 3}
-  laserPrefab: {fileID: 1684410095117889730, guid: 840bc781a79acc6469a10c309a9892de, type: 3}
-  bombPrefab: {fileID: 4293107596892571966, guid: 20183e52023187c42b9fd1d11b1aab96, type: 3}
-  spawnRate: 8
 --- !u!114 &894957485
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1534,6 +1508,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponItems:
   - {fileID: 6058233925014839363, guid: ca848e0205ecd4599a698bf26737c2ed, type: 3}
+  - {fileID: 8153874603629096597, guid: 0892c2dd894162c438497773895727f5, type: 3}
+  - {fileID: 3677065510083006430, guid: 660f5836b5303ef4eb4f69c304765984, type: 3}
+  - {fileID: 1684410095117889730, guid: 840bc781a79acc6469a10c309a9892de, type: 3}
+  - {fileID: 4293107596892571966, guid: 20183e52023187c42b9fd1d11b1aab96, type: 3}
   spawnRate: 10
 --- !u!1 &942063011
 GameObject:

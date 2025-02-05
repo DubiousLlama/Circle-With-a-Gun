@@ -122,7 +122,7 @@ public class SpawnScript : MonoBehaviour
 
         // Check if the spawn position intersects with any other colliders
         Collider2D hitCollider = Physics2D.OverlapPoint(spawnPosition);
-        if (hitCollider != null && hitCollider.gameObject.tag != "PowerUp")
+        if (hitCollider != null && hitCollider.gameObject.tag != "Item")
         {
             SpawnEnemy(enemy, i+1);
             return;
@@ -164,7 +164,7 @@ public class SpawnScript : MonoBehaviour
         // Check if the spawn position intersects with any other colliders
         Collider2D hitCollider = Physics2D.OverlapPoint(spawnPosition);
         
-        if (hitCollider != null && hitCollider.gameObject.tag != "PowerUp")
+        if (hitCollider != null && hitCollider.gameObject.tag != "Item")
         {
             SpawnEnemyGroup(enemy, numFoes, j+1);
             return;
@@ -187,7 +187,7 @@ public class SpawnScript : MonoBehaviour
                 hitCollider = Physics2D.OverlapPoint(spawnPosition);
                 l += 1;
 
-                if ((hitCollider == null ||  hitCollider.gameObject.tag == "PowerUp") && playArea.rect.Contains(spawnPosition - (Vector2)playArea.position))
+                if ((hitCollider == null ||  hitCollider.gameObject.tag == "Item") && playArea.rect.Contains(spawnPosition - (Vector2)playArea.position))
                 {
                     break;
                 }

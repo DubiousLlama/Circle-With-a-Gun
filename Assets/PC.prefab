@@ -258,6 +258,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   primaryWeapon: {fileID: 0}
   secondaryWeapon: {fileID: 0}
+  defaultPrimaryWeapon: {fileID: 2920370379373296382, guid: e476e74bf2b64400bbb44cb96742abf3, type: 3}
 --- !u!1 &6332708187256554447
 GameObject:
   m_ObjectHideFlags: 0

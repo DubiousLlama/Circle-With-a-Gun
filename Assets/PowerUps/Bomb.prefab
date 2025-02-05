@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8225955505613248171}
   m_Layer: 14
   m_Name: Bomb
-  m_TagString: PowerUp
+  m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

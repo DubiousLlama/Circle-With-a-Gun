@@ -68,20 +68,13 @@ public class WeaponsSpawner : MonoBehaviour
         }
         #endif
 
-        // Check if the spawn loaction overlaps with another powerup
-        Collider2D collider = Physics2D.OverlapCircle(spawnLocation, 1f,LayerMask.NameToLayer("PowerUp"));
-        if (collider != null)
-        {
-            Debug.Log("Weapon overlaps with another PowerUp");
-            SpawnWeapon(weaponItemPrefab, j+=1);
-            return;
-        }
-
+        Collider2D collider = Physics2D.OverlapCircle(spawnLocation, 1f,LayerMask.NameToLayer("Item"));
+        
         // Check if the spawn loaction overlaps with another weapon item
-        collider = Physics2D.OverlapCircle(spawnLocation, 1f,LayerMask.NameToLayer("WeaponItem"));
+        collider = Physics2D.OverlapCircle(spawnLocation, 1f,LayerMask.NameToLayer("Item"));
         if (collider != null)
         {
-            Debug.Log("Weapon overlaps with another WeaponItem");
+            Debug.Log("Weapon overlaps with another item");
             SpawnWeapon(weaponItemPrefab, j+=1);
             return;
         }
