@@ -1,74 +1,89 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using UnityEngine;
 
 public class LightningStrike : Weapon
 {
-    // Start is called before the first frame update
-    public int damage = 80;
+    private string strike = "Lightning";
+    private string explosion = "Explosion";
+    private int damage = 125;
+    private int aoeDamage = 75;
 
-    GameObject strikePrefab;
-    private string sfx = "Lightning";
+    private Vector3 destination;
+    Collider2D foe;
+
+    LayerMask enemyLayer;
 
     public new void Awake()
-    { 
+    {
         base.Awake();
 
         // Modify base class variables as needed
-        lifetime = 10f;
-        cooldown = 1f;
+        cooldown = 3f;
         isAutomatic = false;
-        isTemporary = true;
+        isTemporary = false;
         weaponType = WeaponType.Secondary;
-    }
 
-    public new void Start()
-    {
-        base.Start();
+        enemyLayer = LayerMask.GetMask("Foes");
 
-        strikePrefab = Resources.Load<GameObject>("LightningAttack");
-
-        if (strikePrefab == null)
-        {
-            Debug.LogError("Strike prefab not found");
-        }
     }
 
     protected override void Fire()
     {
-        Quaternion rot = firePoint.rotation * Quaternion.Euler(0, 0, 90);
-
-        Vector3 offset = new Vector3(strikePrefab.GetComponent<BoxCollider2D>().size.x * 0.5f, 0, 1);
-        // Rotate the offset by the firepoint's rotation
-        offset = rot * offset;
-
-
-        GameObject strike = Instantiate(strikePrefab, firePoint.position + offset, rot);
-
-        Collider2D collider = strike.GetComponent<Collider2D>();
-
-        // Get all the colliders that the strike is touching
-        ContactFilter2D filter = new ContactFilter2D();
-        filter.useTriggers = true;
-        List<Collider2D> results = new List<Collider2D>();
-        int count = collider.OverlapCollider(filter, results);
-        Debug.Log(count);
-
-        foreach (Collider2D hit in results)
+        // Get a random foe within 10 units of the player
+        Collider2D[] foes = Physics2D.OverlapCircleAll(transform.position, 10f, enemyLayer);
+        if (foes.Length == 0)
         {
-            // Check if the collider is an enemy
-            if (hit.CompareTag("Foe"))
-            {
-                EnemyHealth health = hit.GetComponent<EnemyHealth>();
-
-                if (health != null)
-                {
-                    health.TakeDamage(damage);
-                }
-            }
+            Debug.Log("No foes in range");
+            return;
         }
-        audioManager.PlaySfx(sfx);
-        Destroy(strike, 0.5f);
+
+        foe = foes[Random.Range(0, foes.Length)];
+
+        destination = foe.transform.position;
+
+
+        // The lighting strike object has a child called 'StrikePoint' which is the point where the lightning strikes
+        // Adjust the position of the lightning strike so that the StrikePoint is at the destination
+
+        Vector3 strikeOffset = new Vector3(0.27f * 0.4f, 10.8f * 0.4f, 0);
+
+        // Create the lightning strike 
+        GameObject lightningStrike = Instantiate(Resources.Load<GameObject>("LightningStrikeEffect"), destination + strikeOffset, Quaternion.identity);
+        Destroy(lightningStrike, 2f);
+        AudioManager.instance.PlaySfx(strike);
+        Invoke("LightningExplosion", 0.5f);
+
     }
 
+    private void LightningExplosion()
+    {
+        AudioManager.instance.PlaySfx(explosion);
+        
+
+        // Get all foes directly contacted
+        Collider2D[] foes = Physics2D.OverlapCircleAll(destination, 0.3f, enemyLayer);
+        foreach (Collider2D foe in foes)
+        {
+            if (foe.tag == "Foe") {
+                foe.GetComponentInParent<EnemyHealth>().TakeDamage(damage);
+            }
+        }
+
+        Invoke("LightningAoE", 0.1f);
+    }
+
+    private void LightningAoE()
+    {
+        // Get all foes in the AoE
+        Collider2D[] foes = Physics2D.OverlapCircleAll(destination, 1.75f, enemyLayer);
+        foreach (Collider2D foe in foes)
+        {
+            if (foe.tag == "Foe")
+            {
+                foe.GetComponentInParent<EnemyHealth>().TakeDamage(aoeDamage);
+            }
+        }
+    }
 }

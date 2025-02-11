@@ -18,6 +18,7 @@ public class Weapon : MonoBehaviour
     protected AudioManager audioManager;
     protected PlayerStats playerStats;
     protected Transform firePoint;
+    protected RechargeBarController barController;
 
     protected bool isFiring = false;
 
@@ -29,6 +30,13 @@ public class Weapon : MonoBehaviour
         audioManager = AudioManager.instance;
         playerStats = transform.parent.GetComponent<PlayerStats>();
         firePoint = transform.parent.Find("FirePoint");
+
+        GameObject rechargeBar = GameObject.Find("RechargeBar");
+        barController = rechargeBar.GetComponent<RechargeBarController>();
+        if (weaponType == WeaponType.Secondary)
+        {
+            barController.SetMaxRecharge(cooldown);
+        }
 
         lifetimeRemaining = lifetime;
     }
@@ -54,7 +62,7 @@ public class Weapon : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    public void Update()
     {
         if (cooldownRemaining > 0)
         {
@@ -84,6 +92,16 @@ public class Weapon : MonoBehaviour
         if (!isAutomatic)
         {
             isFiring = false;
+        }
+
+        if (weaponType == WeaponType.Secondary)
+        {
+            float charge = cooldown - cooldownRemaining;
+
+            if (charge > 0 && charge <= cooldown)
+            {
+                barController.SetRecharge(charge);
+            }
         }
     }
 

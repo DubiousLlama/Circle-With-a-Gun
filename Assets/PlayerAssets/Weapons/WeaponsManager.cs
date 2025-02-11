@@ -13,6 +13,8 @@ public class WeaponsManager : MonoBehaviour
 
     public GameObject defaultPrimaryWeapon;
 
+    public GameObject testingSecondaryWeapon;
+
     private GameObject player;
 
     void Start()
@@ -68,6 +70,15 @@ public class WeaponsManager : MonoBehaviour
             GameObject weaponInstance = Instantiate(defaultPrimaryWeapon, player.transform);
             primaryWeapon = weaponInstance.GetComponent<Weapon>();
         }
+
+        #if UNITY_EDITOR
+        if (secondaryWeapon == null && testingSecondaryWeapon != null)
+        {
+            GameObject weaponInstance = Instantiate(testingSecondaryWeapon, player.transform);
+            secondaryWeapon = weaponInstance.GetComponent<Weapon>();
+        }       
+        #endif
+
     }
 
     public void AddWeapon(GameObject weaponPrefab)
