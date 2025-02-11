@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WeaponsSpawner : MonoBehaviour
+public class ItemSpawner : MonoBehaviour
 {
     private RectTransform playArea;
+
     
-    public GameObject[] weaponItems;
+    public GameObject[] items;
 
     [Range(0.01f, 20)]
     public float spawnRate = 10f;
@@ -40,18 +41,18 @@ public class WeaponsSpawner : MonoBehaviour
         if (spawnTimer >= spawnRate)
         {
             spawnTimer = 0f;
-            // TODO Scott: Make this a weighted random based on the rarity of the weapon
-            int index = Random.Range(0, weaponItems.Length);
-            GameObject weaponItemPrefab = weaponItems[index];
-            SpawnWeapon(weaponItemPrefab);
+            // TODO Scott: Make this a weighted random based on the rarity of the item
+            int index = Random.Range(0, items.Length);
+            GameObject itemPrefab = items[index];
+            SpawnItem(itemPrefab);
         }
     }
 
-    private void SpawnWeapon(GameObject weaponItemPrefab, int j = 0)
+    private void SpawnItem(GameObject itemPrefab, int j = 0)
     {
         if (j > 10)
         {
-            Debug.Log("Too many attempts to spawn weapon");
+            Debug.Log("Too many attempts to spawn item");
             return;
         }
 
@@ -70,12 +71,12 @@ public class WeaponsSpawner : MonoBehaviour
 
         Collider2D collider = Physics2D.OverlapCircle(spawnLocation, 1f,LayerMask.NameToLayer("Item"));
         
-        // Check if the spawn loaction overlaps with another weapon item
+        // Check if the spawn loaction overlaps with another item
         collider = Physics2D.OverlapCircle(spawnLocation, 1f,LayerMask.NameToLayer("Item"));
         if (collider != null)
         {
-            Debug.Log("Weapon overlaps with another item");
-            SpawnWeapon(weaponItemPrefab, j+=1);
+            Debug.Log("Item overlaps with another item");
+            SpawnItem(itemPrefab, j+=1);
             return;
         }
 
@@ -83,21 +84,21 @@ public class WeaponsSpawner : MonoBehaviour
         collider = Physics2D.OverlapCircle(spawnLocation, 1f, LayerMask.NameToLayer("Obstacle"));
         if (collider != null)
         {
-            Debug.Log("WeaponItem overlaps with an obstacle");
-            SpawnWeapon(weaponItemPrefab, j+=1);
+            Debug.Log("Item overlaps with an obstacle");
+            SpawnItem(itemPrefab, j+=1);
             return;
         }
 
         // Check if the location is within 4 units of the player
         if (Vector2.Distance(spawnLocation, player.transform.position) < 4)
         {
-            Debug.Log("WeaponItem is too close to the player");
-            SpawnWeapon(weaponItemPrefab, j+=1);
+            Debug.Log("Item is too close to the player");
+            SpawnItem(itemPrefab, j+=1);
             return;
         }
 
         Vector3 v3 = new Vector3(spawnLocation.x, spawnLocation.y, 5);
 
-        Instantiate(weaponItemPrefab, v3, Quaternion.identity);
+        Instantiate(itemPrefab, v3, Quaternion.identity);
     }
 }

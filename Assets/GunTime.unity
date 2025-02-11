@@ -1412,7 +1412,7 @@ GameObject:
   - component: {fileID: 894957485}
   - component: {fileID: 894957486}
   m_Layer: 0
-  m_Name: EnemySpawner
+  m_Name: Spawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1510,7 +1510,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed8b0bd25f1dc488bb3705a389ee1f2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponItems:
+  items:
   - {fileID: 6058233925014839363, guid: ca848e0205ecd4599a698bf26737c2ed, type: 3}
   - {fileID: 8153874603629096597, guid: 0892c2dd894162c438497773895727f5, type: 3}
   - {fileID: 3677065510083006430, guid: 660f5836b5303ef4eb4f69c304765984, type: 3}
