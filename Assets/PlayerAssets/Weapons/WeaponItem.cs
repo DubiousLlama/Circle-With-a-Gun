@@ -18,4 +18,10 @@ public class WeaponItem : MonoBehaviour
             Destroy(gameObject, 0.1f);
         }
     }
+
+    public void MakeSpecial()
+    {
+        Weapon weaponComponent = weapon.GetComponent<Weapon>();
+        weaponComponent.SetRarity(WeaponRarity.Legendary);
+    }
 }

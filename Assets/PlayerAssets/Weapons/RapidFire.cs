@@ -15,19 +15,15 @@ public class RapidFire : Weapon
     private string sfx = "Gun";
     private Color bulletColor = new Color(0.561111f, 0f, 1f, 1f);
 
-    public new void Awake()
+    public void Awake()
     {
-        base.Awake();
-        
-        // Modify base class variables as needed
         cooldown = 0.1f;
-        isAutomatic = true;
         weaponType = WeaponType.Primary;
     }
 
-    public new void Start()
+    public override void Equip()
     {
-        base.Start();
+        base.Equip();
 
         bulletPrefab = Resources.Load<GameObject>("Bullet");
 
@@ -35,6 +31,8 @@ public class RapidFire : Weapon
         {
             Debug.LogError("Bullet prefab not found");
         }
+
+        Debug.Log("Weapon equipped: " + gameObject.name);
     }
 
     protected override void Fire()

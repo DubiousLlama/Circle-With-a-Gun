@@ -12,15 +12,15 @@ public class RedButton : Weapon
 
     private Vector3 destination;
 
-    public new void Awake()
+    public void Awake()
     {
-        base.Awake();
-
-        // Modify base class variables as needed
         cooldown = 15f;
-        isAutomatic = false;
-        isTemporary = false;
         weaponType = WeaponType.Secondary;
+    }
+
+    public override void Equip()
+    {
+        base.Equip();
 
         playArea = GameObject.Find("PlayArea").GetComponent<RectTransform>();
         playerHealth = transform.parent.GetComponent<PlayerHealth>();

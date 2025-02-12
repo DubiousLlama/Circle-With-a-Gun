@@ -15,15 +15,15 @@ public class LightningStrike : Weapon
 
     LayerMask enemyLayer;
 
-    public new void Awake()
+    public void Awake()
     {
-        base.Awake();
-
-        // Modify base class variables as needed
         cooldown = 3f;
-        isAutomatic = false;
-        isTemporary = false;
         weaponType = WeaponType.Secondary;
+    }
+
+    public override void Equip()
+    {
+        base.Equip();
 
         enemyLayer = LayerMask.GetMask("Foes");
     }

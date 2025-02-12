@@ -11,7 +11,6 @@ public class WeaponButton : MonoBehaviour
     public Button button;
     public WeaponType weaponType;
     private WeaponsManager weaponsManager;
-    private Weapon weapon;
 
     void Start()
     {
@@ -20,11 +19,7 @@ public class WeaponButton : MonoBehaviour
 
     void Update()
     {
-        if (weaponType == WeaponType.Primary) {
-            weapon = weaponsManager.primaryWeapon;
-        } else {
-            weapon = weaponsManager.secondaryWeapon;
-        }
+        Weapon weapon = weaponsManager.GetEquippedWeapon(weaponType);
 
         button.interactable = weapon?.CanFire() ?? false;
 
@@ -39,11 +34,11 @@ public class WeaponButton : MonoBehaviour
 
     public void OnPointerDown()
     {
-        weapon?.OnPointerDown();
+        weaponsManager?.OnPointerDown(weaponType);
     }
 
     public void OnPointerUp()
     {
-        weapon?.OnPointerUp();
+        weaponsManager?.OnPointerUp(weaponType);
     }
 }
