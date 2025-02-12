@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6781626611977445168}
   - component: {fileID: 6781626611977445169}
   m_Layer: 14
-  m_Name: LightningBoltItem
+  m_Name: ShotgunItem
   m_TagString: Item
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d22bf76bf4d804e91ac89edc8029aee0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weapon: {fileID: 8084131027652953183}
+  weapon: {fileID: 2920370379373296382, guid: 9651df96b60a4c14aa481c9fccd09943, type: 3}
 --- !u!212 &6781626611977445168
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -89,7 +89,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: ccc351dc611f0824c909d22151949664, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ff939039ea8b5344299f5caa9cf9bd53, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -180,10 +180,5 @@ PrefabInstance:
 --- !u!4 &3757500483258096060 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7904377369460279483, guid: b408ef8ef8e5a4a95a2738ef2bdc6206, type: 3}
-  m_PrefabInstance: {fileID: 6454977261595791623}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &8084131027652953183 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3000582385287026008, guid: b408ef8ef8e5a4a95a2738ef2bdc6206, type: 3}
   m_PrefabInstance: {fileID: 6454977261595791623}
   m_PrefabAsset: {fileID: 0}

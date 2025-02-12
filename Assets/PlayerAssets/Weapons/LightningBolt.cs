@@ -19,7 +19,7 @@ public class LightningBolt : Weapon
         cooldown = 1f;
         isAutomatic = false;
         isTemporary = true;
-        weaponType = WeaponType.Secondary;
+        weaponType = WeaponType.Primary;
     }
 
     public void OnEnable()

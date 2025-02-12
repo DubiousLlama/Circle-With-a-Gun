@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.EventSystems;
+using System;
 
 public class WeaponsManager : MonoBehaviour
 {
-    [HideInInspector]
     public Weapon primaryWeapon;
-    [HideInInspector]
     public Weapon secondaryWeapon;
 
     public GameObject defaultPrimaryWeapon;
@@ -83,22 +82,25 @@ public class WeaponsManager : MonoBehaviour
 
     public void EquipWeapon(GameObject weapon)
     {
-        // Change parent of weapon to player
-        weapon.transform.SetParent(player.transform);
-        Weapon weaponComponent = weapon.GetComponent<Weapon>();
-        weapon.SetActive(true);
+        GameObject weaponInstance = Instantiate(weapon, player.transform);
+        Weapon weaponComponent = weaponInstance.GetComponent<Weapon>();
         if (weaponComponent.weaponType == WeaponType.Primary)
         {
             if (primaryWeapon != null)
             {
                 Destroy(primaryWeapon.gameObject);
             }
-        } else if (weaponComponent.weaponType == WeaponType.Secondary)
+            primaryWeapon = weaponComponent;
+            primaryWeapon.gameObject.SetActive(true);
+        }
+        else if (weaponComponent.weaponType == WeaponType.Secondary)
         {
             if (secondaryWeapon != null)
             {
                 Destroy(secondaryWeapon.gameObject);
             }
+            secondaryWeapon = weaponComponent;
+            primaryWeapon.gameObject.SetActive(true);
         }
     }
 }
