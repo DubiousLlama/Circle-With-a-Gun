@@ -174,7 +174,7 @@ public class WaveSpawner : MonoBehaviour
     {
         // Check if the spawn position intersects with any other colliders
         Collider2D hitCollider = Physics2D.OverlapCircle(spawnPosition, 0.3f);
-        if (hitCollider != null && hitCollider.gameObject.tag != "PowerUp")
+        if (hitCollider != null && hitCollider.gameObject.tag != "Item")
         {
             return false;
         }

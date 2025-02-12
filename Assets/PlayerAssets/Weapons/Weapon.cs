@@ -18,15 +18,25 @@ public class Weapon : MonoBehaviour
     protected AudioManager audioManager;
     protected PlayerStats playerStats;
     protected Transform firePoint;
+    protected RechargeBarController barController;
 
     protected bool isFiring = false;
+
+    protected void Awake() {}
 
     // Start is called before the first frame update
     protected void Start()
     {
         audioManager = AudioManager.instance;
-        playerStats = GetComponent<PlayerStats>();
-        firePoint = transform.Find("FirePoint");
+        playerStats = transform.parent.GetComponent<PlayerStats>();
+        firePoint = transform.parent.Find("FirePoint");
+
+        GameObject rechargeBar = GameObject.Find("RechargeBar");
+        barController = rechargeBar.GetComponent<RechargeBarController>();
+        if (weaponType == WeaponType.Secondary)
+        {
+            barController.SetMaxRecharge(cooldown);
+        }
 
         lifetimeRemaining = lifetime;
     }
@@ -52,7 +62,7 @@ public class Weapon : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    public void Update()
     {
         if (cooldownRemaining > 0)
         {
@@ -83,11 +93,20 @@ public class Weapon : MonoBehaviour
         {
             isFiring = false;
         }
+
+        if (weaponType == WeaponType.Secondary)
+        {
+            float charge = cooldown - cooldownRemaining;
+
+            if (charge > 0 && charge <= cooldown)
+            {
+                barController.SetRecharge(charge);
+            }
+        }
     }
 
     private void Expire()
     {
-        Debug.Log("No weapon expiration behavior implemented");
-        // SCOTT: Once you have weapon switching enabled, implement this method so that the player is restored to the default weapon upon expiration
+        Destroy(gameObject);
     }
 }

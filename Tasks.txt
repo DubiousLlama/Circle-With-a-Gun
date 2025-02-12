@@ -1,0 +1,39 @@
+Three weapon types:
+Secondary <- Drop from blue Octos
+Primary <- Drop from blue Octos
+Legendary <- Random chance to spawn on the map
+
+Legendary = #D81B60
+Rare 5% = #FFC107
+Uncommon 25% = #1E88E5
+Common 70% = Black/White
+
+Decide on Wednesday:
+ - Octos drop
+ - Random map spawning
+ - Pause and menu popup on octo death
+
+Weapon despawning
+  - Weapons despawn after 70s
+
+Interface stuff
+ - Desktop indicators for what weapon you have and whether it is availible/charged
+
+Powerup changes
+  - Health is instant
+  - Damage is removed
+  - Bomb stays the same
+  - Speed changes to be indicated by the player shrinking a bit; speed decays over time
+
+
+Next stuff
+  - Weapon refactors
+
+
+
+
+
+
+
+
+

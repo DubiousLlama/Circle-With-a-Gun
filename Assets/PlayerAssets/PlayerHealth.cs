@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
@@ -40,6 +41,12 @@ public class PlayerHealth : MonoBehaviour
         audioManager.PlaySfx(damageToUse);
         health -= damage;
         regenTimer = 0f;
+    }
+
+    public void Heal(float heal)
+    {
+        health += heal;
+        regenTimer = regenDelay + 0.01f;
     }
 
     void Update()

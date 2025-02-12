@@ -53,6 +53,11 @@ public class BulletScript : MonoBehaviour
     
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (collision.gameObject.layer == 8)
+        {
+            return;
+        }
+
         hitEffect.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
         GameObject effect = Instantiate(hitEffect, transform.position, Quaternion.identity);
         Destroy(effect, 0.5f);

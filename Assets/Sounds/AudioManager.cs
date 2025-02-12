@@ -15,7 +15,7 @@ public class AudioManager : MonoBehaviour
 
     private AudioSource gunSource;
 
-    private int currentSong = 0;
+    private string currentSong = "";
 
     void Awake()
     {
@@ -45,11 +45,26 @@ public class AudioManager : MonoBehaviour
 
     public void QueueMusic()
     {
+        List<string> songs = new List<string>() { "cwag1", "cwag2", "cwag4"};
+
         // Whenever the music ends, play a new song
         if (!MusicSource.isPlaying)
         {
-            currentSong = (currentSong + 1) % music.Length;
-            PlayMusic(music[currentSong].name);
+            if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "MainMenu")
+            {
+                currentSong = "title";
+                PlayMusic(currentSong);
+                return;
+            }   
+            // Get a random song from the list, other than the current song
+            // This is kind of a hacky way to do it, it produces a 66% chance to play the next song, and a 33% chance to play the previous song lol. Seems fine for now.
+            int songIndex = Random.Range(0, songs.Count);
+            if (songs[songIndex] == currentSong)
+            {
+                songIndex = (songIndex + 1) % songs.Count;
+            }
+            currentSong = songs[songIndex];
+            PlayMusic(currentSong);
         }
     }
 
