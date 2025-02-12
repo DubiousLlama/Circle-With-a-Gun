@@ -9,6 +9,7 @@ public enum WeaponRarity { Common, Uncommon, Rare, Legendary };
 
 public class Weapon : MonoBehaviour
 {
+    public WeaponItem weaponItem;
     public WeaponType weaponType;
     public WeaponSlot weaponSlot {
         get {

@@ -13,6 +13,10 @@ public class WeaponsIndicator : MonoBehaviour
     private Transform secondaryIndicator;
     private Transform specialIndicator;
 
+    private Image primaryWeaponIcon;
+    private Image secondaryWeaponIcon;
+    private Image specialWeaponIcon;
+
     private Image primaryWeaponLifetimeFill;
     private Image secondaryWeaponLifetimeFill;
     private Image specialWeaponLifetimeFill;
@@ -25,25 +29,11 @@ public class WeaponsIndicator : MonoBehaviour
 
     private Color powerUpGreen = new Color(0.054901960784313725f, 0.7686274509803922f, 0);
 
-    private void Start()
+    private void UpdateIndicator(Transform indicator, Weapon weapon)
     {
-        primaryIndicator = transform.Find("Primary");
-        secondaryIndicator = transform.Find("Secondary");
-        specialIndicator = transform.Find("Special");
-
-        primaryWeaponLifetimeFill = primaryIndicator.Find("LifetimeFill").GetComponent<Image>();
-        secondaryWeaponLifetimeFill = secondaryIndicator.Find("LifetimeFill").GetComponent<Image>();
-        specialWeaponLifetimeFill = specialIndicator.Find("LifetimeFill").GetComponent<Image>();
-
-        primaryWeaponCooldownFill = primaryIndicator.Find("CooldownFill").GetComponent<Image>();
-        secondaryWeaponCooldownFill = secondaryIndicator.Find("CooldownFill").GetComponent<Image>();
-        specialWeaponCooldownFill = specialIndicator.Find("CooldownFill").GetComponent<Image>();
-
-        weaponsManager = GameObject.Find("PC").GetComponent<WeaponsManager>();
-    }
-
-    private void UpdateIndicator(Transform indicator, Image lifetimeFill, Image cooldownFill, Weapon weapon)
-    {
+        Image icon = indicator.GetComponent<Image>();
+        Image lifetimeFill = indicator.Find("LifetimeFill").GetComponent<Image>();
+        Image cooldownFill = indicator.Find("CooldownFill").GetComponent<Image>();
         if (weapon == null) {
             indicator.gameObject.SetActive(false);
             return;
@@ -51,13 +41,20 @@ public class WeaponsIndicator : MonoBehaviour
         indicator.gameObject.SetActive(true);
         cooldownFill.fillAmount = weapon.isAutomatic ? 0 : weapon.cooldownRemaining / weapon.cooldown;
         lifetimeFill.fillAmount = weapon.isTemporary ? weapon.lifetimeRemaining / weapon.lifetime : 1;
+        icon.sprite = weapon.weaponItem.GetComponent<SpriteRenderer>().sprite;
     }
 
     // Update is called once per frame
     void Update()
     {
-        UpdateIndicator(primaryIndicator, primaryWeaponLifetimeFill, primaryWeaponCooldownFill, weaponsManager.weapons[WeaponSlot.One]);
-        UpdateIndicator(secondaryIndicator, secondaryWeaponLifetimeFill, secondaryWeaponCooldownFill, weaponsManager.weapons[WeaponSlot.Two]);
-        UpdateIndicator(specialIndicator, specialWeaponLifetimeFill, specialWeaponCooldownFill, weaponsManager.weapons[WeaponSlot.Three]);
+        primaryIndicator = transform.Find("Primary");
+        secondaryIndicator = transform.Find("Secondary");
+        specialIndicator = transform.Find("Special");
+
+        weaponsManager = GameObject.Find("PC").GetComponent<WeaponsManager>();
+
+        UpdateIndicator(primaryIndicator, weaponsManager.weapons[WeaponSlot.One]);
+        UpdateIndicator(secondaryIndicator, weaponsManager.weapons[WeaponSlot.Two]);
+        UpdateIndicator(specialIndicator, weaponsManager.weapons[WeaponSlot.Three]);
     }
 }

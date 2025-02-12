@@ -123,13 +123,13 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 49925816330663696}
     m_Modifications:
+    - target: {fileID: 1536682588048890443, guid: b408ef8ef8e5a4a95a2738ef2bdc6206, type: 3}
+      propertyPath: weaponItem
+      value: 
+      objectReference: {fileID: 4504035735191739336}
     - target: {fileID: 3000582385287026008, guid: b408ef8ef8e5a4a95a2738ef2bdc6206, type: 3}
       propertyPath: m_Name
       value: LightningBolt
-      objectReference: {fileID: 0}
-    - target: {fileID: 3000582385287026008, guid: b408ef8ef8e5a4a95a2738ef2bdc6206, type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7904377369460279483, guid: b408ef8ef8e5a4a95a2738ef2bdc6206, type: 3}
       propertyPath: m_RootOrder

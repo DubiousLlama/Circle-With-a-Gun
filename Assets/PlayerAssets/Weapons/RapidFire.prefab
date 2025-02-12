@@ -44,12 +44,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 858aeb46f4163af4686d583c4b2789be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponItem: {fileID: 4504035735191739336, guid: f2caba1e28b60ea4cac2a5e415fa97a0, type: 3}
   weaponType: 0
   cooldown: 0.1
-  isAutomatic: 0
-  isTemporary: 0
   lifetime: 0
   lifetimeRemaining: 0
   cooldownRemaining: 0
+  weaponsManager: {fileID: 0}
   damage: 20
   bulletForce: 20
