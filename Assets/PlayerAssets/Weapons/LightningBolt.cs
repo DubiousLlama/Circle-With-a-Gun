@@ -10,26 +10,28 @@ public class LightningBolt : Weapon
     GameObject strikePrefab;
     private string sfx = "Lightning";
 
-    public new void Awake()
+    public void Awake()
     { 
-        base.Awake();
-
-        // Modify base class variables as needed
         lifetime = 10f;
         cooldown = 1f;
-        isAutomatic = false;
-        isTemporary = true;
-        weaponType = WeaponType.Secondary;
+        weaponType = WeaponType.Primary;
     }
 
-    public void OnEnable()
+    public override void Equip()
     {
+        base.Equip();
+        
         strikePrefab = Resources.Load<GameObject>("LightningAttack");
 
         if (strikePrefab == null)
         {
             Debug.LogError("Strike prefab not found");
         }
+    }
+
+    public new void SetRarity(WeaponRarity rarity)
+    {
+        base.SetRarity(rarity);
     }
 
     protected override void Fire()

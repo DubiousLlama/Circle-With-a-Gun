@@ -15,6 +15,11 @@ public class ItemSpawner : MonoBehaviour
     private float spawnTimer = 0f;
     private Vector2 spawnLocation;
 
+    private float[] itemRarityWeights;
+
+    public float powerUpWeight;
+    public float weaponWeight;
+
     GameObject player;
 
     // Start is called before the first frame update
@@ -31,6 +36,16 @@ public class ItemSpawner : MonoBehaviour
         {
             Debug.LogError("Player not found");
         }
+
+        itemRarityWeights = new float[items.Length];
+        for (int i = 0; i < items.Length; i++) {
+            WeaponItem weaponItem = items[i].GetComponent<WeaponItem>();
+            if (weaponItem != null) {
+                itemRarityWeights[i] = weaponWeight;
+            } else {
+                itemRarityWeights[i] = powerUpWeight;
+            }
+        }
     }
 
     // Update is called once per frame
@@ -41,11 +56,30 @@ public class ItemSpawner : MonoBehaviour
         if (spawnTimer >= spawnRate)
         {
             spawnTimer = 0f;
-            // TODO Scott: Make this a weighted random based on the rarity of the item
-            int index = Random.Range(0, items.Length);
+            int index = WeightedRandom(itemRarityWeights);
             GameObject itemPrefab = items[index];
             SpawnItem(itemPrefab);
         }
+    }
+
+    private int WeightedRandom(float[] weights)
+    {
+        float weightSum = 0f;
+        foreach (float weight in weights)
+        {
+            weightSum += weight;
+        }
+        int index = 0;
+        int lastIndex = weights.Length - 1;
+        while (index < lastIndex)
+        {
+            if (Random.Range(0, weightSum) < weights[index])
+            {
+                return index;
+            }
+            weightSum -= weights[index++];
+        }
+        return index;
     }
 
     private void SpawnItem(GameObject itemPrefab, int j = 0)
@@ -99,6 +133,12 @@ public class ItemSpawner : MonoBehaviour
 
         Vector3 v3 = new Vector3(spawnLocation.x, spawnLocation.y, 5);
 
-        Instantiate(itemPrefab, v3, Quaternion.identity);
+        GameObject item = Instantiate(itemPrefab, v3, Quaternion.identity);
+        WeaponItem weaponItem = item.GetComponent<WeaponItem>();
+        if (weaponItem != null)
+        {
+            // All weapons spawned from the item spawner are special weapons
+            weaponItem.MakeSpecial();
+        }
     }
 }

@@ -7,9 +7,9 @@ using UnityEngine.EventSystems;
 public class WeaponsManager : MonoBehaviour
 {
     [HideInInspector]
-    public Weapon primaryWeapon;
+    public Dictionary<WeaponSlot, Weapon> weapons = new Dictionary<WeaponSlot, Weapon>();
     [HideInInspector]
-    public Weapon secondaryWeapon;
+    public Dictionary<WeaponType, bool> isFiring = new Dictionary<WeaponType, bool>();
 
     public GameObject defaultPrimaryWeapon;
 
@@ -17,68 +17,73 @@ public class WeaponsManager : MonoBehaviour
 
     private GameObject player;
 
+    void Awake()
+    {
+        weapons[WeaponSlot.One] = null;
+        weapons[WeaponSlot.Two] = null;
+        weapons[WeaponSlot.Three] = null;
+
+        isFiring[WeaponType.Primary] = false;
+        isFiring[WeaponType.Secondary] = false;
+    }
+
     void Start()
     {
         player = GameObject.Find("PC");
+        
+        EquipWeapon(Instantiate(defaultPrimaryWeapon));
+
+        #if UNITY_EDITOR
+        if (testingSecondaryWeapon != null)
+        {
+            EquipWeapon(Instantiate(testingSecondaryWeapon));
+        }
+        #endif
+    }
+
+    public Weapon GetEquippedWeapon(WeaponType weaponType)
+    {
+        if (weaponType == WeaponType.Primary) {
+            return weapons[WeaponSlot.Three] ?? weapons[WeaponSlot.One];
+        } else {
+            return weapons[WeaponSlot.Two];
+        }
     }
 
     void Update()
     {
-        UpdateWeapons();
-
         // WeaponButton is used for mobile
         if (Platform.IsDesktop()) {
             // Primary weapon
             if (Input.GetButtonDown("Fire1"))
             {
-                primaryWeapon?.OnPointerDown();
+                OnPointerDown(WeaponType.Primary);
             }
             if (Input.GetButtonUp("Fire1"))
             {
-                primaryWeapon?.OnPointerUp();
+                OnPointerUp(WeaponType.Primary);
             }
 
             // Secondary weapon
             if (Input.GetButtonDown("Fire2"))
             {
-                secondaryWeapon?.OnPointerDown();
+                OnPointerDown(WeaponType.Secondary);
             }
             if (Input.GetButtonUp("Fire2"))
             {
-                secondaryWeapon?.OnPointerUp();
+                OnPointerUp(WeaponType.Secondary);
             }
         }
     }
 
-    private void UpdateWeapons()
+    public void OnPointerDown(WeaponType weaponType)
     {
-        Weapon[] weapons = player.transform.GetComponentsInChildren<Weapon>();
-        foreach (Weapon weapon in weapons)
-        {
-            if (weapon.weaponType == WeaponType.Primary)
-            {
-                primaryWeapon = weapon;
-            }
-            if (weapon.weaponType == WeaponType.Secondary)
-            {
-                secondaryWeapon = weapon;
-            }
-        }
+        isFiring[weaponType] = true;
+    }
 
-        if (primaryWeapon == null)
-        {
-            GameObject weaponInstance = Instantiate(defaultPrimaryWeapon, player.transform);
-            primaryWeapon = weaponInstance.GetComponent<Weapon>();
-        }
-
-        #if UNITY_EDITOR
-        if (secondaryWeapon == null && testingSecondaryWeapon != null)
-        {
-            GameObject weaponInstance = Instantiate(testingSecondaryWeapon, player.transform);
-            secondaryWeapon = weaponInstance.GetComponent<Weapon>();
-        }       
-        #endif
-
+    public void OnPointerUp(WeaponType weaponType)
+    {
+        isFiring[weaponType] = false;
     }
 
     public void EquipWeapon(GameObject weapon)
@@ -86,19 +91,8 @@ public class WeaponsManager : MonoBehaviour
         // Change parent of weapon to player
         weapon.transform.SetParent(player.transform);
         Weapon weaponComponent = weapon.GetComponent<Weapon>();
-        weapon.SetActive(true);
-        if (weaponComponent.weaponType == WeaponType.Primary)
-        {
-            if (primaryWeapon != null)
-            {
-                Destroy(primaryWeapon.gameObject);
-            }
-        } else if (weaponComponent.weaponType == WeaponType.Secondary)
-        {
-            if (secondaryWeapon != null)
-            {
-                Destroy(secondaryWeapon.gameObject);
-            }
-        }
+        this.weapons[weaponComponent.weaponSlot]?.Expire();
+        weaponComponent.weaponsManager = this;
+        weaponComponent.Equip();
     }
 }

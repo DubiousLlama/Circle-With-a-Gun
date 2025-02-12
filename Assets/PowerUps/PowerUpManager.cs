@@ -19,7 +19,6 @@ public class PowerUpManager : MonoBehaviour
     private Shooting playerShooting;
     private BeamAttack playerNoAimAttacks;
     private GameObject healthBar;
-    private IndicatorController indController;
 
     private Color powerUpGreen = new Color(0.054901960784313725f, 0.7686274509803922f, 0);
 
@@ -47,7 +46,6 @@ public class PowerUpManager : MonoBehaviour
 
         healthBar = GameObject.Find("HealthBar").transform.GetChild(0).gameObject;
         baseBeamColor = new Color(0.561111f, 0, 1f, 1f);
-        indController = GameObject.Find("PowerUpIndicator").GetComponent<IndicatorController>();
         playerNoAimAttacks = player.GetComponent<BeamAttack>();
 
         playerStats = player.GetComponent<PlayerStats>();
@@ -96,7 +94,6 @@ public class PowerUpManager : MonoBehaviour
 
             playerStats.regenMod = 5f;
             playerHealth.regenDelay = baseRegenDelay / 2f;
-            indController.SetDuration(0, powerUpDurations[0]);
 
 
         }
@@ -107,19 +104,16 @@ public class PowerUpManager : MonoBehaviour
 
             playerStats.regenMod = 1f;
             playerHealth.regenDelay = baseRegenDelay;
-            indController.SetDuration(0, 0);
         }
 
         // Speed
         if (powerUpActive[1])
         {
             playerStats.speedMod = 1.66f;
-            indController.SetDuration(1, powerUpDurations[1]);
         }
         else
         {
             playerStats.speedMod = 1f;
-            indController.SetDuration(1, 0);
         }
 
         // Laser
@@ -128,7 +122,6 @@ public class PowerUpManager : MonoBehaviour
            playerShooting.bulletColor = powerUpGreen;
            playerStats.damageMod = 2f;
            playerShooting.fireRate = 0.08f;
-           indController.SetDuration(2, powerUpDurations[2]);
         }
         else
         {
@@ -136,8 +129,6 @@ public class PowerUpManager : MonoBehaviour
             playerStats.damageMod = 1f;
             playerShooting.bulletColor = baseBeamColor;
             playerShooting.fireRate = baseShootingSpeed;
-            indController.SetDuration(2, 0);
-
         }
 
         // Explosions
@@ -146,7 +137,6 @@ public class PowerUpManager : MonoBehaviour
 
             playerNoAimAttacks.rechargeBar.transform.GetChild(0).GetComponent<Image>().color = powerUpGreen;
             playerNoAimAttacks.beamColor = powerUpGreen;
-            indController.SetDuration(3, powerUpDurations[3]);
             playerStats.explosionDamageMod = 2f;
             playerStats.explosionRadiusMod = 1.25f;
 
@@ -157,8 +147,6 @@ public class PowerUpManager : MonoBehaviour
             playerNoAimAttacks.rechargeBar.transform.GetChild(0).GetComponent<Image>().color = baseBeamColor;
             playerStats.explosionDamageMod = 1f;
             playerStats.explosionRadiusMod = 1f;
-            indController.SetDuration(3, 0);
-
         }
     }
 

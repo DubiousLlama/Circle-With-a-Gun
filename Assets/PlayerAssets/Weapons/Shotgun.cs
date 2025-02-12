@@ -18,19 +18,15 @@ public class Shotgun : Weapon
     private string sfx = "Gun";
     private Color bulletColor = new Color(1f, 0.5569f, 0f, 1f);
 
-    public new void Awake()
+    public void Awake()
     {
-        base.Awake();
-
-        // Modify base class variables as needed
         cooldown = 0.38f;
-        isAutomatic = true;
         weaponType = WeaponType.Primary;
     }
 
-    public new void Start()
+    public override void Equip()
     {
-        base.Start();
+        base.Equip();
 
         bulletPrefab = Resources.Load<GameObject>("Bullet");
 
