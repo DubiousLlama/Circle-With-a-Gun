@@ -16,12 +16,9 @@ public class PlayerMovement : MonoBehaviour
 
     ICollection<string> slowIDs = new List<string>();
 
-    PlayerStats playerStats;
-
     // Update is called once per frame
     void Update()
     {
-        playerStats = GetComponent<PlayerStats>();
 
         rb = GetComponent<Rigidbody2D>();
 
@@ -50,16 +47,12 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate() {
 
-        if (playerStats == null)
-        {
-            playerStats = GetComponent<PlayerStats>();
-        }
         if (rb == null)
         {
             rb = GetComponent<Rigidbody2D>();
         }
 
-        rb.AddForce(movement.normalized * moveSpeed * playerStats.Speed());
+        rb.AddForce(movement.normalized * moveSpeed);
 
         float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg + 90f;
 

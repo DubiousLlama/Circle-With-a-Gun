@@ -43,7 +43,7 @@ public class RapidFire : Weapon
         SpriteRenderer sr = bullet.GetComponent<SpriteRenderer>();
 
         sr.color = bulletColor;
-        bs.damage = (int)(damage * playerStats.Damage());
+        bs.damage = damage;
 
         rb.AddForce(firePoint.up * bulletForce, ForceMode2D.Impulse);
 

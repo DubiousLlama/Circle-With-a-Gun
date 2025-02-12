@@ -16,7 +16,6 @@ public class PlayerHealth : MonoBehaviour
     private float regenTimer = 0f;
 
     private ScoreTracker scoreTracker;
-    private PlayerStats playerStats;
     private bool gameOver = false;
 
     private float maxHealth = 1000f;
@@ -30,7 +29,6 @@ public class PlayerHealth : MonoBehaviour
         gameOverScreen.SetActive(false);
 
         scoreTracker = GameObject.Find("Score").GetComponent<ScoreTracker>();
-        playerStats = GetComponent<PlayerStats>();
 
         audioManager = AudioManager.instance;
     }
@@ -51,7 +49,7 @@ public class PlayerHealth : MonoBehaviour
 
     void Update()
     {
-        maxHealth = startingMaxHealth * playerStats.MaxHealth();
+        maxHealth = startingMaxHealth;
 
         if (regenTimer < regenDelay)
         {
@@ -60,7 +58,7 @@ public class PlayerHealth : MonoBehaviour
 
         if (health < maxHealth && regenTimer > regenDelay)
         {
-            health += regenRate * playerStats.RegenRate() * Time.deltaTime;
+            health += regenRate * Time.deltaTime;
         }
         if (health > maxHealth)
         {
