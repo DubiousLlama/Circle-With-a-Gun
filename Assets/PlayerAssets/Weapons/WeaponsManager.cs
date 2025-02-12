@@ -81,17 +81,19 @@ public class WeaponsManager : MonoBehaviour
 
     }
 
-    public void AddWeapon(GameObject weaponPrefab)
+    public void EquipWeapon(GameObject weapon)
     {
-        GameObject weaponInstance = Instantiate(weaponPrefab, player.transform);
-        Weapon weapon = weaponInstance.GetComponent<Weapon>();
-        if (weapon.weaponType == WeaponType.Primary)
+        // Change parent of weapon to player
+        weapon.transform.SetParent(player.transform);
+        Weapon weaponComponent = weapon.GetComponent<Weapon>();
+        weapon.SetActive(true);
+        if (weaponComponent.weaponType == WeaponType.Primary)
         {
             if (primaryWeapon != null)
             {
                 Destroy(primaryWeapon.gameObject);
             }
-        } else if (weapon.weaponType == WeaponType.Secondary)
+        } else if (weaponComponent.weaponType == WeaponType.Secondary)
         {
             if (secondaryWeapon != null)
             {

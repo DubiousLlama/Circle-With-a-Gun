@@ -19,13 +19,11 @@ public class LightningBolt : Weapon
         cooldown = 1f;
         isAutomatic = false;
         isTemporary = true;
-        weaponType = WeaponType.Primary;
+        weaponType = WeaponType.Secondary;
     }
 
-    public new void Start()
+    public void OnEnable()
     {
-        base.Start();
-
         strikePrefab = Resources.Load<GameObject>("LightningAttack");
 
         if (strikePrefab == null)

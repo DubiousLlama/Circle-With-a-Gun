@@ -26,7 +26,6 @@ public class LightningStrike : Weapon
         weaponType = WeaponType.Secondary;
 
         enemyLayer = LayerMask.GetMask("Foes");
-
     }
 
     protected override void Fire()
