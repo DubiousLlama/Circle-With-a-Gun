@@ -278,6 +278,20 @@ MonoBehaviour:
   threshold3: 90
   threshold4: 50
   threshold5: 30
+  dropItem: 1
+  items:
+  - item: {fileID: 2920370379373296382, guid: 3b706576849cef340bbf1330fb0f196a, type: 3}
+    weight: 4
+    rarity: 1
+  - item: {fileID: 2920370379373296382, guid: 3b706576849cef340bbf1330fb0f196a, type: 3}
+    weight: 1
+    rarity: 2
+  - item: {fileID: 2920370379373296382, guid: 9651df96b60a4c14aa481c9fccd09943, type: 3}
+    weight: 4
+    rarity: 1
+  - item: {fileID: 2920370379373296382, guid: 9651df96b60a4c14aa481c9fccd09943, type: 3}
+    weight: 1
+    rarity: 2
 --- !u!114 &4009117033137057337
 MonoBehaviour:
   m_ObjectHideFlags: 0

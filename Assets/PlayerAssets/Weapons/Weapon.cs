@@ -84,7 +84,7 @@ public class Weapon : MonoBehaviour
         lifetimeRemaining = lifetime;
     }
 
-    public void SetRarity(WeaponRarity rarity)
+    public virtual void SetRarity(WeaponRarity rarity)
     {
         this.rarity = rarity;
     }

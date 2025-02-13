@@ -7,7 +7,7 @@ using UnityEngine;
 public class Shotgun : Weapon
 {
     int damage = 35;
-    int numBullets = 5;
+    int numBullets;
     int spread = 40;
     float rangeLife = 0.25f;
 
@@ -20,8 +20,29 @@ public class Shotgun : Weapon
 
     public void Awake()
     {
-        cooldown = 0.38f;
         weaponType = WeaponType.Primary;
+        SetRarity(WeaponRarity.Common);
+    }
+
+    private Dictionary<WeaponRarity, float> cooldowns = new Dictionary<WeaponRarity, float> {
+        { WeaponRarity.Legendary, 0.2f },
+        { WeaponRarity.Rare, 0.3f },
+        { WeaponRarity.Uncommon, 0.4f },
+        { WeaponRarity.Common, 0.5f }
+    };
+
+    private Dictionary<WeaponRarity, int> numBullets = new Dictionary<WeaponRarity, int> {
+        { WeaponRarity.Legendary, 11 },
+        { WeaponRarity.Rare, 9 },
+        { WeaponRarity.Uncommon, 7 },
+        { WeaponRarity.Common, 5 }
+    };
+
+    public override void SetRarity(WeaponRarity rarity)
+    {
+        base.SetRarity(rarity);
+        cooldown = cooldowns[rarity];
+        numBullets = numBullets[rarity];
     }
 
     public override void Equip()

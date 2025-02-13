@@ -17,8 +17,21 @@ public class RapidFire : Weapon
 
     public void Awake()
     {
-        cooldown = 0.1f;
         weaponType = WeaponType.Primary;
+        SetRarity(WeaponRarity.Common);
+    }
+
+    private Dictionary<WeaponRarity, float> cooldowns = new Dictionary<WeaponRarity, float> {
+        { WeaponRarity.Legendary, 0.025f },
+        { WeaponRarity.Rare, 0.05f },
+        { WeaponRarity.Uncommon, 0.075f },
+        { WeaponRarity.Common, 0.1f }
+    };
+
+    public override void SetRarity(WeaponRarity rarity)
+    {
+        base.SetRarity(rarity);
+        cooldown = cooldowns[rarity];
     }
 
     public override void Equip()

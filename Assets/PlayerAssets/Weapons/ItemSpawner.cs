@@ -6,7 +6,7 @@ public class ItemSpawner : MonoBehaviour
 {
     private RectTransform playArea;
 
-    
+    public GameObject weaponItem;
     public GameObject[] items;
 
     [Range(0.01f, 20)]
@@ -39,8 +39,8 @@ public class ItemSpawner : MonoBehaviour
 
         itemRarityWeights = new float[items.Length];
         for (int i = 0; i < items.Length; i++) {
-            WeaponItem weaponItem = items[i].GetComponent<WeaponItem>();
-            if (weaponItem != null) {
+            Weapon weapon = items[i].GetComponent<Weapon>();
+            if (weapon != null) {
                 itemRarityWeights[i] = weaponWeight;
             } else {
                 itemRarityWeights[i] = powerUpWeight;
@@ -58,11 +58,11 @@ public class ItemSpawner : MonoBehaviour
             spawnTimer = 0f;
             int index = WeightedRandom(itemRarityWeights);
             GameObject itemPrefab = items[index];
-            SpawnItem(itemPrefab);
+            SpawnItemAtRandomLocation(itemPrefab);
         }
     }
 
-    private int WeightedRandom(float[] weights)
+    static public int WeightedRandom(float[] weights)
     {
         float weightSum = 0f;
         foreach (float weight in weights)
@@ -82,7 +82,7 @@ public class ItemSpawner : MonoBehaviour
         return index;
     }
 
-    private void SpawnItem(GameObject itemPrefab, int j = 0)
+    private void SpawnItemAtRandomLocation(GameObject itemPrefab, int j = 0)
     {
         if (j > 10)
         {
@@ -110,7 +110,7 @@ public class ItemSpawner : MonoBehaviour
         if (collider != null)
         {
             Debug.Log("Item overlaps with another item");
-            SpawnItem(itemPrefab, j+=1);
+            SpawnItemAtRandomLocation(itemPrefab, j+=1);
             return;
         }
 
@@ -119,7 +119,7 @@ public class ItemSpawner : MonoBehaviour
         if (collider != null)
         {
             Debug.Log("Item overlaps with an obstacle");
-            SpawnItem(itemPrefab, j+=1);
+            SpawnItemAtRandomLocation(itemPrefab, j+=1);
             return;
         }
 
@@ -127,19 +127,26 @@ public class ItemSpawner : MonoBehaviour
         if (Vector2.Distance(spawnLocation, player.transform.position) < 4)
         {
             Debug.Log("Item is too close to the player");
-            SpawnItem(itemPrefab, j+=1);
+            SpawnItemAtRandomLocation(itemPrefab, j+=1);
             return;
         }
 
         Vector3 v3 = new Vector3(spawnLocation.x, spawnLocation.y, 5);
+        SpawnItem(itemPrefab, v3, WeaponRarity.Legendary);
+    }
 
-        GameObject item = Instantiate(itemPrefab, v3, Quaternion.identity);
-        WeaponItem weaponItem = item.GetComponent<WeaponItem>();
-        if (weaponItem != null)
-        {
-            Debug.Log("Make special item: " + itemPrefab.name);
-            // All weapons spawned from the item spawner are special weapons
-            weaponItem.MakeSpecial();
+    public void SpawnItem(GameObject itemPrefab, Vector3 v3, WeaponRarity rarity)
+    {
+        bool isWeapon = itemPrefab.GetComponent<Weapon>() != null;
+        if (isWeapon) {
+            GameObject weaponItemInstance = Instantiate(weaponItem, v3, Quaternion.identity);
+            WeaponItem weaponItemComponent = weaponItemInstance.GetComponent<WeaponItem>();
+            GameObject weaponInstance = Instantiate(itemPrefab, weaponItemInstance.transform);
+            Weapon weaponComponent = weaponInstance.GetComponent<Weapon>();
+            weaponComponent.SetRarity(rarity);
+            weaponItemComponent.weapon = weaponInstance;
+        } else {
+            Instantiate(itemPrefab, v3, Quaternion.identity);
         }
     }
 }

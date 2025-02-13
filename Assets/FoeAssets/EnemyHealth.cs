@@ -4,6 +4,13 @@ using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using UnityEngine;
 
+[System.Serializable]
+public struct ItemDrop {
+    public GameObject item;
+    public float weight;
+    public WeaponRarity rarity;
+}
+
 public class EnemyHealth : MonoBehaviour
 {
     public int health = 100;
@@ -31,13 +38,15 @@ public class EnemyHealth : MonoBehaviour
     public int threshold4 = 10;
     [OptionalField]
     public int threshold5 = 0;
+    public bool dropItem = false;
+    public ItemDrop[] items;
 
     private GameObject Score;
-
+    private ItemSpawner itemSpawner;
     void Start()
     {
         Score = GameObject.Find("Score");
-
+        itemSpawner = GameObject.Find("Spawner").GetComponent<ItemSpawner>();
     }
 
     public void TakeDamage(int damage)
@@ -84,5 +93,15 @@ public class EnemyHealth : MonoBehaviour
 
         // Increase the score when the enemy dies
         Score.GetComponent<ScoreTracker>().IncreaseScore(scoreValue);
+
+        if (dropItem) {
+            float[] weights = new float[items.Length];
+            for (int i = 0; i < items.Length; i++) {
+                weights[i] = items[i].weight;
+            }
+            int index = ItemSpawner.WeightedRandom(weights);
+            ItemDrop itemDrop = items[index];
+            itemSpawner.SpawnItem(itemDrop.item, transform.position, itemDrop.rarity);
+        }
     }
 }

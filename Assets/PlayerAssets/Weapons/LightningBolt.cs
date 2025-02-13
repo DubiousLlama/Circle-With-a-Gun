@@ -12,8 +12,8 @@ public class LightningBolt : Weapon
 
     public void Awake()
     { 
-        cooldown = 1f;
         weaponType = WeaponType.Primary;
+        SetRarity(WeaponRarity.Common);
     }
 
     public override void Equip()
@@ -27,10 +27,18 @@ public class LightningBolt : Weapon
             Debug.LogError("Strike prefab not found");
         }
     }
+    
+    private Dictionary<WeaponRarity, float> cooldowns = new Dictionary<WeaponRarity, float> {
+        { WeaponRarity.Legendary, 0.25f },
+        { WeaponRarity.Rare, 0.5f },
+        { WeaponRarity.Uncommon, 0.75f },
+        { WeaponRarity.Common, 1f }
+    };
 
-    public new void SetRarity(WeaponRarity rarity)
+    public override void SetRarity(WeaponRarity rarity)
     {
         base.SetRarity(rarity);
+        cooldown = cooldowns[rarity];
     }
 
     protected override void Fire()

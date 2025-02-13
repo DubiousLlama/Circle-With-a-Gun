@@ -21,7 +21,8 @@ public class WeaponIndicator : MonoBehaviour
 
     private WeaponsManager weaponsManager;
     
-    private Dictionary<WeaponRarity, Color> rarityColors = new Dictionary<WeaponRarity, Color> {
+    [HideInInspector]
+    public static Dictionary<WeaponRarity, Color> rarityColors = new Dictionary<WeaponRarity, Color> {
         { WeaponRarity.Common, new Color(0, 0, 0) },
         { WeaponRarity.Uncommon, new Color(0.1176471f, 0.5333334f, 0.9019608f) },
         { WeaponRarity.Rare, new Color(1, 0.7568628f, 0.027451f) },
@@ -59,7 +60,6 @@ public class WeaponIndicator : MonoBehaviour
         icon.sprite = weapon.sprite;
 
         rarityText.text = ((int) weapon.rarity + 1).ToString();
-        Debug.Log(rarityColors[weapon.rarity]);
         rarityBackground.color = rarityColors[weapon.rarity];
     }
 }
