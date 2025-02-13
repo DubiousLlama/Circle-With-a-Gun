@@ -149,6 +149,7 @@ GameObject:
   - component: {fileID: 6837543930778508338}
   - component: {fileID: 6837543930778508342}
   - component: {fileID: 6837543930778508343}
+  - component: {fileID: 7639945539187387781}
   m_Layer: 5
   m_Name: Weapon Button
   m_TagString: Untagged
@@ -163,7 +164,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6837543930778508337}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2.5, y: 2.5, z: 1}
   m_ConstrainProportionsScale: 0
@@ -206,7 +207,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 4579fc405abf5b64f9587a3cc99cefcd, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b16257d716fde40c7b0bbbe8676478fd, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -317,11 +318,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed5f51c33cdde43c7b2d385660f880f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  duration: 10
-  text: {fileID: 6837543929423469274}
-  fill: {fileID: 6837543931048101495}
-  button: {fileID: 6837543930778508338}
-  weaponType: 0
+  weaponType: 1
+--- !u!225 &7639945539187387781
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6837543930778508337}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &6837543931048101493
 GameObject:
   m_ObjectHideFlags: 0

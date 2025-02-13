@@ -17,6 +17,9 @@ public class WeaponsManager : MonoBehaviour
     public GameObject testingSecondaryWeapon;
 
     private GameObject player;
+    
+    [HideInInspector]
+    public bool isMoving = false;
 
     void Awake()
     {
@@ -75,6 +78,9 @@ public class WeaponsManager : MonoBehaviour
                 OnPointerUp(WeaponType.Secondary);
             }
         }
+
+        Vector2 movement = player.GetComponent<PlayerMovement>().movement;
+        isMoving = movement.magnitude > 0.01f;
     }
 
     public void OnPointerDown(WeaponType weaponType)

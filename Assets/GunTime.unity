@@ -1651,8 +1651,8 @@ MonoBehaviour:
   - {fileID: 2920370379373296382, guid: 9651df96b60a4c14aa481c9fccd09943, type: 3}
   - {fileID: 2920370379373296382, guid: e476e74bf2b64400bbb44cb96742abf3, type: 3}
   - {fileID: 3000582385287026008, guid: b408ef8ef8e5a4a95a2738ef2bdc6206, type: 3}
-  spawnRate: 5
-  powerUpWeight: 1
+  spawnRate: 8
+  powerUpWeight: 2
   weaponWeight: 1
 --- !u!1 &942063011
 GameObject:
@@ -2100,14 +2100,6 @@ PrefabInstance:
     - target: {fileID: 6837543930778508337, guid: 3cb708e3b551e436f8c1a027fa68450d, type: 3}
       propertyPath: m_Name
       value: Fire Left
-      objectReference: {fileID: 0}
-    - target: {fileID: 6837543930778508343, guid: 3cb708e3b551e436f8c1a027fa68450d, type: 3}
-      propertyPath: weaponType
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6837543930778508343, guid: 3cb708e3b551e436f8c1a027fa68450d, type: 3}
-      propertyPath: isLeftWeapon
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3cb708e3b551e436f8c1a027fa68450d, type: 3}
@@ -3398,6 +3390,10 @@ PrefabInstance:
     - target: {fileID: 6837543930778508337, guid: 3cb708e3b551e436f8c1a027fa68450d, type: 3}
       propertyPath: m_Name
       value: Fire Right
+      objectReference: {fileID: 0}
+    - target: {fileID: 6837543930778508343, guid: 3cb708e3b551e436f8c1a027fa68450d, type: 3}
+      propertyPath: weaponType
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3cb708e3b551e436f8c1a027fa68450d, type: 3}
