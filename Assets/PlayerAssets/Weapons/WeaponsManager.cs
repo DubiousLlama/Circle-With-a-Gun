@@ -97,6 +97,7 @@ public class WeaponsManager : MonoBehaviour
     {
         // Change parent of weapon to player
         weapon.transform.SetParent(player.transform);
+        weapon.transform.position = player.transform.position;
         Weapon weaponComponent = weapon.GetComponent<Weapon>();
         this.weapons[weaponComponent.weaponSlot]?.Expire();
         weaponComponent.weaponsManager = this;
