@@ -29,7 +29,9 @@ public class RedButton : Weapon
     protected override void Fire()
     {
         int i = 0;
-        while (playArea != null) {
+        while (i < 100) {
+            i++;
+
             // Get a random point inside the play area
             Vector3 randomPoint = new Vector3(Random.Range(playArea.rect.xMin, playArea.rect.xMax), Random.Range(playArea.rect.yMin, playArea.rect.yMax), 0);
 
@@ -53,19 +55,6 @@ public class RedButton : Weapon
                 continue;
             }
 
-            // Debug only code
-            #if UNITY_EDITOR
-                i++;
-                if (i > 1000)
-                {
-                    Debug.LogError("Red Button failed to find a valid point after 1000 attempts");
-                    break;
-                }
-            #endif
-
-
-            // If all checks pass, queue the telport (it should happen after 0.1 seconds)
-
             // Play the teleport sound
             AudioManager.instance.PlaySfx(sfx);
             destination = randomPoint;
@@ -73,7 +62,6 @@ public class RedButton : Weapon
 
             break;
         }
-
     }
 
     private void Teleport()
