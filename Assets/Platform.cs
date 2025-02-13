@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 public class Platform
@@ -8,8 +9,12 @@ public class Platform
     public enum PlatformType
     {
         Mobile,
-        Desktop
+        Desktop,
+        Unset
     }
+
+    private static PlatformType platformCache = PlatformType.Unset;
+
     // Method to determine the platform
     public static PlatformType GetPlatform()
     {
@@ -35,8 +40,12 @@ public class Platform
             case RuntimePlatform.WindowsEditor:
             case RuntimePlatform.OSXEditor:
             case RuntimePlatform.LinuxEditor:
-                return PlatformType.Desktop;
-
+                if (platformCache == PlatformType.Unset)
+                {
+                    EditorConfig config = AssetDatabase.LoadAssetAtPath<EditorConfig>("Assets/EditorConfig.asset");
+                    platformCache = config.platform;
+                }
+                return platformCache;
             default:
                 Debug.LogWarning("Unknown platform. Defaulting to Desktop.");
                 return PlatformType.Desktop;
