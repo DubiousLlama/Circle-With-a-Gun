@@ -137,6 +137,7 @@ public class ItemSpawner : MonoBehaviour
         WeaponItem weaponItem = item.GetComponent<WeaponItem>();
         if (weaponItem != null)
         {
+            Debug.Log("Make special item: " + itemPrefab.name);
             // All weapons spawned from the item spawner are special weapons
             weaponItem.MakeSpecial();
         }

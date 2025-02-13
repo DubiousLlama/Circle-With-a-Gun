@@ -56,6 +56,8 @@ public class Weapon : MonoBehaviour
     }
 
     protected bool isEquipped = false;
+    
+    [HideInInspector]
     public WeaponsManager weaponsManager;
     protected WeaponRarity rarity = WeaponRarity.Common;
 
