@@ -11,7 +11,8 @@ public class PlayerMovement : MonoBehaviour
     public Joystick movementJoystick;
     public Joystick directionJoystick;
 
-    Vector2 movement;
+    [HideInInspector]
+    public Vector2 movement;
     Vector2 lookDir;
 
     ICollection<string> slowIDs = new List<string>();

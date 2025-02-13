@@ -101,7 +101,10 @@ public class Weapon : MonoBehaviour
 
     public bool CanFire()
     {
-        return cooldownRemaining <= 0 && (isTemporary ? !IsExpired() : true);
+        bool canFireMovement = weaponType != WeaponType.Secondary || !weaponsManager.isMoving;
+        bool canFireCooldown = cooldownRemaining <= 0;
+        bool canFireTemporary = isTemporary ? !IsExpired() : true;
+        return canFireMovement && canFireCooldown && canFireTemporary;
     }
 
     // Update is called once per frame
