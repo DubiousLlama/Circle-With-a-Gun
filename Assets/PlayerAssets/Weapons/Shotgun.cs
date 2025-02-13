@@ -31,7 +31,7 @@ public class Shotgun : Weapon
         { WeaponRarity.Common, 0.5f }
     };
 
-    private Dictionary<WeaponRarity, int> numBullets = new Dictionary<WeaponRarity, int> {
+    private Dictionary<WeaponRarity, int> numBulletss = new Dictionary<WeaponRarity, int> {
         { WeaponRarity.Legendary, 11 },
         { WeaponRarity.Rare, 9 },
         { WeaponRarity.Uncommon, 7 },
@@ -42,7 +42,7 @@ public class Shotgun : Weapon
     {
         base.SetRarity(rarity);
         cooldown = cooldowns[rarity];
-        numBullets = numBullets[rarity];
+        numBullets = numBulletss[rarity];
     }
 
     public override void Equip()
