@@ -12,7 +12,6 @@ public class LightningBolt : Weapon
 
     public void Awake()
     { 
-        lifetime = 10f;
         cooldown = 1f;
         weaponType = WeaponType.Primary;
     }

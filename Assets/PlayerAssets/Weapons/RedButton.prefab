@@ -44,10 +44,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9e81e78563d0e4468ffe226974671a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponItem: {fileID: 4504035735191739336, guid: a0f8a3363c1d2554898f38c57560ed58, type: 3}
+  sprite: {fileID: 21300000, guid: 39952375232fe5f4eaf0eb5c9efe24d4, type: 3}
   weaponType: 0
   cooldown: 0.1
-  lifetime: 0
+  lifetime: 10
   lifetimeRemaining: 0
   cooldownRemaining: 0
   weaponsManager: {fileID: 0}

@@ -41,7 +41,7 @@ public class WeaponsIndicator : MonoBehaviour
         indicator.gameObject.SetActive(true);
         cooldownFill.fillAmount = weapon.isAutomatic ? 0 : weapon.cooldownRemaining / weapon.cooldown;
         lifetimeFill.fillAmount = weapon.isTemporary ? weapon.lifetimeRemaining / weapon.lifetime : 1;
-        icon.sprite = weapon.weaponItem.GetComponent<SpriteRenderer>().sprite;
+        icon.sprite = weapon.sprite;
     }
 
     // Update is called once per frame

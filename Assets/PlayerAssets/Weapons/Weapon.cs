@@ -9,7 +9,7 @@ public enum WeaponRarity { Common, Uncommon, Rare, Legendary };
 
 public class Weapon : MonoBehaviour
 {
-    public WeaponItem weaponItem;
+    public Sprite sprite;
     public WeaponType weaponType;
     public WeaponSlot weaponSlot {
         get {
@@ -23,7 +23,7 @@ public class Weapon : MonoBehaviour
         }
     }
     public float cooldown = 0.1f;
-    public float lifetime = 0f;
+    public float lifetime = 10f;
 
     public bool isAutomatic {
         get {
@@ -37,7 +37,9 @@ public class Weapon : MonoBehaviour
     }
 
 
+    [HideInInspector]
     public float lifetimeRemaining = 0f;
+    [HideInInspector]
     public float cooldownRemaining = 0f;
     protected AudioManager audioManager;
     protected PlayerStats playerStats;
