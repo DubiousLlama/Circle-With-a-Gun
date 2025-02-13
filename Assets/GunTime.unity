@@ -291,6 +291,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 772361591}
     m_Modifications:
+    - target: {fileID: 1279196484749629345, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
+      propertyPath: m_AdditionalShaderChannelsFlag
+      value: 25
+      objectReference: {fileID: 0}
     - target: {fileID: 2882209905168990432, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -377,7 +381,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2882209905168990433, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
       propertyPath: m_Name
-      value: Secondary
+      value: Slot Two
+      objectReference: {fileID: 0}
+    - target: {fileID: 3003877806079815466, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
+      propertyPath: weaponSlot
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
@@ -874,6 +882,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 772361591}
     m_Modifications:
+    - target: {fileID: 1279196484749629345, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
+      propertyPath: m_AdditionalShaderChannelsFlag
+      value: 25
+      objectReference: {fileID: 0}
     - target: {fileID: 2882209905168990432, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -960,7 +972,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2882209905168990433, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
       propertyPath: m_Name
-      value: Special
+      value: Slot Three
+      objectReference: {fileID: 0}
+    - target: {fileID: 3003877806079815466, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
+      propertyPath: weaponSlot
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
@@ -1215,9 +1231,8 @@ GameObject:
   m_Component:
   - component: {fileID: 772361591}
   - component: {fileID: 772361592}
-  - component: {fileID: 772361593}
   m_Layer: 5
-  m_Name: WeaponsIndicator
+  m_Name: Weapons
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1254,18 +1269,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 772361590}
   m_CullTransparentMesh: 1
---- !u!114 &772361593
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 772361590}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c5ee651826e84ce08203565abdb2011, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &837363707
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3296,11 +3299,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2882209905168990433, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
       propertyPath: m_Name
-      value: Primary
-      objectReference: {fileID: 0}
-    - target: {fileID: 2882209905168990435, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
-      propertyPath: m_Enabled
-      value: 1
+      value: Slot One
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}

@@ -59,7 +59,7 @@ public class Weapon : MonoBehaviour
     
     [HideInInspector]
     public WeaponsManager weaponsManager;
-    protected WeaponRarity rarity = WeaponRarity.Common;
+    public WeaponRarity rarity { get; protected set; } = WeaponRarity.Common;
 
     // Start is called before the first frame update
     public virtual void Equip()
