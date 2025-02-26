@@ -30,24 +30,17 @@ public class PowerUpTrigger : MonoBehaviour
             switch (powerUpName)
             {
                 case "Speed":
-                    powerUpManager.ActivatePowerUp(powerUpName);
-                    playerStats.ImproveSpeed();
+                    PlayerMovement playerMovement = collision.gameObject.GetComponent<PlayerMovement>();
+                    playerMovement.SetSpeedBonus(3.5f);
                     AudioManager.instance.PlaySfx("Score1", 0.25f);
                     break;
                 case "Regen":
-                    powerUpManager.ActivatePowerUp(powerUpName);
-                    playerStats.ImproveHealth();
+                    PlayerHealth playerHealth = collision.gameObject.GetComponent<PlayerHealth>();
+                    playerHealth.Heal(1000);
                     AudioManager.instance.PlaySfx("Score3", 0.25f);
-                    break;
-                case "Laser":
-                    powerUpManager.ActivatePowerUp(powerUpName);
-                    playerStats.ImproveDamage();
-                    AudioManager.instance.PlaySfx("Score2", 0.25f);
                     break;
                 case "Bomb":
                     Bomb();
-                    playerStats.ImproveExplosions();
-                    powerUpManager.ActivatePowerUp(powerUpName);
                     GameObject b = Instantiate(explosion, transform.position, Quaternion.identity);
                     b.transform.localScale = new Vector3(9*0.4f, 9 * 0.4f, 1);
                     Destroy(b, 0.5f);
@@ -76,7 +69,7 @@ public class PowerUpTrigger : MonoBehaviour
             if (distance <= 5f)
             {
                 EnemyHealth enemyHealth = enemy.GetComponent<EnemyHealth>();
-                enemyHealth.TakeDamage(100);
+                enemyHealth.TakeDamage(500);
             }
 
             if (distance <= 9f)

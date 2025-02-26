@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class SpawnScript : MonoBehaviour
+public class EnemySpawner : MonoBehaviour
 {
     [Header("Enemy Prefabs")]
     public GameObject squarePrefab;

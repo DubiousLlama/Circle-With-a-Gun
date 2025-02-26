@@ -9,30 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7011c630e29cb7478c38ae91db22fc8, type: 3}
+  m_Script: {fileID: 11500000, guid: 8c9ef7883357dc84db102f462a0145b8, type: 3}
   m_Name: Trios
   m_EditorClassIdentifier: 
-  groups:
-  - enemy: {fileID: 5362832273410236654, guid: e6fdd261559adf04f818215264ef2333, type: 3}
-    count: 3
-    spawnOffset: {x: 10, y: 2}
-    groupSpread: 1
-  - enemy: {fileID: 5362832273410236654, guid: e6fdd261559adf04f818215264ef2333, type: 3}
-    count: 3
-    spawnOffset: {x: -10, y: 2}
-    groupSpread: 1
-  - enemy: {fileID: 5362832273410236654, guid: e6fdd261559adf04f818215264ef2333, type: 3}
-    count: 3
-    spawnOffset: {x: 2, y: 10}
-    groupSpread: 1
-  - enemy: {fileID: 5362832273410236654, guid: e6fdd261559adf04f818215264ef2333, type: 3}
-    count: 3
-    spawnOffset: {x: 2, y: -10}
-    groupSpread: 1
-  - enemy: {fileID: 5362832273410236654, guid: e6fdd261559adf04f818215264ef2333, type: 3}
-    count: 5
-    spawnOffset: {x: 5, y: 5}
-    groupSpread: 1
-  ongoing: 1
-  groupsAtATime: 1
-  rate: 5
+  groups: []
+  ongoing: 0
+  groupsAtATime: 0
+  rate: 0
