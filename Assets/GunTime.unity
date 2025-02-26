@@ -1356,11 +1356,7 @@ PrefabInstance:
       propertyPath: rechargeBar
       value: 
       objectReference: {fileID: 1703521929}
-    m_RemovedComponents:
-    - {fileID: 8492312598352083001, guid: c8b91edf6d6d9d1479e0ad6d14d272f1, type: 3}
-    - {fileID: 8492312598352082976, guid: c8b91edf6d6d9d1479e0ad6d14d272f1, type: 3}
-    - {fileID: 8492312598352083000, guid: c8b91edf6d6d9d1479e0ad6d14d272f1, type: 3}
-    - {fileID: 6332708186182667636, guid: c8b91edf6d6d9d1479e0ad6d14d272f1, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c8b91edf6d6d9d1479e0ad6d14d272f1, type: 3}
 --- !u!1001 &869350290
 PrefabInstance:
@@ -1578,26 +1574,36 @@ MonoBehaviour:
   m_GameObject: {fileID: 894957481}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91a47c5a079c0ce4f8ff995f9191b78a, type: 3}
+  m_Script: {fileID: 11500000, guid: 7001ee74d2078134ca33c26bf037479c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   difficulty: 1
-  difficultyIncrease: 0.008
-  timeBetweenWaves: 10
-  timeVariance: 2
+  difficultyIncrease: 0.002
+  timeBetweenWaves: 12
+  timeVariance: 3
   distanceVariance: 1
   pool1:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  pool1time: 20
+  - {fileID: 11400000, guid: bd61417eb3da6f54d8d99cc32b833852, type: 2}
+  - {fileID: 11400000, guid: ad0a31a7832948c4c909f70009edc5e2, type: 2}
+  - {fileID: 11400000, guid: 7c6b583376643d74583c7e4589f2958c, type: 2}
+  pool1time: 5
   pool2:
-  - {fileID: 11400000, guid: f2e69d7789daa674e8ad306c4c5391f3, type: 2}
-  pool2time: 0
-  pool3: []
-  pool3time: 0
-  pool4: []
-  pool4time: 0
+  - {fileID: 11400000, guid: 52ddde28b74fcb345815e6d371d766b0, type: 2}
+  - {fileID: 11400000, guid: 3fa65b0852d221944af25b508618a3d4, type: 2}
+  - {fileID: 11400000, guid: c684a5e5a915496488cb072c82365df6, type: 2}
+  pool2time: 45
+  pool3:
+  - {fileID: 11400000, guid: bb317c1d5fdf56b44b5b57b2f5632f6a, type: 2}
+  - {fileID: 11400000, guid: 41df76c1dcad4664e928412ac8ceb810, type: 2}
+  - {fileID: 11400000, guid: 9d42f4640adb8e943b9a102f5ff4c9ad, type: 2}
+  pool3time: 90
+  pool4:
+  - {fileID: 11400000, guid: d99f402fa24885a44b80139ef613620e, type: 2}
+  - {fileID: 11400000, guid: ab5467de22d57e741934cca346b0e1e7, type: 2}
+  - {fileID: 11400000, guid: 46c5498a1f1420b4a9585ada5ebe06c5, type: 2}
+  - {fileID: 11400000, guid: 3794f7b2cebe52c4e8e3cf49bb898295, type: 2}
+  - {fileID: 11400000, guid: d457b9c45ddad034193bc61d8475f87f, type: 2}
+  pool4time: 180
 --- !u!114 &894957486
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1607,23 +1613,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 894957481}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5239c3a06d70256429a25bd70f11c22a, type: 3}
+  m_Script: {fileID: 11500000, guid: 99e7cf36f1d99db4d94b332e5ea4526c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  squarePrefab: {fileID: 3908111154662281100, guid: da86d5c1d84df0a47811d9597e3ae3dd, type: 3}
-  trianglePrefab: {fileID: 5362832273410236654, guid: 704b3c09b7f51bf4dab79d2debc39883, type: 3}
-  octoPrefab: {fileID: 8760996535251935041, guid: af1584e728a2fc043b683bcb51bd7621, type: 3}
-  trapzPrefab: {fileID: 4009117033137057281, guid: 099fb975db4e4d54daab515abd7c9dd7, type: 3}
+  squarePrefab: {fileID: 3908111154662281100, guid: 8a156f7f3cfc65642b1d3fc1899f27bb, type: 3}
+  trianglePrefab: {fileID: 5362832273410236654, guid: e6fdd261559adf04f818215264ef2333, type: 3}
+  octoPrefab: {fileID: 4009117033137057281, guid: 840aa63fb05ef6f4a8e3aa29597ad30b, type: 3}
+  trapzPrefab: {fileID: 8760996535251935041, guid: cf464622199f6d34295ad2135903f268, type: 3}
   playArea: {fileID: 1457920235}
   difficulty: 1
   difficultyIncrease: 0.008
-  spawnRate: 2
-  spawnGroupRate: 10
-  spawnTriangleRate: 3
-  spawnOctoRate: 3
-  spawnTrapzRate: 10
+  spawnRate: 6
+  spawnGroupRate: 15
+  spawnTriangleRate: 8
+  spawnOctoRate: 24
+  spawnTrapzRate: 12
   spawnRange: 10
-  spawnRateVariation: 0.33
+  spawnRateVariation: 0.5
 --- !u!114 &894957487
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1633,14 +1639,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 894957481}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0cedf518bfba12344b03ce32f3802090, type: 3}
+  m_Script: {fileID: 11500000, guid: ed8b0bd25f1dc488bb3705a389ee1f2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponItem: {fileID: 0}
-  items: []
-  spawnRate: 10
-  powerUpWeight: 0
-  weaponWeight: 0
+  weaponItem: {fileID: 3295067330042803226, guid: 36531ad160ddb4705a46c680e401ef73, type: 3}
+  items:
+  - {fileID: 8153874603629096597, guid: 0892c2dd894162c438497773895727f5, type: 3}
+  - {fileID: 3677065510083006430, guid: 660f5836b5303ef4eb4f69c304765984, type: 3}
+  - {fileID: 1684410095117889730, guid: 840bc781a79acc6469a10c309a9892de, type: 3}
+  - {fileID: 4293107596892571966, guid: 20183e52023187c42b9fd1d11b1aab96, type: 3}
+  - {fileID: 2920370379373296382, guid: 9651df96b60a4c14aa481c9fccd09943, type: 3}
+  - {fileID: 2920370379373296382, guid: e476e74bf2b64400bbb44cb96742abf3, type: 3}
+  - {fileID: 3000582385287026008, guid: b408ef8ef8e5a4a95a2738ef2bdc6206, type: 3}
+  spawnRate: 8
+  powerUpWeight: 2
+  weaponWeight: 1
 --- !u!1 &942063011
 GameObject:
   m_ObjectHideFlags: 0
