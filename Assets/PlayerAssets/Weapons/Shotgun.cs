@@ -7,7 +7,7 @@ using UnityEngine;
 public class Shotgun : Weapon
 {
     int damage = 35;
-    int numBullets;
+    int numBullets = 5;
     int spread = 40;
     float rangeLife = 0.25f;
 
@@ -20,30 +20,45 @@ public class Shotgun : Weapon
 
     public void Awake()
     {
-        displayName = "Shotgun";
         weaponType = WeaponType.Primary;
         SetRarity(WeaponRarity.Common);
     }
 
-    private Dictionary<WeaponRarity, float> cooldowns = new Dictionary<WeaponRarity, float> {
-        { WeaponRarity.Legendary, 0.2f },
-        { WeaponRarity.Rare, 0.3f },
-        { WeaponRarity.Uncommon, 0.4f },
-        { WeaponRarity.Common, 0.5f }
+    private Dictionary<WeaponRarity, int> r_damage = new Dictionary<WeaponRarity, int> {
+        { WeaponRarity.Rare, 50 },
+        { WeaponRarity.Uncommon, 40 },
+        { WeaponRarity.Common, 35 }
     };
 
-    private Dictionary<WeaponRarity, int> numBulletss = new Dictionary<WeaponRarity, int> {
-        { WeaponRarity.Legendary, 4 },
-        { WeaponRarity.Rare, 4 },
-        { WeaponRarity.Uncommon, 4 },
-        { WeaponRarity.Common, 4 }
+    private Dictionary<WeaponRarity, int> r_spread = new Dictionary<WeaponRarity, int> {
+        { WeaponRarity.Rare, 40 },
+        { WeaponRarity.Uncommon, 40 },
+        { WeaponRarity.Common, 55 }
     };
+
+    private Dictionary<WeaponRarity, int> r_numbullets = new Dictionary<WeaponRarity, int> {
+        { WeaponRarity.Rare, 7 },
+        { WeaponRarity.Uncommon, 5 },
+        { WeaponRarity.Common, 5 }
+    };
+
+    public override string getDisplayName()
+    {
+        return "Shotgun";
+    }
+
+    public override WeaponType getFinalType()
+    {
+        return WeaponType.Primary;
+    }
 
     public override void SetRarity(WeaponRarity rarity)
     {
         base.SetRarity(rarity);
-        cooldown = cooldowns[rarity];
-        numBullets = numBulletss[rarity];
+        spread = r_spread[rarity];
+        damage = r_damage[rarity];
+        numBullets = r_numbullets[rarity];
+        cooldown = 0.38f;
     }
 
     public override void Equip()

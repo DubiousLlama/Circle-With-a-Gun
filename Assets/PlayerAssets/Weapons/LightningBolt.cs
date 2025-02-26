@@ -11,9 +11,8 @@ public class LightningBolt : Weapon
 
     public void Awake()
     { 
-        displayName = "Lightning Bolt";
-        weaponType = WeaponType.Primary;
-        SetRarity(WeaponRarity.Common);
+        weaponType = WeaponType.Legendary;
+        SetRarity(WeaponRarity.Legendary);
     }
 
     public override void Equip()
@@ -29,16 +28,23 @@ public class LightningBolt : Weapon
     }
     
     private Dictionary<WeaponRarity, float> cooldowns = new Dictionary<WeaponRarity, float> {
-        { WeaponRarity.Legendary, 0.25f },
-        { WeaponRarity.Rare, 0.5f },
-        { WeaponRarity.Uncommon, 0.75f },
-        { WeaponRarity.Common, 1f }
+        { WeaponRarity.Legendary, 0.33f },
     };
 
     public override void SetRarity(WeaponRarity rarity)
     {
         base.SetRarity(rarity);
         cooldown = cooldowns[rarity];
+    }
+
+    public override string getDisplayName()
+    {
+        return "Lightning Bolt";
+    }
+
+    public override WeaponType getFinalType()
+    {
+        return WeaponType.Legendary;
     }
 
     protected override void Fire()

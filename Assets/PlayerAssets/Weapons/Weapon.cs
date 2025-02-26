@@ -9,12 +9,11 @@ public enum WeaponRarity { Common, Uncommon, Rare, Legendary };
 
 public class Weapon : MonoBehaviour
 {
-    public string displayName = "";
     public Sprite sprite;
     public WeaponType weaponType;
     public WeaponSlot weaponSlot {
         get {
-            if (rarity == WeaponRarity.Legendary) {
+            if (weaponType == WeaponType.Legendary) {
                 return WeaponSlot.Three;
             } else if (weaponType == WeaponType.Secondary) {
                 return WeaponSlot.Two;
@@ -92,6 +91,16 @@ public class Weapon : MonoBehaviour
         Debug.Log("No weapon fire behavior implemented");
     }
 
+    public virtual string getDisplayName()
+    {
+        return "Name not set.";
+    }
+
+    public virtual WeaponType getFinalType()
+    {
+        return WeaponType.Primary;
+    }
+
     public virtual bool IsExpired()
     {
         return isTemporary ? lifetimeRemaining <= 0 : false;
@@ -157,6 +166,7 @@ public class Weapon : MonoBehaviour
     public void Expire()
     {
         weaponsManager.weapons[weaponSlot] = null;
+        isFiring = false;
         Destroy(gameObject);
     }
 }

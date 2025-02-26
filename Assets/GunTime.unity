@@ -1652,8 +1652,8 @@ MonoBehaviour:
   - {fileID: 2920370379373296382, guid: e476e74bf2b64400bbb44cb96742abf3, type: 3}
   - {fileID: 3000582385287026008, guid: b408ef8ef8e5a4a95a2738ef2bdc6206, type: 3}
   - {fileID: 2920370379373296382, guid: 5c27a87add5bdc745a88fd2335521fe2, type: 3}
-  spawnRate: 8
-  powerUpWeight: 3
+  spawnRate: 0.34
+  powerUpWeight: 4
   weaponWeight: 1
   legendaryWeight: 0.5
   commonOccurance: 7

@@ -17,16 +17,40 @@ public class LightningStrike : Weapon
 
     public void Awake()
     {
-        displayName = "Lightning Strike";
-        cooldown = 3f;
-        weaponType = WeaponType.Secondary;
+        cooldown = 3.5f;
+        weaponType = getFinalType();
     }
+
+    private Dictionary<WeaponRarity, int> r_damage = new Dictionary<WeaponRarity, int> {
+        { WeaponRarity.Rare, 150 },
+        { WeaponRarity.Uncommon, 100 },
+        { WeaponRarity.Common, 50 }
+    };
+
+    private Dictionary<WeaponRarity, int> r_aoeDamage = new Dictionary<WeaponRarity, int> {
+        { WeaponRarity.Rare, 150 },
+        { WeaponRarity.Uncommon, 100 },
+        { WeaponRarity.Common, 75 }
+    };
 
     public override void Equip()
     {
         base.Equip();
 
         enemyLayer = LayerMask.GetMask("Foes");
+
+        damage = r_damage[rarity];
+        aoeDamage = r_aoeDamage[rarity];
+    }
+
+    public override string getDisplayName()
+    {
+        return "Lightning Strike";
+    }
+
+    public override WeaponType getFinalType()
+    {
+        return WeaponType.Secondary;
     }
 
     protected override void Fire()

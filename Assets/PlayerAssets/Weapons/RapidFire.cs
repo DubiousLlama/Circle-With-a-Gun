@@ -17,7 +17,6 @@ public class RapidFire : Weapon
 
     public void Awake()
     {
-        displayName = "Gun";
         isAutomatic = true;
         weaponType = WeaponType.Primary;
         SetRarity(WeaponRarity.Common);
@@ -34,6 +33,16 @@ public class RapidFire : Weapon
     {
         base.SetRarity(rarity);
         cooldown = cooldowns[rarity];
+    }
+
+    public override string getDisplayName()
+    {
+        return "Gun";
+    }
+
+    public override WeaponType getFinalType()
+    {
+        return WeaponType.Primary;
     }
 
     public override void Equip()

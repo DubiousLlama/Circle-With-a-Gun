@@ -144,8 +144,15 @@ public class ItemSpawner : MonoBehaviour
         }
 
         Vector3 v3 = new Vector3(spawnLocation.x, spawnLocation.y, 5);
+
+        if (itemPrefab.GetComponent<Weapon>() == null)
+        {
+            SpawnItem(itemPrefab, v3, WeaponRarity.Common);
+            return;
+        }
+
         WeaponRarity rarity;
-        if (itemPrefab.GetComponent<Weapon>().weaponType == WeaponType.Legendary)
+        if (itemPrefab.GetComponent<Weapon>().getFinalType() == WeaponType.Legendary)
         {
             rarity = WeaponRarity.Legendary;
         } else
@@ -154,10 +161,10 @@ public class ItemSpawner : MonoBehaviour
         }
 
         // Check if the player has an item of the same type or better equipped
-        string weaponKind = itemPrefab.GetComponent<Weapon>().displayName;
+        string weaponKind = itemPrefab.GetComponent<Weapon>().getDisplayName();
         Weapon playerWeapon = player.GetComponent<WeaponsManager>().GetEquippedWeapon(itemPrefab.GetComponent<Weapon>().weaponType);
 
-        if (playerWeapon.displayName == weaponKind && playerWeapon.rarity >= rarity)
+        if (playerWeapon.getDisplayName() == weaponKind && playerWeapon.rarity >= rarity)
         {
             Debug.Log("Player already has a better or equal weapon equipped");
             return;

@@ -45,9 +45,11 @@ public class WeaponsManager : MonoBehaviour
     public Weapon GetEquippedWeapon(WeaponType weaponType)
     {
         if (weaponType == WeaponType.Primary) {
-            return weapons[WeaponSlot.Three] ?? weapons[WeaponSlot.One];
-        } else {
+            return weapons[WeaponSlot.One];
+        } else if (weaponType == WeaponType.Secondary) {
             return weapons[WeaponSlot.Two];
+        } else {
+            return weapons[WeaponSlot.Three];
         }
     }
 
@@ -63,11 +65,25 @@ public class WeaponsManager : MonoBehaviour
             // Primary weapon
             if (Input.GetButtonDown("Fire1"))
             {
-                OnPointerDown(WeaponType.Primary);
+                if (weapons[WeaponSlot.Three] == null)
+                {
+                    OnPointerDown(WeaponType.Primary);
+                } else
+                {
+                    OnPointerDown(WeaponType.Legendary);
+                }
+                
             }
             if (Input.GetButtonUp("Fire1"))
             {
-                OnPointerUp(WeaponType.Primary);
+                if (weapons[WeaponSlot.Three] == null)
+                {
+                    OnPointerUp(WeaponType.Primary);
+                }
+                else
+                {
+                    OnPointerUp(WeaponType.Legendary);
+                }
             }
 
             // Secondary weapon

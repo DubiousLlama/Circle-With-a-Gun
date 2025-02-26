@@ -14,17 +14,46 @@ public class RedButton : Weapon
 
     public void Awake()
     {
-        displayName = "Escape";
-        cooldown = 15f;
         weaponType = WeaponType.Secondary;
     }
+
+    private Dictionary<WeaponRarity, float> r_cooldown = new Dictionary<WeaponRarity, float> {
+        { WeaponRarity.Rare, 9f },
+        { WeaponRarity.Uncommon, 12f },
+        { WeaponRarity.Common, 15f }
+    };
+
+    private Dictionary<WeaponRarity, float> r_delay = new Dictionary<WeaponRarity, float> {
+        { WeaponRarity.Rare, 0.2f },
+        { WeaponRarity.Uncommon, 0.25f },
+        { WeaponRarity.Common, 0.3f }
+    };
+
+    private Dictionary<WeaponRarity, int> heal = new Dictionary<WeaponRarity, int> {
+        { WeaponRarity.Rare, 700 },
+        { WeaponRarity.Uncommon, 500 },
+        { WeaponRarity.Common, 300 }
+    };
 
     public override void Equip()
     {
         base.Equip();
 
+        cooldown = r_cooldown[rarity];
+        teleportDelay = r_delay[rarity];
+        healAmount = heal[rarity];
         playArea = GameObject.Find("PlayArea").GetComponent<RectTransform>();
         playerHealth = transform.parent.GetComponent<PlayerHealth>();
+    }
+
+    public override string getDisplayName()
+    {
+        return "Escape";
+    }
+
+    public override WeaponType getFinalType()
+    {
+        return WeaponType.Secondary;
     }
 
     protected override void Fire()
