@@ -2,13 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum WeaponType { Primary, Secondary };
+public enum WeaponType { Primary, Secondary, Legendary };
 public enum WeaponSlot { One, Two, Three };
 
 public enum WeaponRarity { Common, Uncommon, Rare, Legendary };
 
 public class Weapon : MonoBehaviour
 {
+    public string displayName = "";
     public Sprite sprite;
     public WeaponType weaponType;
     public WeaponSlot weaponSlot {
@@ -25,11 +26,8 @@ public class Weapon : MonoBehaviour
     public float cooldown = 0.1f;
     public float lifetime = 10f;
 
-    public bool isAutomatic {
-        get {
-            return weaponType == WeaponType.Primary;
-        }
-    }
+    [HideInInspector]
+    public bool isAutomatic = false;
     public bool isTemporary {
         get {
             return rarity == WeaponRarity.Legendary;
@@ -101,7 +99,7 @@ public class Weapon : MonoBehaviour
 
     public bool CanFire()
     {
-        bool canFireMovement = weaponType != WeaponType.Secondary || !weaponsManager.isMoving;
+        bool canFireMovement = weaponType != WeaponType.Secondary || !weaponsManager.isPlayerMoving();
         bool canFireCooldown = cooldownRemaining <= 0;
         bool canFireTemporary = isTemporary ? !IsExpired() : true;
         return canFireMovement && canFireCooldown && canFireTemporary;

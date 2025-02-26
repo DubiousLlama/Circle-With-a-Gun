@@ -17,6 +17,8 @@ public class RapidFire : Weapon
 
     public void Awake()
     {
+        displayName = "Gun";
+        isAutomatic = true;
         weaponType = WeaponType.Primary;
         SetRarity(WeaponRarity.Common);
     }

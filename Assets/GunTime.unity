@@ -1356,7 +1356,8 @@ PrefabInstance:
       propertyPath: rechargeBar
       value: 
       objectReference: {fileID: 1703521929}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6332708186182667636, guid: c8b91edf6d6d9d1479e0ad6d14d272f1, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: c8b91edf6d6d9d1479e0ad6d14d272f1, type: 3}
 --- !u!1001 &869350290
 PrefabInstance:
@@ -1646,14 +1647,18 @@ MonoBehaviour:
   items:
   - {fileID: 8153874603629096597, guid: 0892c2dd894162c438497773895727f5, type: 3}
   - {fileID: 3677065510083006430, guid: 660f5836b5303ef4eb4f69c304765984, type: 3}
-  - {fileID: 1684410095117889730, guid: 840bc781a79acc6469a10c309a9892de, type: 3}
   - {fileID: 4293107596892571966, guid: 20183e52023187c42b9fd1d11b1aab96, type: 3}
   - {fileID: 2920370379373296382, guid: 9651df96b60a4c14aa481c9fccd09943, type: 3}
   - {fileID: 2920370379373296382, guid: e476e74bf2b64400bbb44cb96742abf3, type: 3}
   - {fileID: 3000582385287026008, guid: b408ef8ef8e5a4a95a2738ef2bdc6206, type: 3}
+  - {fileID: 2920370379373296382, guid: 5c27a87add5bdc745a88fd2335521fe2, type: 3}
   spawnRate: 8
-  powerUpWeight: 2
+  powerUpWeight: 3
   weaponWeight: 1
+  legendaryWeight: 0.5
+  commonOccurance: 7
+  uncommonOccurance: 2
+  rareOccurance: 0.5
 --- !u!1 &942063011
 GameObject:
   m_ObjectHideFlags: 0

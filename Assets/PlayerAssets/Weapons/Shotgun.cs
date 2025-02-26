@@ -20,6 +20,7 @@ public class Shotgun : Weapon
 
     public void Awake()
     {
+        displayName = "Shotgun";
         weaponType = WeaponType.Primary;
         SetRarity(WeaponRarity.Common);
     }
@@ -32,10 +33,10 @@ public class Shotgun : Weapon
     };
 
     private Dictionary<WeaponRarity, int> numBulletss = new Dictionary<WeaponRarity, int> {
-        { WeaponRarity.Legendary, 11 },
-        { WeaponRarity.Rare, 9 },
-        { WeaponRarity.Uncommon, 7 },
-        { WeaponRarity.Common, 5 }
+        { WeaponRarity.Legendary, 4 },
+        { WeaponRarity.Rare, 4 },
+        { WeaponRarity.Uncommon, 4 },
+        { WeaponRarity.Common, 4 }
     };
 
     public override void SetRarity(WeaponRarity rarity)
@@ -87,7 +88,7 @@ public class Shotgun : Weapon
         SpriteRenderer sr = bullet.GetComponent<SpriteRenderer>();
 
         sr.color = bulletColor;
-        bs.damage = (int)(damage * playerStats.Damage());
+        bs.damage = damage;
 
         Destroy(bullet, rangeLife);
 

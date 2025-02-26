@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class LightningBolt : Weapon
 {
-    // Start is called before the first frame update
     public int damage = 80;
 
     GameObject strikePrefab;
@@ -12,6 +11,7 @@ public class LightningBolt : Weapon
 
     public void Awake()
     { 
+        displayName = "Lightning Bolt";
         weaponType = WeaponType.Primary;
         SetRarity(WeaponRarity.Common);
     }

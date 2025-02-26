@@ -17,6 +17,7 @@ public class LightningStrike : Weapon
 
     public void Awake()
     {
+        displayName = "Lightning Strike";
         cooldown = 3f;
         weaponType = WeaponType.Secondary;
     }

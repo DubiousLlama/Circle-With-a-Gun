@@ -90,6 +90,11 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    public bool isMoving()
+    {
+        return movement != Vector2.zero;
+    }
+
     private void HandlePlayerInput()
     {
         rb = GetComponent<Rigidbody2D>();

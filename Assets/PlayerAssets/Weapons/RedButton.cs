@@ -14,6 +14,7 @@ public class RedButton : Weapon
 
     public void Awake()
     {
+        displayName = "Escape";
         cooldown = 15f;
         weaponType = WeaponType.Secondary;
     }
@@ -29,14 +30,21 @@ public class RedButton : Weapon
     protected override void Fire()
     {
         int i = 0;
-        while (i < 100) {
+        while (i < 200) {
             i++;
+
+            if (i == 100)
+            {
+                Debug.LogWarning("Failed to find a valid teleport location");
+                return;
+            }
 
             // Get a random point inside the play area
             Vector3 randomPoint = new Vector3(Random.Range(playArea.rect.xMin, playArea.rect.xMax), Random.Range(playArea.rect.yMin, playArea.rect.yMax), 0);
 
-            // Check if the point is too close to the player
-            if (Vector3.Distance(randomPoint, transform.position) < 20f)
+            // Check if the point is too close to the player (decreasing as we get desperate)
+            float distanceAway = 25f - (i * 0.05f);
+            if (Vector3.Distance(randomPoint, transform.position) < distanceAway)
             {
                 continue;
             }
@@ -48,8 +56,9 @@ public class RedButton : Weapon
                 continue;
             }
 
-            // Check if there is a foe within 5 units of the point
-            Collider2D[] foes = Physics2D.OverlapCircleAll(randomPoint, 5f);
+            // Check if there is a foe within 5 (decreasing as we get deseperate) units of the point
+            float foeRadius = 5f - (i * 0.025f);
+            Collider2D[] foes = Physics2D.OverlapCircleAll(randomPoint, foeRadius);
             if (foes.Length > 0)
             {
                 continue;

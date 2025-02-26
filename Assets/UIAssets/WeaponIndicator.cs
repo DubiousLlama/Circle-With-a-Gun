@@ -20,6 +20,7 @@ public class WeaponIndicator : MonoBehaviour
     private TextMeshProUGUI rarityText;
 
     private WeaponsManager weaponsManager;
+    private PlayerMovement playerMovement;
     
     [HideInInspector]
     public static Dictionary<WeaponRarity, Color> rarityColors = new Dictionary<WeaponRarity, Color> {
@@ -32,6 +33,7 @@ public class WeaponIndicator : MonoBehaviour
     void Start()
     {
         weaponsManager = GameObject.Find("PC").GetComponent<WeaponsManager>();
+        playerMovement = GameObject.Find("PC").GetComponent<PlayerMovement>();
 
         canvasGroup = GetComponent<CanvasGroup>();
 
@@ -55,6 +57,15 @@ public class WeaponIndicator : MonoBehaviour
         } else {
             canvasGroup.alpha = 1f;
         }
+
+        if (weaponSlot == WeaponSlot.Two && playerMovement.isMoving())
+        {
+            canvasGroup.alpha = 0.5f;
+        } else
+        {
+            canvasGroup.alpha = 1f;
+        }
+
         cooldownFill.fillAmount = weapon.isAutomatic ? 0 : weapon.cooldownRemaining / weapon.cooldown;
         lifetimeFill.fillAmount = weapon.isTemporary ? weapon.lifetimeRemaining / weapon.lifetime : 1;
         icon.sprite = weapon.sprite;

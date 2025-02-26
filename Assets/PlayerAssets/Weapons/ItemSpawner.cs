@@ -19,6 +19,12 @@ public class ItemSpawner : MonoBehaviour
 
     public float powerUpWeight;
     public float weaponWeight;
+    public float legendaryWeight;
+
+    public float commonOccurance;
+    public float uncommonOccurance;
+    public float rareOccurance;
+// Note
 
     GameObject player;
 
@@ -41,7 +47,13 @@ public class ItemSpawner : MonoBehaviour
         for (int i = 0; i < items.Length; i++) {
             Weapon weapon = items[i].GetComponent<Weapon>();
             if (weapon != null) {
-                itemRarityWeights[i] = weaponWeight;
+                if (weapon.weaponType == WeaponType.Legendary)
+                {
+                    itemRarityWeights[i] = legendaryWeight;
+                } else
+                {
+                    itemRarityWeights[i] = weaponWeight;
+                }
             } else {
                 itemRarityWeights[i] = powerUpWeight;
             }
@@ -132,7 +144,26 @@ public class ItemSpawner : MonoBehaviour
         }
 
         Vector3 v3 = new Vector3(spawnLocation.x, spawnLocation.y, 5);
-        SpawnItem(itemPrefab, v3, WeaponRarity.Legendary);
+        WeaponRarity rarity;
+        if (itemPrefab.GetComponent<Weapon>().weaponType == WeaponType.Legendary)
+        {
+            rarity = WeaponRarity.Legendary;
+        } else
+        {
+            rarity = (WeaponRarity)WeightedRandom(new float[] { commonOccurance, uncommonOccurance, rareOccurance });
+        }
+
+        // Check if the player has an item of the same type or better equipped
+        string weaponKind = itemPrefab.GetComponent<Weapon>().displayName;
+        Weapon playerWeapon = player.GetComponent<WeaponsManager>().GetEquippedWeapon(itemPrefab.GetComponent<Weapon>().weaponType);
+
+        if (playerWeapon.displayName == weaponKind && playerWeapon.rarity >= rarity)
+        {
+            Debug.Log("Player already has a better or equal weapon equipped");
+            return;
+        }
+
+        SpawnItem(itemPrefab, v3, rarity);
     }
 
     public void SpawnItem(GameObject itemPrefab, Vector3 v3, WeaponRarity rarity)
@@ -149,4 +180,5 @@ public class ItemSpawner : MonoBehaviour
             Instantiate(itemPrefab, v3, Quaternion.identity);
         }
     }
+
 }
