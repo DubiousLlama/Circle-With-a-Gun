@@ -12,11 +12,11 @@ public class PowerUpTrigger : MonoBehaviour
     PlayerStats playerStats;
     PowerUpManager powerUpManager;
 
-    void OnTriggerEnter2D (Collider2D collision)
+    void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Player")
-        { 
-            if (powerUpManager == null )
+        {
+            if (powerUpManager == null)
             {
                 powerUpManager = collision.gameObject.GetComponent<PowerUpManager>();
             }
@@ -24,38 +24,31 @@ public class PowerUpTrigger : MonoBehaviour
             {
                 playerStats = collision.gameObject.GetComponent<PlayerStats>();
             }
-                
+
             Debug.Log("Power Up Triggered: " + powerUpName);
 
             switch (powerUpName)
             {
                 case "Speed":
-                    powerUpManager.ActivatePowerUp(powerUpName);
-                    playerStats.ImproveSpeed();
+                    PlayerMovement playerMovement = collision.gameObject.GetComponent<PlayerMovement>();
+                    playerMovement.SetSpeedBonus(3.5f);
                     AudioManager.instance.PlaySfx("Score1", 0.25f);
                     break;
                 case "Regen":
-                    powerUpManager.ActivatePowerUp(powerUpName);
-                    playerStats.ImproveHealth();
+                    PlayerHealth playerHealth = collision.gameObject.GetComponent<PlayerHealth>();
+                    playerHealth.Heal(1000);
                     AudioManager.instance.PlaySfx("Score3", 0.25f);
-                    break;
-                case "Laser":
-                    powerUpManager.ActivatePowerUp(powerUpName);
-                    playerStats.ImproveDamage();
-                    AudioManager.instance.PlaySfx("Score2", 0.25f);
                     break;
                 case "Bomb":
                     Bomb();
-                    playerStats.ImproveExplosions();
-                    powerUpManager.ActivatePowerUp(powerUpName);
                     GameObject b = Instantiate(explosion, transform.position, Quaternion.identity);
-                    b.transform.localScale = new Vector3(9*0.4f, 9 * 0.4f, 1);
+                    b.transform.localScale = new Vector3(9 * 0.4f, 9 * 0.4f, 1);
                     Destroy(b, 0.5f);
                     AudioManager.instance.PlaySfx("WooshLightning", 0.6f);
                     break;
                 default:
                     break;
-            }   
+            }
 
             // Set the color of the power up to (0.9,0.9, 0.9) for 0.1 seconds, then destroy it
             GetComponent<SpriteRenderer>().color = new Color(0.9f, 0.9f, 0.9f);
@@ -72,11 +65,11 @@ public class PowerUpTrigger : MonoBehaviour
 
             // Figure out if the enemy is within 9 units of the bomb
             float distance = Vector2.Distance(enemy.transform.position, transform.position);
-            
+
             if (distance <= 5f)
             {
                 EnemyHealth enemyHealth = enemy.GetComponent<EnemyHealth>();
-                enemyHealth.TakeDamage(100);
+                enemyHealth.TakeDamage(500);
             }
 
             if (distance <= 9f)
