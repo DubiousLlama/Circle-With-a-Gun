@@ -1345,6 +1345,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6332708186182667642, guid: c8b91edf6d6d9d1479e0ad6d14d272f1, type: 3}
+      propertyPath: health
+      value: 2000
+      objectReference: {fileID: 0}
+    - target: {fileID: 6332708186182667642, guid: c8b91edf6d6d9d1479e0ad6d14d272f1, type: 3}
+      propertyPath: regenRate
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6332708186182667642, guid: c8b91edf6d6d9d1479e0ad6d14d272f1, type: 3}
       propertyPath: gameOverScreen
       value: 
       objectReference: {fileID: 107831363}
@@ -1352,6 +1360,10 @@ PrefabInstance:
       propertyPath: sliderController
       value: 
       objectReference: {fileID: 990913170}
+    - target: {fileID: 6332708186182667642, guid: c8b91edf6d6d9d1479e0ad6d14d272f1, type: 3}
+      propertyPath: startingMaxHealth
+      value: 2000
+      objectReference: {fileID: 0}
     - target: {fileID: 8492312598352083001, guid: c8b91edf6d6d9d1479e0ad6d14d272f1, type: 3}
       propertyPath: rechargeBar
       value: 
@@ -1578,7 +1590,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7001ee74d2078134ca33c26bf037479c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  difficulty: 1
+  difficulty: 0.7
   difficultyIncrease: 0.002
   timeBetweenWaves: 12
   timeVariance: 3
@@ -1587,17 +1599,17 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bd61417eb3da6f54d8d99cc32b833852, type: 2}
   - {fileID: 11400000, guid: ad0a31a7832948c4c909f70009edc5e2, type: 2}
   - {fileID: 11400000, guid: 7c6b583376643d74583c7e4589f2958c, type: 2}
-  pool1time: 5
+  pool1time: 20
   pool2:
   - {fileID: 11400000, guid: 52ddde28b74fcb345815e6d371d766b0, type: 2}
   - {fileID: 11400000, guid: 3fa65b0852d221944af25b508618a3d4, type: 2}
   - {fileID: 11400000, guid: c684a5e5a915496488cb072c82365df6, type: 2}
-  pool2time: 45
+  pool2time: 90
   pool3:
   - {fileID: 11400000, guid: bb317c1d5fdf56b44b5b57b2f5632f6a, type: 2}
   - {fileID: 11400000, guid: 41df76c1dcad4664e928412ac8ceb810, type: 2}
   - {fileID: 11400000, guid: 9d42f4640adb8e943b9a102f5ff4c9ad, type: 2}
-  pool3time: 90
+  pool3time: 120
   pool4:
   - {fileID: 11400000, guid: d99f402fa24885a44b80139ef613620e, type: 2}
   - {fileID: 11400000, guid: ab5467de22d57e741934cca346b0e1e7, type: 2}
@@ -1652,10 +1664,10 @@ MonoBehaviour:
   - {fileID: 2920370379373296382, guid: e476e74bf2b64400bbb44cb96742abf3, type: 3}
   - {fileID: 3000582385287026008, guid: b408ef8ef8e5a4a95a2738ef2bdc6206, type: 3}
   - {fileID: 2920370379373296382, guid: 5c27a87add5bdc745a88fd2335521fe2, type: 3}
-  spawnRate: 0.34
-  powerUpWeight: 4
+  spawnRate: 8
+  powerUpWeight: 2
   weaponWeight: 1
-  legendaryWeight: 0.5
+  legendaryWeight: 0
   commonOccurance: 7
   uncommonOccurance: 2
   rareOccurance: 0.5

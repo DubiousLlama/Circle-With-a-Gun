@@ -26,6 +26,7 @@ public class WeaponsManager : MonoBehaviour
 
         isFiring[WeaponType.Primary] = false;
         isFiring[WeaponType.Secondary] = false;
+        isFiring[WeaponType.Legendary] = false;
     }
 
     void Start()
