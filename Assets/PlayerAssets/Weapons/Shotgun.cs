@@ -25,20 +25,20 @@ public class Shotgun : Weapon
     }
 
     private Dictionary<WeaponRarity, int> r_damage = new Dictionary<WeaponRarity, int> {
-        { WeaponRarity.Rare, 50 },
-        { WeaponRarity.Uncommon, 40 },
+        { WeaponRarity.Rare, 35 },
+        { WeaponRarity.Uncommon, 35 },
         { WeaponRarity.Common, 35 }
     };
 
     private Dictionary<WeaponRarity, int> r_spread = new Dictionary<WeaponRarity, int> {
-        { WeaponRarity.Rare, 40 },
-        { WeaponRarity.Uncommon, 40 },
-        { WeaponRarity.Common, 55 }
+        { WeaponRarity.Rare, 35 },
+        { WeaponRarity.Uncommon, 45 },
+        { WeaponRarity.Common, 60 }
     };
 
     private Dictionary<WeaponRarity, int> r_numbullets = new Dictionary<WeaponRarity, int> {
-        { WeaponRarity.Rare, 7 },
-        { WeaponRarity.Uncommon, 5 },
+        { WeaponRarity.Rare, 9 },
+        { WeaponRarity.Uncommon, 7 },
         { WeaponRarity.Common, 5 }
     };
 
@@ -59,6 +59,7 @@ public class Shotgun : Weapon
         damage = r_damage[rarity];
         numBullets = r_numbullets[rarity];
         cooldown = 0.38f;
+        isAutomatic = true;
     }
 
     public override void Equip()

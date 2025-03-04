@@ -6,42 +6,44 @@ public class Boomerang : Weapon
 {
     private int damage;
     private float speed;
+    private float  range = 1.25f;
 
     private GameObject boomerangPrefab;
 
     public void Awake()
     {
-        isAutomatic = true;
+        isAutomatic = false;
         weaponType = WeaponType.Primary;
         SetRarity(WeaponRarity.Common);
     }
 
     private Dictionary<WeaponRarity, float> cooldowns = new Dictionary<WeaponRarity, float> {
-        { WeaponRarity.Legendary, 0.25f },
-        { WeaponRarity.Rare, 0.35f },
-        { WeaponRarity.Uncommon, 0.45f },
-        { WeaponRarity.Common, 0.5f }
+        { WeaponRarity.Legendary, 0.75f },
+        { WeaponRarity.Rare, 0.8f },
+        { WeaponRarity.Uncommon, 1f },
+        { WeaponRarity.Common, 1.1f }
     };
 
     private Dictionary<WeaponRarity, int> r_damage = new Dictionary<WeaponRarity, int> {
         { WeaponRarity.Legendary, 100 },
-        { WeaponRarity.Rare, 70 },
-        { WeaponRarity.Uncommon, 40 },
-        { WeaponRarity.Common, 30 }
+        { WeaponRarity.Rare, 50 },
+        { WeaponRarity.Uncommon, 50 },
+        { WeaponRarity.Common, 40 }
     };
 
     private Dictionary<WeaponRarity, float> r_speed = new Dictionary<WeaponRarity, float> {
         { WeaponRarity.Legendary, 20f },
-        { WeaponRarity.Rare, 18f },
-        { WeaponRarity.Uncommon, 15f },
-        { WeaponRarity.Common, 10f }
+        { WeaponRarity.Rare, 11f },
+        { WeaponRarity.Uncommon, 9f },
+        { WeaponRarity.Common, 7f }
     };
 
     public override void SetRarity(WeaponRarity rarity)
     {
         base.SetRarity(rarity);
         cooldown = cooldowns[rarity];
-
+        damage = r_damage[rarity];
+        speed = r_speed[rarity];
     }
 
     public override string getDisplayName()
@@ -71,12 +73,11 @@ public class Boomerang : Weapon
     protected override void Fire()
     {
         GameObject boomerang = Instantiate(boomerangPrefab, firePoint.position, firePoint.rotation);
-        Rigidbody2D rb = boomerang.GetComponent<Rigidbody2D>();
-        BulletScript bs = boomerang.GetComponent<BoomerScript>();
-        SpriteRenderer sr = boomerang.GetComponent<SpriteRenderer>();
+        BoomerScript bs = boomerang.GetComponent<BoomerScript>();
+        
+        bs.Launch(firePoint.up, speed);
 
         bs.damage = damage;
-
-        rb.AddForce(firePoint.up * speed, ForceMode2D.Impulse);
+        bs.lifetime = range;
     }
 }

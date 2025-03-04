@@ -28,10 +28,16 @@ public class EnemyDamage : MonoBehaviour
 
     private float colorChangeTimer = 0f;
 
+    private Color white = new Color(1f, 1f, 1f, 1f);
+    private Color attackColor = new Color(0.7f, 0.03f, 0.15f);
+
+    Transform[] corners;
+
     void Start()
     {
         player = GameObject.Find("PC");
         pathfinding = GetComponent<Pathfinding.AIPath>();
+        corners = gameObject.transform.GetChild(1).GetComponentsInChildren<Transform>();
     }
 
     // Update is called once per frame
@@ -47,19 +53,6 @@ public class EnemyDamage : MonoBehaviour
             inRangeTimer += Time.deltaTime;
         }
 
-        else
-        {
-            inRangeTimer = 0;
-            
-            // Destroy all line renderers
-            if (isAttacking == true)
-            {
-                Destroy(attackLine1);
-                Destroy(attackLine2);
-                isAttacking = false;
-            }
-        }
-
         if (fireDelay > 0)
         {
             fireDelay -= Time.deltaTime;
@@ -72,7 +65,23 @@ public class EnemyDamage : MonoBehaviour
 
         if (colorChangeTimer <= 0)
         {
-            gameObject.GetComponent<SpriteRenderer>().color = Color.white;
+            gameObject.GetComponent<SpriteRenderer>().color = white;
+        }
+
+
+        else
+        {
+            inRangeTimer = 0;
+            
+            // Destroy all line renderers
+            if (isAttacking == true)
+            {
+                Destroy(attackLine1);
+                Destroy(attackLine2);
+                isAttacking = false;
+            }
+
+            return;
         }
 
         if (isAttacking == false && inRangeTimer > 0.1f && fireDelay <= mustBeInRangeFor)
@@ -101,7 +110,7 @@ public class EnemyDamage : MonoBehaviour
             Destroy(attackLine2);
             isAttacking = false;
 
-            gameObject.GetComponent<SpriteRenderer>().color = new Color(0.7f, 0.03f, 0.15f);
+            gameObject.GetComponent<SpriteRenderer>().color = attackColor;
             colorChangeTimer = 0.2f;
         }
         
@@ -123,7 +132,6 @@ public class EnemyDamage : MonoBehaviour
     private Vector3 GetCorner(int closenessRank)
     {
         SortedList<float, Transform> cornerDistances = new SortedList<float, Transform>();
-        Transform[] corners = gameObject.transform.GetChild(1).GetComponentsInChildren<Transform>();
 
         // This strange little bit of code is because the first element is the parent's transform
         for (int i = 1; i < corners.Length; i++)
