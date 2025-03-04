@@ -387,6 +387,22 @@ PrefabInstance:
       propertyPath: weaponSlot
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8319267871796741399, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: b16257d716fde40c7b0bbbe8676478fd, type: 3}
+    - target: {fileID: 8319267871796741399, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8319267871796741399, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8319267871796741399, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
 --- !u!224 &102222227 stripped
@@ -977,6 +993,22 @@ PrefabInstance:
     - target: {fileID: 3003877806079815466, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
       propertyPath: weaponSlot
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8319267871796741399, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: b16257d716fde40c7b0bbbe8676478fd, type: 3}
+    - target: {fileID: 8319267871796741399, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8319267871796741399, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8319267871796741399, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
+      propertyPath: m_Color.r
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
@@ -1662,13 +1694,14 @@ MonoBehaviour:
   - {fileID: 4293107596892571966, guid: 20183e52023187c42b9fd1d11b1aab96, type: 3}
   - {fileID: 2920370379373296382, guid: 9651df96b60a4c14aa481c9fccd09943, type: 3}
   - {fileID: 2920370379373296382, guid: e476e74bf2b64400bbb44cb96742abf3, type: 3}
-  - {fileID: 3000582385287026008, guid: b408ef8ef8e5a4a95a2738ef2bdc6206, type: 3}
   - {fileID: 2920370379373296382, guid: 5c27a87add5bdc745a88fd2335521fe2, type: 3}
-  spawnRate: 8
-  powerUpWeight: 2
+  - {fileID: 2920370379373296382, guid: 0edf60b7ebff98e4db713a4a7ba8b876, type: 3}
+  - {fileID: 3000582385287026008, guid: b408ef8ef8e5a4a95a2738ef2bdc6206, type: 3}
+  spawnRate: 0.75
+  powerUpWeight: 1.8
   weaponWeight: 1
-  legendaryWeight: 0
-  commonOccurance: 7
+  legendaryWeight: 8
+  commonOccurance: 5
   uncommonOccurance: 2
   rareOccurance: 0.5
 --- !u!1 &942063011
@@ -3310,6 +3343,26 @@ PrefabInstance:
     - target: {fileID: 2882209905168990433, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
       propertyPath: m_Name
       value: Slot One
+      objectReference: {fileID: 0}
+    - target: {fileID: 8319267871796741399, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: b16257d716fde40c7b0bbbe8676478fd, type: 3}
+    - target: {fileID: 8319267871796741399, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8319267871796741399, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8319267871796741399, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8319267871796741399, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}

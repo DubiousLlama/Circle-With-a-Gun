@@ -77,14 +77,8 @@ public class WeaponsManager : MonoBehaviour
             }
             if (Input.GetButtonUp("Fire1"))
             {
-                if (weapons[WeaponSlot.Three] == null)
-                {
-                    OnPointerUp(WeaponType.Primary);
-                }
-                else
-                {
-                    OnPointerUp(WeaponType.Legendary);
-                }
+                OnPointerUp(WeaponType.Primary);
+                OnPointerUp(WeaponType.Legendary);
             }
 
             // Secondary weapon

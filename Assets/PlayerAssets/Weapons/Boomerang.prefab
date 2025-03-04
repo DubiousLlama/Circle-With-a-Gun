@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5419c2b237548ea4ab4d97d7a9ff5261, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: 429d35981bec6f64b8581682876d5f9d, type: 3}
+  sprite: {fileID: 21300000, guid: ade8ede78615a9b4f82ff6ff4c92cc17, type: 3}
   weaponType: 0
   cooldown: 0.1
   lifetime: 10

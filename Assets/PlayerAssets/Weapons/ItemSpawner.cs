@@ -15,7 +15,7 @@ public class ItemSpawner : MonoBehaviour
     private float spawnTimer = 0f;
     private Vector2 spawnLocation;
 
-    private float[] itemRarityWeights;
+    private float[] itemTypeWeights;
 
     public float powerUpWeight;
     public float weaponWeight;
@@ -43,21 +43,23 @@ public class ItemSpawner : MonoBehaviour
             Debug.LogError("Player not found");
         }
 
-        itemRarityWeights = new float[items.Length];
+        itemTypeWeights = new float[items.Length];
         for (int i = 0; i < items.Length; i++) {
             Weapon weapon = items[i].GetComponent<Weapon>();
             if (weapon != null) {
-                if (weapon.weaponType == WeaponType.Legendary)
+                if (weapon.getFinalType() == WeaponType.Legendary)
                 {
-                    itemRarityWeights[i] = legendaryWeight;
+                    itemTypeWeights[i] = legendaryWeight;
                 } else
                 {
-                    itemRarityWeights[i] = weaponWeight;
+                    itemTypeWeights[i] = weaponWeight;
                 }
             } else {
-                itemRarityWeights[i] = powerUpWeight;
+                itemTypeWeights[i] = powerUpWeight;
             }
         }
+
+        Debug.LogWarning("Item type weights: " + string.Join(", ", itemTypeWeights));
     }
 
     // Update is called once per frame
@@ -68,9 +70,13 @@ public class ItemSpawner : MonoBehaviour
         if (spawnTimer >= spawnRate)
         {
             spawnTimer = 0f;
-            int index = WeightedRandom(itemRarityWeights);
-            GameObject itemPrefab = items[index];
-            SpawnItemAtRandomLocation(itemPrefab);
+            int index = WeightedRandom(itemTypeWeights);
+            GameObject item = items[index];
+
+            Debug.Log(item);
+
+
+            SpawnItemAtRandomLocation(items[index]);
         }
     }
 
@@ -106,14 +112,14 @@ public class ItemSpawner : MonoBehaviour
         spawnLocation = new Vector3(Random.Range(playArea.rect.xMin + 1f, playArea.rect.xMax - 1f), Random.Range(playArea.rect.yMin + 1f, playArea.rect.yMax  - 1f), 5) + playArea.position;
 
         //only run this code when in the editor
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         if (!playArea.rect.Contains(spawnLocation - (Vector2)playArea.position))
         {
             Debug.Log(spawnLocation);
             Debug.Log("spawn location is not within the play area");
             return;
         }
-        #endif
+#endif
 
         Collider2D collider = Physics2D.OverlapCircle(spawnLocation, 1f,LayerMask.NameToLayer("Item"));
         
@@ -161,20 +167,30 @@ public class ItemSpawner : MonoBehaviour
         }
 
         // Check if the player has an item of the same type or better equipped
-        string weaponKind = itemPrefab.GetComponent<Weapon>().getDisplayName();
-        Weapon playerWeapon = player.GetComponent<WeaponsManager>().GetEquippedWeapon(itemPrefab.GetComponent<Weapon>().weaponType);
-
-        if (playerWeapon.getDisplayName() == weaponKind && playerWeapon.rarity >= rarity)
+        if (itemPrefab.GetComponent<Weapon>().getFinalType() == WeaponType.Primary || itemPrefab.GetComponent<Weapon>().getFinalType() == WeaponType.Secondary)
         {
-            Debug.Log("Player already has a better or equal weapon equipped");
-            return;
-        }
+            string weaponKind = itemPrefab.GetComponent<Weapon>().getDisplayName();
+            Weapon playerWeapon = player.GetComponent<WeaponsManager>().GetEquippedWeapon(itemPrefab.GetComponent<Weapon>().weaponType);
 
+            if (playerWeapon.getDisplayName() == weaponKind && playerWeapon.rarity >= rarity)
+            {
+                Debug.Log("Player already has a better or equal weapon equipped");
+                return;
+            }
+        }
         SpawnItem(itemPrefab, v3, rarity);
     }
 
     public void SpawnItem(GameObject itemPrefab, Vector3 v3, WeaponRarity rarity)
     {
+        // Check if there is another object on the weapons layer within 1 units of the spawn location
+        Collider2D collider = Physics2D.OverlapCircle(v3, 1f, LayerMask.NameToLayer("Item"));
+        if (collider != null)
+        {
+            Debug.Log("Item overlaps with another item");
+            return;
+        }
+
         bool isWeapon = itemPrefab.GetComponent<Weapon>() != null;
         if (isWeapon) {
             GameObject weaponItemInstance = Instantiate(weaponItem, v3, Quaternion.identity);

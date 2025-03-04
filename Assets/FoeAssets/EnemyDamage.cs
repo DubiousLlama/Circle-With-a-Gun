@@ -47,12 +47,6 @@ public class EnemyDamage : MonoBehaviour
 
         float distance = Vector3.Distance(player.GetComponent<Transform>().position, transform.position);
 
-
-        if (distance <= attackRange + 0.5f)
-        {
-            inRangeTimer += Time.deltaTime;
-        }
-
         if (fireDelay > 0)
         {
             fireDelay -= Time.deltaTime;
@@ -69,7 +63,10 @@ public class EnemyDamage : MonoBehaviour
         }
 
 
-        else
+        if (distance <= attackRange + 0.5f)
+        {
+            inRangeTimer += Time.deltaTime;
+        } else
         {
             inRangeTimer = 0;
             

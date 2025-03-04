@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class LightningBolt : Weapon
 {
-    public int damage = 80;
+    public int damage = 120;
 
     GameObject strikePrefab;
     private string sfx = "Lightning";
 
     public void Awake()
     { 
+        isAutomatic = false;
         weaponType = WeaponType.Legendary;
         SetRarity(WeaponRarity.Legendary);
     }
@@ -28,7 +29,7 @@ public class LightningBolt : Weapon
     }
     
     private Dictionary<WeaponRarity, float> cooldowns = new Dictionary<WeaponRarity, float> {
-        { WeaponRarity.Legendary, 0.33f },
+        { WeaponRarity.Legendary, 0.4f },
     };
 
     public override void SetRarity(WeaponRarity rarity)

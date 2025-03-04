@@ -25,9 +25,9 @@ public class Shotgun : Weapon
     }
 
     private Dictionary<WeaponRarity, int> r_damage = new Dictionary<WeaponRarity, int> {
-        { WeaponRarity.Rare, 35 },
-        { WeaponRarity.Uncommon, 35 },
-        { WeaponRarity.Common, 35 }
+        { WeaponRarity.Rare, 25 },
+        { WeaponRarity.Uncommon, 25 },
+        { WeaponRarity.Common, 25 }
     };
 
     private Dictionary<WeaponRarity, int> r_spread = new Dictionary<WeaponRarity, int> {

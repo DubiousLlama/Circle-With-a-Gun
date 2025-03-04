@@ -43,6 +43,9 @@ public class EnemyHealth : MonoBehaviour
 
     private GameObject Score;
     private ItemSpawner itemSpawner;
+
+    private bool dead = false;
+
     void Start()
     {
         Score = GameObject.Find("Score");
@@ -86,6 +89,12 @@ public class EnemyHealth : MonoBehaviour
 
     void Die()
     {
+        if (dead)
+        {
+            return;
+        }
+
+        dead = true;
         deathEffect.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
         GameObject effect = Instantiate(deathEffect, transform.position, Quaternion.identity);
         Destroy(effect, 0.5f);

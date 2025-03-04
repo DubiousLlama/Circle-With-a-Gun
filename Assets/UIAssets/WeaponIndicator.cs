@@ -17,6 +17,7 @@ public class WeaponIndicator : MonoBehaviour
     private Image lifetimeFill;
     private Image cooldownFill;
     private Image rarityBackground;
+    private Image background;
     private TextMeshProUGUI rarityText;
 
     private WeaponsManager weaponsManager;
@@ -41,6 +42,7 @@ public class WeaponIndicator : MonoBehaviour
         lifetimeFill = transform.Find("LifetimeFill").GetComponent<Image>();
         cooldownFill = transform.Find("CooldownFill").GetComponent<Image>();
         rarityBackground = transform.Find("RarityBackground").GetComponent<Image>();
+        background = transform.Find("Background").GetComponent<Image>();
         rarityText = rarityBackground.transform.Find("RarityText").GetComponent<TextMeshProUGUI>();
     }
 
@@ -71,6 +73,7 @@ public class WeaponIndicator : MonoBehaviour
         icon.sprite = weapon.sprite;
 
         rarityText.text = ((int) weapon.rarity + 1).ToString();
-        rarityBackground.color = rarityColors[weapon.rarity];
+        background.color = rarityColors[weapon.rarity];
+
     }
 }
