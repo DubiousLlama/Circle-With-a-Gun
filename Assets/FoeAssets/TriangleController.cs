@@ -11,7 +11,7 @@ public class TriangleController : MonoBehaviour
     public float range = 7f;
 
     [Range(0.1f, 4)]
-    public float attackWindup = 0.8f;
+    public float attackWindup = 1f;
 
     [Range(0.1f, 6)]
     public float attackCooldown = 1;
@@ -20,7 +20,7 @@ public class TriangleController : MonoBehaviour
     public float chargePace = 8;
 
     [Range(0.5f, 4)]
-    public float chargeDuration = 1.5f;
+    public float chargeDuration = 3f;
 
     private string state;
     private GameObject player;
@@ -29,6 +29,9 @@ public class TriangleController : MonoBehaviour
     private float wait = 0;
     private Pathfinding.AIPath pathfinding;
     private Vector3 target;
+    private bool dealtDamage = false;
+
+    //private int messageTrack = 0;
     
     // Update is called once per frame
 
@@ -46,7 +49,7 @@ public class TriangleController : MonoBehaviour
         // First, update the state of the triangle
         float playerDistance = Vector2.Distance(transform.position, player.transform.position);
 
-        if (range / 2 < playerDistance && playerDistance < range && state == "pathfinding" && attackRecharge <= 0)
+        if (state == "pathfinding" && range / 2 < playerDistance && playerDistance < range  && attackRecharge <= 0)
         {
             pathfinding.enabled = false;
             state = "aiming";
@@ -54,22 +57,40 @@ public class TriangleController : MonoBehaviour
             // Change the color of the triangle to indicate that it is charging
             gameObject.GetComponent<SpriteRenderer>().color = new Color(0.8f, 0.8f, 0.8f);
             Invoke("ResetColor", chargeDuration + attackWindup);
+
+
+            //Debug.Log(messageTrack + ": State Change from Pathfinding to Aiming");
+            //messageTrack++;
         }
         else if (state == "aiming" && attackingFor >= attackWindup)
         {
+            wait = 0;
             state = "charging";
+
+            // Lock the rotation of the foe
+            gameObject.GetComponent<Rigidbody2D>().freezeRotation = true;
+
             Charge();
+
+            //Debug.Log(messageTrack + ": State Change from Aiming to Charging");
+            //messageTrack++;
         }
         else if (state == "charging" && wait >= chargeDuration)
         {
+            gameObject.GetComponent<Rigidbody2D>().freezeRotation = false;
+
             state = "pathfinding";
             pathfinding.enabled = true;
             attackRecharge = attackCooldown;
             attackingFor = 0;
             wait = 0;
+            dealtDamage = false;
 
             // Set the triangle's velocity to zero
             GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+
+            //Debug.Log(messageTrack + ": State Change from Charging to Pathfinding");
+            //messageTrack++;
         }
 
         //Now, take action based on the state of the triangle
@@ -120,8 +141,9 @@ public class TriangleController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject == player && state == "charging")
+        if (collision.gameObject == player && state == "charging" && !dealtDamage)
         {
+            dealtDamage = true;
             collision.gameObject.GetComponent<PlayerHealth>().Damage(damage);
             gameObject.GetComponent<EnemyHealth>().TakeDamage(1000);
         }

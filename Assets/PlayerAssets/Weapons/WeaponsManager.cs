@@ -112,5 +112,10 @@ public class WeaponsManager : MonoBehaviour
         this.weapons[weaponComponent.weaponSlot]?.Expire();
         weaponComponent.weaponsManager = this;
         weaponComponent.Equip();
+
+        if (weaponComponent.getFinalType() == WeaponType.Legendary)
+        {
+            OnPointerUp(WeaponType.Primary);
+        }
     }
 }

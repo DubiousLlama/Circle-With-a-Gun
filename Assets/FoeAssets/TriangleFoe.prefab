@@ -16,7 +16,6 @@ GameObject:
   - component: {fileID: 4184842238469369798}
   - component: {fileID: 2632064407500274207}
   - component: {fileID: -5833325925895472674}
-  - component: {fileID: 2593336347513291876}
   m_Layer: 10
   m_Name: TriangleFoe
   m_TagString: Foe
@@ -189,6 +188,8 @@ MonoBehaviour:
   threshold3: 20
   threshold4: 10
   threshold5: 0
+  dropItem: 0
+  items: []
 --- !u!114 &4184842238469369798
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -202,9 +203,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 400
-  range: 6
-  attackWindup: 1
-  attackCooldown: 2
+  range: 7
+  attackWindup: 1.2
+  attackCooldown: 3
   chargePace: 10
   chargeDuration: 1
 --- !u!114 &2632064407500274207
@@ -277,24 +278,6 @@ MonoBehaviour:
   slowWhenNotFacingTarget: 0
   whenCloseToDestination: 0
   constrainInsideGraph: 0
---- !u!114 &2593336347513291876
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5362832273410236654}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ae9fe8803dbfb1940b087881ca0fe449, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damage: 400
-  range: 7
-  attackWindup: 0.8
-  attackCooldown: 1
-  chargePace: 8
-  chargeDuration: 1.5
 --- !u!1 &6318859863315472559
 GameObject:
   m_ObjectHideFlags: 0

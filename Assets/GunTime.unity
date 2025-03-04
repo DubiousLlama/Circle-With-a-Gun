@@ -1670,7 +1670,7 @@ MonoBehaviour:
   difficultyIncrease: 0.008
   spawnRate: 6
   spawnGroupRate: 15
-  spawnTriangleRate: 8
+  spawnTriangleRate: 10
   spawnOctoRate: 24
   spawnTrapzRate: 12
   spawnRange: 10
@@ -1697,10 +1697,10 @@ MonoBehaviour:
   - {fileID: 2920370379373296382, guid: 5c27a87add5bdc745a88fd2335521fe2, type: 3}
   - {fileID: 2920370379373296382, guid: 0edf60b7ebff98e4db713a4a7ba8b876, type: 3}
   - {fileID: 3000582385287026008, guid: b408ef8ef8e5a4a95a2738ef2bdc6206, type: 3}
-  spawnRate: 0.75
+  spawnRate: 8
   powerUpWeight: 1.8
   weaponWeight: 1
-  legendaryWeight: 8
+  legendaryWeight: 0.5
   commonOccurance: 5
   uncommonOccurance: 2
   rareOccurance: 0.5
