@@ -12,12 +12,18 @@ public class PlayerMovement : MonoBehaviour
     public Camera cam;
     public Joystick movementJoystick;
     public Joystick directionJoystick;
+    private WeaponsManager weaponsManager;
 
     [HideInInspector]
     public Vector2 movement;
     Vector2 lookDir;
 
     ICollection<string> slowIDs = new List<string>();
+
+    void Awake()
+    {
+        weaponsManager = GetComponent<WeaponsManager>();
+    }
 
     // Update is called once per frame
     void Update()
@@ -114,11 +120,13 @@ public class PlayerMovement : MonoBehaviour
         {
             lookDir.x = directionJoystick.Horizontal;
             lookDir.y = directionJoystick.Vertical;
+            weaponsManager.OnPrimaryDown();
         }
         else
         {
             Vector2 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
             lookDir = mousePos - rb.position;
+            weaponsManager.OnPrimaryUp();
         }
     }
 }

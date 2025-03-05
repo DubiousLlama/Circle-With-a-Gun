@@ -59,6 +59,33 @@ public class WeaponsManager : MonoBehaviour
         return player.GetComponent<PlayerMovement>().isMoving();
     }
 
+    public void OnPrimaryDown()
+    {
+        if (weapons[WeaponSlot.Three] == null)
+        {
+            isFiring[WeaponType.Primary] = true;
+        } else
+        {
+            isFiring[WeaponType.Legendary] = true;
+        }
+    }
+
+    public void OnPrimaryUp()
+    {
+        isFiring[WeaponType.Primary] = false;
+        isFiring[WeaponType.Legendary] = false;
+    }
+
+    public void OnSecondaryDown()
+    {
+        isFiring[WeaponType.Secondary] = true;
+    }
+
+    public void OnSecondaryUp()
+    {
+        isFiring[WeaponType.Secondary] = false;
+    }
+
     void Update()
     {
         // WeaponButton is used for mobile
@@ -66,41 +93,23 @@ public class WeaponsManager : MonoBehaviour
             // Primary weapon
             if (Input.GetButtonDown("Fire1"))
             {
-                if (weapons[WeaponSlot.Three] == null)
-                {
-                    OnPointerDown(WeaponType.Primary);
-                } else
-                {
-                    OnPointerDown(WeaponType.Legendary);
-                }
-                
+                OnPrimaryDown();
             }
             if (Input.GetButtonUp("Fire1"))
             {
-                OnPointerUp(WeaponType.Primary);
-                OnPointerUp(WeaponType.Legendary);
+                OnPrimaryUp();
             }
 
             // Secondary weapon
             if (Input.GetButtonDown("Fire2"))
             {
-                OnPointerDown(WeaponType.Secondary);
+                OnSecondaryDown();
             }
             if (Input.GetButtonUp("Fire2"))
             {
-                OnPointerUp(WeaponType.Secondary);
+                OnSecondaryUp();
             }
         }
-    }
-
-    public void OnPointerDown(WeaponType weaponType)
-    {
-        isFiring[weaponType] = true;
-    }
-
-    public void OnPointerUp(WeaponType weaponType)
-    {
-        isFiring[weaponType] = false;
     }
 
     public void EquipWeapon(GameObject weapon)
@@ -115,7 +124,7 @@ public class WeaponsManager : MonoBehaviour
 
         if (weaponComponent.getFinalType() == WeaponType.Legendary)
         {
-            OnPointerUp(WeaponType.Primary);
+            isFiring[WeaponType.Primary] = false;
         }
     }
 }

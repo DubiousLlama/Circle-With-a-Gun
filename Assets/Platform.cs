@@ -24,6 +24,15 @@ public class Platform
             return hardcodedPlatform.Value;
         }
 
+        #if UNITY_EDITOR
+            if (platformCache == PlatformType.Unset)
+            {
+                EditorConfig config = AssetDatabase.LoadAssetAtPath<EditorConfig>("Assets/EditorConfig.asset");
+                platformCache = config.platform;
+            }
+            return platformCache;
+        #endif
+
         // Determine platform based on Unity's runtime platform
         switch (Application.platform)
         {
@@ -37,15 +46,6 @@ public class Platform
             case RuntimePlatform.WebGLPlayer:
                 return PlatformType.Desktop;
 
-            case RuntimePlatform.WindowsEditor:
-            case RuntimePlatform.OSXEditor:
-            case RuntimePlatform.LinuxEditor:
-                if (platformCache == PlatformType.Unset)
-                {
-                    EditorConfig config = AssetDatabase.LoadAssetAtPath<EditorConfig>("Assets/EditorConfig.asset");
-                    platformCache = config.platform;
-                }
-                return platformCache;
             default:
                 Debug.LogWarning("Unknown platform. Defaulting to Desktop.");
                 return PlatformType.Desktop;

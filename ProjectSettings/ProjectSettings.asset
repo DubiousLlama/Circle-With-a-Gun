@@ -845,7 +845,13 @@ PlayerSettings:
   XboxOneOverrideIdentityName: 
   XboxOneOverrideIdentityPublisher: 
   vrEditorSettings: {}
-  cloudServicesEnabled: {}
+  cloudServicesEnabled:
+    Build: 0
+    Collab: 0
+    Game Performance: 0
+    Purchasing: 0
+    UDP: 0
+    Unity Ads: 0
   luminIcon:
     m_Name: 
     m_ModelFolderPath: 
@@ -860,11 +866,11 @@ PlayerSettings:
   apiCompatibilityLevel: 6
   activeInputHandler: 0
   windowsGamepadBackendHint: 0
-  cloudProjectId: beec3e74-fab5-4ebb-8e97-c0bbd669d9bb
+  cloudProjectId: f29a2181-38af-496c-a50f-da216cc34fde
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
   projectName: Circle With a Gun
-  organizationId: dubiousllama
+  organizationId: psl-4500625
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   playerDataPath: 

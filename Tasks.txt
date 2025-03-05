@@ -3,9 +3,9 @@ Secondary <- Drop from blue Octos
 Primary <- Drop from blue Octos
 Legendary <- Random chance to spawn on the map
 
-Legendary = #D81B60
-Rare 5% = #FFC107
-Uncommon 25% = #1E88E5
+Legendary =rgb(216, 27, 96)
+Rare 5% =rgb(255, 193, 7)
+Uncommon 25% =rgb(30, 136, 229)
 Common 70% = Black/White
 
 Decide on Wednesday:

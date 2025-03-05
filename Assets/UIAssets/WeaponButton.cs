@@ -41,16 +41,10 @@ public class WeaponButton : MonoBehaviour
     {
         if (isFire1)
         {
-            if (weaponsManager.weapons[WeaponSlot.Three] == null)
-            {
-                weaponsManager.OnPointerDown(WeaponType.Primary);
-            } else
-            {
-                weaponsManager.OnPointerDown(WeaponType.Legendary);
-            }
+            weaponsManager.OnPrimaryDown();
         } else
         {
-            weaponsManager.OnPointerDown(WeaponType.Secondary);
+            weaponsManager.OnSecondaryDown();
         }
     }
 
@@ -58,10 +52,9 @@ public class WeaponButton : MonoBehaviour
     {
         if (isFire1)
         {
-            weaponsManager.OnPointerUp(WeaponType.Primary);
-            weaponsManager.OnPointerUp(WeaponType.Legendary);
+            weaponsManager.OnPrimaryUp();
         } else {
-            weaponsManager.OnPointerUp(WeaponType.Secondary);
+            weaponsManager.OnSecondaryUp();
         }
     }
 }
