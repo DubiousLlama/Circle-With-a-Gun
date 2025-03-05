@@ -387,6 +387,14 @@ PrefabInstance:
       propertyPath: weaponSlot
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3003877806079815466, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
+      propertyPath: weaponSlots.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3003877806079815466, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
+      propertyPath: weaponSlots.Array.data[0]
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8319267871796741399, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -992,6 +1000,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3003877806079815466, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
       propertyPath: weaponSlot
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3003877806079815466, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
+      propertyPath: weaponSlots.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3003877806079815466, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
+      propertyPath: weaponSlots.Array.data[0]
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8319267871796741399, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
@@ -1700,7 +1716,7 @@ MonoBehaviour:
   spawnRate: 8
   powerUpWeight: 1.8
   weaponWeight: 1
-  legendaryWeight: 0.5
+  legendaryWeight: 5
   commonOccurance: 5
   uncommonOccurance: 2
   rareOccurance: 0.5
@@ -2151,6 +2167,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fire Left
       objectReference: {fileID: 0}
+    - target: {fileID: 6837543930778508338, guid: 3cb708e3b551e436f8c1a027fa68450d, type: 3}
+      propertyPath: m_TargetGraphic
+      value: 
+      objectReference: {fileID: 1959890693}
+    - target: {fileID: 6837543930778508343, guid: 3cb708e3b551e436f8c1a027fa68450d, type: 3}
+      propertyPath: isFire1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7303275556843264341, guid: 3cb708e3b551e436f8c1a027fa68450d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3cb708e3b551e436f8c1a027fa68450d, type: 3}
 --- !u!1 &1052375756
@@ -2473,6 +2501,17 @@ Transform:
   m_Father: {fileID: 13892474}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1384253448 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8528860553865949979, guid: 3cb708e3b551e436f8c1a027fa68450d, type: 3}
+  m_PrefabInstance: {fileID: 6837543929873303377}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1395592282
 GameObject:
   m_ObjectHideFlags: 0
@@ -3159,6 +3198,17 @@ Transform:
   m_Father: {fileID: 13892474}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1959890693 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8528860553865949979, guid: 3cb708e3b551e436f8c1a027fa68450d, type: 3}
+  m_PrefabInstance: {fileID: 1046274731}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &1987960177 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2882209905168990432, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
@@ -3344,6 +3394,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Slot One
       objectReference: {fileID: 0}
+    - target: {fileID: 3003877806079815466, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
+      propertyPath: weaponSlots.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8319267871796741399, guid: 6f07ebe1d21dd4e74b082932dc5fcf80, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -3373,6 +3427,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1604214900}
     m_Modifications:
+    - target: {fileID: 1482172450413102734, guid: 3cb708e3b551e436f8c1a027fa68450d, type: 3}
+      propertyPath: weaponSlots.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1482172450413102734, guid: 3cb708e3b551e436f8c1a027fa68450d, type: 3}
+      propertyPath: weaponSlots.Array.data[0]
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1482172450413102734, guid: 3cb708e3b551e436f8c1a027fa68450d, type: 3}
+      propertyPath: weaponSlots.Array.data[1]
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6837543930778508336, guid: 3cb708e3b551e436f8c1a027fa68450d, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -3461,6 +3527,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fire Right
       objectReference: {fileID: 0}
+    - target: {fileID: 6837543930778508338, guid: 3cb708e3b551e436f8c1a027fa68450d, type: 3}
+      propertyPath: m_TargetGraphic
+      value: 
+      objectReference: {fileID: 1384253448}
     - target: {fileID: 6837543930778508343, guid: 3cb708e3b551e436f8c1a027fa68450d, type: 3}
       propertyPath: weaponType
       value: 0

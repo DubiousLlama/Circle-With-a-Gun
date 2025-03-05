@@ -9,7 +9,7 @@ using UnityEngine.UI;
 
 public class WeaponIndicator : MonoBehaviour
 {
-    public WeaponSlot weaponSlot;
+    public WeaponSlot[] weaponSlots;
 
     private CanvasGroup canvasGroup;
 
@@ -49,7 +49,14 @@ public class WeaponIndicator : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Weapon weapon = weaponsManager.weapons[weaponSlot];
+        Weapon weapon = null;
+        foreach (WeaponSlot weaponSlot in weaponSlots) {
+            weapon = weaponsManager.weapons[weaponSlot];
+            if (weapon != null) {
+                break;
+            }
+        }
+
         if (weapon == null) {
             canvasGroup.alpha = 0f;
             return;
@@ -60,7 +67,7 @@ public class WeaponIndicator : MonoBehaviour
             canvasGroup.alpha = 1f;
         }
 
-        if (weaponSlot == WeaponSlot.Two && playerMovement.isMoving())
+        if (weapon.weaponSlot == WeaponSlot.Two && playerMovement.isMoving())
         {
             canvasGroup.alpha = 0.5f;
         } else
