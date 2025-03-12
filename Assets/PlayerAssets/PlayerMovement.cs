@@ -120,13 +120,19 @@ public class PlayerMovement : MonoBehaviour
         {
             lookDir.x = directionJoystick.Horizontal;
             lookDir.y = directionJoystick.Vertical;
-            weaponsManager.OnPrimaryDown();
+            if (Platform.IsMobile())
+            {
+                weaponsManager.OnPrimaryDown();
+            }
         }
         else
         {
             Vector2 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
             lookDir = mousePos - rb.position;
-            weaponsManager.OnPrimaryUp();
+            if (Platform.IsMobile())
+            {
+                weaponsManager.OnPrimaryUp();
+            }
         }
     }
 }
