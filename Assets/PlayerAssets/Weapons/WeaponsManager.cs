@@ -18,6 +18,8 @@ public class WeaponsManager : MonoBehaviour
 
     private GameObject player;
 
+    private GameMusic gameMusic;
+
     void Awake()
     {
         weapons[WeaponSlot.One] = null;
@@ -32,6 +34,8 @@ public class WeaponsManager : MonoBehaviour
     void Start()
     {
         player = GameObject.Find("PC");
+
+        gameMusic = GameMusic.instance;
         
         EquipWeapon(Instantiate(defaultPrimaryWeapon));
 
@@ -124,7 +128,18 @@ public class WeaponsManager : MonoBehaviour
 
         if (weaponComponent.getFinalType() == WeaponType.Legendary)
         {
+            GameMusic.instance.PlayEventTrack("legendary");
+
+            if (Input.GetButton("Fire1"))
+            {
+                OnPrimaryDown();
+            }
             isFiring[WeaponType.Primary] = false;
+        }
+
+        if (weaponComponent.getFinalType() == WeaponType.Primary && Input.GetButton("Fire1"))
+        {
+            OnPrimaryDown();
         }
     }
 }

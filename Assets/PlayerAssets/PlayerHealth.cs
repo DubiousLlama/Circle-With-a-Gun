@@ -21,6 +21,7 @@ public class PlayerHealth : MonoBehaviour
     private float maxHealth = 1000f;
 
     AudioManager audioManager;
+    GameMusic gameMusic;
 
     // Start is called before the first frame update
     void Start()
@@ -31,6 +32,7 @@ public class PlayerHealth : MonoBehaviour
         scoreTracker = GameObject.Find("Score").GetComponent<ScoreTracker>();
 
         audioManager = AudioManager.instance;
+        gameMusic = GameMusic.instance;
     }
 
     public void Damage(float damage)
@@ -39,6 +41,11 @@ public class PlayerHealth : MonoBehaviour
         audioManager.PlaySfx(damageToUse);
         health -= damage;
         regenTimer = 0f;
+
+        if (health < maxHealth * 0.3f && !gameOver)
+        {
+            gameMusic.PlayEventTrack("lowHealth");
+        }
     }
 
     public void Heal(float heal)
@@ -77,7 +84,8 @@ public class PlayerHealth : MonoBehaviour
                 {
                     PlayerPrefs.SetInt("HighScore", scoreTracker.GetScore());
                 }
-                Invoke("EndGame", 1.4f);
+                gameMusic.PlayEventTrack("death");
+                Invoke("EndGame", 6f);
                 gameOverScreen.SetActive(true);
             }
         }

@@ -8,6 +8,7 @@ public class MenuController : MonoBehaviour
 {
 
     public GameObject HighScore;
+    public MenuMusic menuMusic;
 
     public void QuitGame()
     {
@@ -27,5 +28,6 @@ public class MenuController : MonoBehaviour
         }
 
         HighScore.GetComponent<TextMeshProUGUI>().text = "High Score: " + PlayerPrefs.GetInt("HighScore");
+        menuMusic = MenuMusic.instance;
     }
 }

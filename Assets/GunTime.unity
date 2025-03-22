@@ -1763,7 +1763,7 @@ MonoBehaviour:
   spawnRate: 8
   powerUpWeight: 1.8
   weaponWeight: 1
-  legendaryWeight: 0.5
+  legendaryWeight: 1
   commonOccurance: 5
   uncommonOccurance: 2
   rareOccurance: 0.5
@@ -2332,19 +2332,6 @@ MonoBehaviour:
   - name: teleport
     clip: {fileID: 8300000, guid: 3e418e4ee70c5e54fafe53114e484503, type: 3}
     volume: 0.5
-  music:
-  - name: cwag2
-    clip: {fileID: 8300000, guid: 4953f0d391c0f414dba9e27a397649a7, type: 3}
-    volume: 0.7
-  - name: cwag1
-    clip: {fileID: 8300000, guid: 7e37875e9c7dc438fa69555c049efe33, type: 3}
-    volume: 0.7
-  - name: cwag4
-    clip: {fileID: 8300000, guid: 6e7a2300f5f3d4e4098b3c1614588d96, type: 3}
-    volume: 0.7
-  - name: title
-    clip: {fileID: 8300000, guid: 90c8f4783fe1b40d198ccfff6468ff77, type: 3}
-    volume: 0.7
 --- !u!4 &1052375758
 Transform:
   m_ObjectHideFlags: 0
@@ -3277,6 +3264,73 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b08a2a060920b470a813bbb3a6637ef5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &2081357559
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2081357561}
+  - component: {fileID: 2081357560}
+  m_Layer: 0
+  m_Name: MusicManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2081357560
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2081357559}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60363d4a00f9a0246860863b0ca8843f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  transitionTime: 0.45
+  baseTracks:
+  - name: track1
+    clip: {fileID: 8300000, guid: 7e37875e9c7dc438fa69555c049efe33, type: 3}
+    volume: 1
+  - name: track2
+    clip: {fileID: 8300000, guid: 4953f0d391c0f414dba9e27a397649a7, type: 3}
+    volume: 1
+  - name: track3
+    clip: {fileID: 8300000, guid: 6e7a2300f5f3d4e4098b3c1614588d96, type: 3}
+    volume: 1
+  legendaryTrack:
+    name: legendary
+    clip: {fileID: 8300000, guid: d9e3753d906be744b9cb23bef5db3be8, type: 3}
+    volume: 1
+  lowHealthTrack:
+    name: lowhealth
+    clip: {fileID: 8300000, guid: 90c8f4783fe1b40d198ccfff6468ff77, type: 3}
+    volume: 1
+  deathTrack:
+    name: death
+    clip: {fileID: 8300000, guid: 66e5cc1e021ce834895c5b0d46e81606, type: 3}
+    volume: 1
+--- !u!4 &2081357561
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2081357559}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.7334626, y: 15.103791, z: 9.265438}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 10
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2092361942
 GameObject:
   m_ObjectHideFlags: 0
