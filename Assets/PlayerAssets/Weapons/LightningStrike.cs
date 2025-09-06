@@ -53,7 +53,7 @@ public class LightningStrike : Weapon
         return WeaponType.Secondary;
     }
 
-    protected override void Fire()
+    public override void Fire()
     {
         // Get a random foe within 10 units of the player
         Collider2D[] foes = Physics2D.OverlapCircleAll(transform.position, 10f, enemyLayer);

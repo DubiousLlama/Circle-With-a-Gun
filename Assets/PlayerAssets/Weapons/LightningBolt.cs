@@ -10,8 +10,8 @@ public class LightningBolt : Weapon
     private string sfx = "Lightning";
 
     public void Awake()
-    { 
-        isAutomatic = false;
+    {
+        isAutomatic = true;
         weaponType = WeaponType.Legendary;
         SetRarity(WeaponRarity.Legendary);
     }
@@ -48,7 +48,7 @@ public class LightningBolt : Weapon
         return WeaponType.Legendary;
     }
 
-    protected override void Fire()
+    public override void Fire()
     {
         Quaternion rot = firePoint.rotation * Quaternion.Euler(0, 0, 90);
 

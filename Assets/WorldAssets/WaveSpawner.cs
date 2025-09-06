@@ -41,6 +41,7 @@ public class WaveSpawner : MonoBehaviour
 
     GameObject player;
     RectTransform playArea;
+    EnemyTracker enemyTracker;
 
     // Start is called before the first frame update
     void Start()
@@ -58,6 +59,7 @@ public class WaveSpawner : MonoBehaviour
 
         player = GameObject.Find("PC");
         playArea = GameObject.Find("PlayArea").GetComponent<RectTransform>();
+        enemyTracker = GetComponent<EnemyTracker>();
     }
 
     // Update is called once per frame
@@ -172,6 +174,13 @@ public class WaveSpawner : MonoBehaviour
 
     bool Spawn(GameObject enemy, Vector3 spawnPosition)
     {
+        // Check if we can spawn more enemies
+        if (!enemyTracker.CanSpawnMore())
+        {
+            Debug.Log("Max enemies reached, cannot spawn more.");
+            return false;
+        }
+
         // Check if the spawn position intersects with any other colliders
         Collider2D hitCollider = Physics2D.OverlapCircle(spawnPosition, 0.3f);
         if (hitCollider != null && hitCollider.gameObject.tag != "Item")
@@ -192,7 +201,19 @@ public class WaveSpawner : MonoBehaviour
         }
 
         // Instantiate the enemy prefab at the spawn position
-        Instantiate(enemy, spawnPosition, Quaternion.identity);
+        GameObject spawnedEnemy = Instantiate(enemy, spawnPosition, Quaternion.identity);
+
+        // Get the EnemyTracker component from the GameObject this script is attached to
+
+        if (enemyTracker != null)
+        {
+            enemyTracker.RegisterEnemy(spawnedEnemy);
+        }
+        else
+        {
+            Debug.LogWarning("EnemyTracker component not found on SpawnScript GameObject.");
+        }
+
         return true;
     }
 }

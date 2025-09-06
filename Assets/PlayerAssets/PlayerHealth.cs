@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Serialization;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -22,6 +24,7 @@ public class PlayerHealth : MonoBehaviour
 
     AudioManager audioManager;
     GameMusic gameMusic;
+    PostProcessVolume post;
 
     // Start is called before the first frame update
     void Start()
@@ -33,6 +36,9 @@ public class PlayerHealth : MonoBehaviour
 
         audioManager = AudioManager.instance;
         gameMusic = GameMusic.instance;
+
+        post = GameObject.Find("PostEffects").GetComponent<PostProcessVolume>();
+
     }
 
     public void Damage(float damage)
@@ -89,10 +95,32 @@ public class PlayerHealth : MonoBehaviour
                 gameOverScreen.SetActive(true);
             }
         }
+
+        Pulse();
+
     }
 
-    private void EndGame()
+    private void Pulse()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+        Vignette vignette = post.profile.GetSetting<Vignette>();
+        float pulseSpeed = 5f;
+
+        if (health < maxHealth * 0.35f && !gameOver)
+        {
+            // 
+            float amplitude = (1 - (health / (maxHealth * 0.35f))) * 0.05f + 0.12f;
+
+            // Breathing effect using sine wave
+            vignette.intensity.value =  Mathf.Sin(Time.time * pulseSpeed) * amplitude * 0.3f + amplitude * 3;
+        }
+        else
+        {
+            // Smoothly fade back to 0 when not low health
+            vignette.intensity.value = Mathf.MoveTowards(
+                vignette.intensity.value,
+                0f,
+                Time.deltaTime
+            );
+        }
     }
 }

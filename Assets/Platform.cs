@@ -33,6 +33,8 @@ public class Platform
             return platformCache;
         #endif
 
+        // Disable unreachable code warnings
+        #pragma warning disable CS0162
         // Determine platform based on Unity's runtime platform
         switch (Application.platform)
         {

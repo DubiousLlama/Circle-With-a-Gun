@@ -46,11 +46,15 @@ public class SpawnScript : MonoBehaviour
     private float spawnTrapzTimer = 0f;
 
     private GameObject player;
+    private EnemyTracker enemyTracker;
+
+    private bool isHardMode = false;
 
     private void Start()
     {
         player = GameObject.Find("PC");
         playArea = GameObject.Find("PlayArea").GetComponent<RectTransform>();
+        enemyTracker = GetComponent<EnemyTracker>();
     }
 
     // Update is called once per frame
@@ -58,12 +62,18 @@ public class SpawnScript : MonoBehaviour
     {
         difficulty += Time.deltaTime * difficultyIncrease;
 
+        if (difficulty > 2.5f && !isHardMode)
+        {
+            difficultyIncrease *= 0.25f;
+            isHardMode = true;
+        }
 
-        spawnTimer -= (Time.deltaTime * difficulty);
-        spawnGroupTimer -= (Time.deltaTime * difficulty);
-        spawnTriangleTimer -= (Time.deltaTime * difficulty);
-        spawnOctoTimer -= (Time.deltaTime * difficulty);
-        spawnTrapzTimer -= (Time.deltaTime * difficulty);
+
+        spawnTimer -= (Time.deltaTime * difficulty * (isHardMode ? 0.5f : 1f));
+        spawnGroupTimer -= (Time.deltaTime * difficulty * (isHardMode ? 0.25f : 1f));
+        spawnTriangleTimer -= (Time.deltaTime * difficulty * (isHardMode ? 2f : 1f));
+        spawnOctoTimer -= (Time.deltaTime * difficulty * (isHardMode ? 1.2f : 1f));
+        spawnTrapzTimer -= (Time.deltaTime * difficulty * (isHardMode ? 1.4f : 1f));
 
         if (spawnTimer <= 0)
         {
@@ -137,7 +147,19 @@ public class SpawnScript : MonoBehaviour
 
         // Instantiate the enemy prefab at the spawn position
         Vector3 v3 = spawnPosition;
-        Spawn(v3, enemy);
+        GameObject spawnedEnemy = Spawn(v3, enemy);
+
+        // Get the EnemyTracker component from the GameObject this script is attached to
+        EnemyTracker enemyTracker = GetComponent<EnemyTracker>();
+        if (enemyTracker != null)
+        {
+            enemyTracker.RegisterEnemy(enemy);
+        }
+        else
+        {
+            Debug.LogWarning("EnemyTracker component not found on SpawnScript GameObject.");
+        }
+
     }
 
     void SpawnEnemyGroup(GameObject enemy, int numFoes, int j = 0)
@@ -203,19 +225,37 @@ public class SpawnScript : MonoBehaviour
         for (int i = 0; i < numFoes; i++)
         {
             Vector3 v3 = spawnPositions[i];
-            Spawn(v3, enemy);
+            GameObject spawnedEnemy = Spawn(v3, enemy);
+
+            // Get the EnemyTracker component from the GameObject this script is attached to
+            ;
+            if (enemyTracker != null)
+            {
+                enemyTracker.RegisterEnemy(spawnedEnemy);
+            }
+            else
+            {
+                Debug.LogWarning("EnemyTracker component not found on SpawnScript GameObject.");
+            }
         }
     }
     
-    void Spawn(Vector3 spawnPosition, GameObject enemy)
+    GameObject Spawn(Vector3 spawnPosition, GameObject enemy)
     {
-        // First, check if the spawn position is within 5 units of the player
-        if (Vector3.Distance(spawnPosition, player.GetComponent<Transform>().position) < 5f)
+        // First, check if we can spawn more enemies
+        if (!enemyTracker.CanSpawnMore())
         {
-            return;
+            Debug.Log("Max enemies reached, cannot spawn more.");
+            return null;
         }
 
-        Instantiate(enemy, spawnPosition, Quaternion.identity);
+        // Second, check if the spawn position is within 5 units of the player
+        if (Vector3.Distance(spawnPosition, player.GetComponent<Transform>().position) < 5f)
+        {
+            return null;
+        }
+
+        return Instantiate(enemy, spawnPosition, Quaternion.identity);
     }
 }
 

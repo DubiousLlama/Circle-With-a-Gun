@@ -74,7 +74,7 @@ public class Shotgun : Weapon
         }
     }
 
-    protected override void Fire()
+    public override void Fire()
     {
         float spreadAngleChange = spread / (numBullets-1);
         float startAngle = -spread / 2;

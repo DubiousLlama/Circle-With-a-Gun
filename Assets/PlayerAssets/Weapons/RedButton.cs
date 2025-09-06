@@ -56,7 +56,7 @@ public class RedButton : Weapon
         return WeaponType.Secondary;
     }
 
-    protected override void Fire()
+    public override void Fire()
     {
         int i = 0;
         while (i < 200) {

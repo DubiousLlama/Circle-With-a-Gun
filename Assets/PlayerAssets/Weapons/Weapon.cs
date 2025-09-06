@@ -40,10 +40,11 @@ public class Weapon : MonoBehaviour
     public float cooldownRemaining = 0f;
     protected AudioManager audioManager;
     protected PlayerStats playerStats;
+    protected PlayerMovement playerMovement;
     protected Transform firePoint;
     protected RechargeBarController barController;
     
-    protected bool isFiring {
+    public bool isFiring {
         set {
             weaponsManager.isFiring[weaponType] = value;
         }
@@ -70,6 +71,7 @@ public class Weapon : MonoBehaviour
         audioManager = AudioManager.instance;
         playerStats = transform.parent.GetComponent<PlayerStats>();
         firePoint = transform.parent.Find("FirePoint");
+        playerMovement = transform.parent.GetComponent<PlayerMovement>();
 
         GameObject rechargeBar = GameObject.Find("RechargeBar");
         barController = rechargeBar.GetComponent<RechargeBarController>();
@@ -86,7 +88,7 @@ public class Weapon : MonoBehaviour
         this.rarity = rarity;
     }
 
-    protected virtual void Fire() // Override this method to implement fire behavior for each weapon
+    public virtual void Fire() // Override this method to implement fire behavior for each weapon
     {
         Debug.Log("No weapon fire behavior implemented");
     }
@@ -108,10 +110,9 @@ public class Weapon : MonoBehaviour
 
     public bool CanFire()
     {
-        bool canFireMovement = weaponType != WeaponType.Secondary || !weaponsManager.isPlayerMoving();
         bool canFireCooldown = cooldownRemaining <= 0;
         bool canFireTemporary = isTemporary ? !IsExpired() : true;
-        return canFireMovement && canFireCooldown && canFireTemporary;
+        return canFireCooldown && canFireTemporary;
     }
 
     // Update is called once per frame
@@ -143,6 +144,14 @@ public class Weapon : MonoBehaviour
         {
             if (CanFire())
             {
+                if (getFinalType() == WeaponType.Secondary)
+                {
+                    if (playerMovement.isMoving())
+                    {
+                        playerMovement.SecondaryActivationWhileMoving();
+                        return;
+                    }
+                }
                 Fire();
                 cooldownRemaining = cooldown;
             }
@@ -154,6 +163,9 @@ public class Weapon : MonoBehaviour
 
         if (weaponType == WeaponType.Secondary)
         {
+
+            barController.SetMaxRecharge(cooldown);
+
             float charge = cooldown - cooldownRemaining;
 
             if (charge > 0 && charge <= cooldown)

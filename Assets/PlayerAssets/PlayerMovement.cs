@@ -17,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
     [HideInInspector]
     public Vector2 movement;
     Vector2 lookDir;
+    public bool secondaryMoveStop = false;
 
     ICollection<string> slowIDs = new List<string>();
 
@@ -37,22 +38,70 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-
         if (rb == null)
         {
             rb = GetComponent<Rigidbody2D>();
         }
 
-        rb.AddForce(movement.normalized * (moveSpeed + bonus));
+        if (rb.velocity.magnitude < 0.01f)
+        {
+            rb.velocity = Vector2.zero;
+        }
+
+        if (secondaryMoveStop)
+        {
+            if (rb.velocity.magnitude < 0.01f)
+            {
+                Invoke(nameof(SecondaryFire), 0.15f);
+            }
+            else
+            {
+                // Slow the player down quickly if they can't move
+                rb.velocity = rb.velocity * 0.8f;
+            }
+
+        } else
+        {
+            rb.AddForce(movement.normalized * (moveSpeed + bonus));
+
+            if (movement == Vector2.zero)
+            {
+                // Slow the player down quickly if they can't move
+                rb.velocity = rb.velocity * 0.8f;
+            }
+        }
 
         float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg + 90f;
 
         rb.rotation = angle;
     }
 
+    private void SecondaryFire()
+    {
+        Weapon weapon = weaponsManager.GetEquippedWeapon(WeaponType.Secondary);
+        if (weapon == null || weapon.cooldownRemaining > 0)
+        {
+            secondaryMoveStopDisable();
+            return;
+        }
+        weapon.Fire();
+        weapon.cooldownRemaining = weapon.cooldown;
+        Invoke(nameof(secondaryMoveStopDisable), 0.05f);
+    }
+
+    private void secondaryMoveStopDisable()
+    {
+        secondaryMoveStop = false;
+    }
+
+    public void SecondaryActivationWhileMoving()
+    {
+        secondaryMoveStop = true;
+    }
+
     public void Slow(float slowAmount, string slowID, float slowDuration)
     {
-        if (slowIDs.Contains(slowID))
+        if (slowIDs.Contains(slowID) || slowAmount <= 0)
         {
             return;
         }

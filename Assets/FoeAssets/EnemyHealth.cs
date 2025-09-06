@@ -43,13 +43,16 @@ public class EnemyHealth : MonoBehaviour
 
     private GameObject Score;
     private ItemSpawner itemSpawner;
+    private EnemyTracker enemyTracker;
 
     private bool dead = false;
 
     void Start()
     {
         Score = GameObject.Find("Score");
-        itemSpawner = GameObject.Find("Spawner").GetComponent<ItemSpawner>();
+        GameObject spawner = GameObject.Find("Spawner");
+        itemSpawner = spawner.GetComponent<ItemSpawner>();
+        enemyTracker = spawner.GetComponent<EnemyTracker>();
     }
 
     public void TakeDamage(int damage)
@@ -93,6 +96,8 @@ public class EnemyHealth : MonoBehaviour
         {
             return;
         }
+
+        enemyTracker.UnregisterEnemy(gameObject);
 
         dead = true;
         deathEffect.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);

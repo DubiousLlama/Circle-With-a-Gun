@@ -59,7 +59,7 @@ public class RapidFire : Weapon
         Debug.Log("Weapon equipped: " + gameObject.name);
     }
 
-    protected override void Fire()
+    public override void Fire()
     {
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();

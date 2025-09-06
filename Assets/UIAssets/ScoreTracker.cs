@@ -23,7 +23,7 @@ public class ScoreTracker : MonoBehaviour
             score += increase * multiplier;
         }
 
-        textObject.text = "Score: " + score.ToString();
+        textObject.text = score.ToString();
     }
 
     public void SetScore(int setTo)
@@ -32,7 +32,7 @@ public class ScoreTracker : MonoBehaviour
         {
             score = setTo;
         }
-        textObject.text = "Score: " + score.ToString();
+        textObject.text = score.ToString("G7");
 
     }
 
@@ -43,7 +43,7 @@ public class ScoreTracker : MonoBehaviour
             score = 0;
         }
         
-        textObject.text = "Score: " + score.ToString();
+        textObject.text = score.ToString("G7");
     }
 
     public int GetScore()

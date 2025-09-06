@@ -70,7 +70,7 @@ public class Boomerang : Weapon
         Debug.Log("Weapon equipped: " + gameObject.name);
     }
 
-    protected override void Fire()
+    public override void Fire()
     {
         GameObject boomerang = Instantiate(boomerangPrefab, firePoint.position, firePoint.rotation);
         BoomerScript bs = boomerang.GetComponent<BoomerScript>();

@@ -20,6 +20,13 @@ public class WeaponsManager : MonoBehaviour
 
     private GameMusic gameMusic;
 
+    public GameObject secondaryDisplay;
+    public GameObject secondaryInactive;
+    public GameObject secondaryActive;
+    public GameObject secondaryIndicatorActive;
+
+    public PlayerMovement playerMovement;
+
     void Awake()
     {
         weapons[WeaponSlot.One] = null;
@@ -114,6 +121,14 @@ public class WeaponsManager : MonoBehaviour
                 OnSecondaryUp();
             }
         }
+
+        // Handle secondary display logic
+
+        secondaryDisplay.SetActive(weapons[WeaponSlot.Two] != null);
+        secondaryIndicatorActive.SetActive(weapons[WeaponSlot.Two].cooldownRemaining <= 0);
+        secondaryInactive.SetActive(!playerMovement.isMoving());
+        secondaryActive.SetActive(weapons[WeaponSlot.Two].cooldownRemaining <= 0 && !playerMovement.isMoving());
+
     }
 
     public void EquipWeapon(GameObject weapon)
