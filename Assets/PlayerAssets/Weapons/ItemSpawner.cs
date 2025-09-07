@@ -65,6 +65,8 @@ public class ItemSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GetComponent<EnemyTracker>().enableSpawning == false) { return; }
+
         spawnTimer += Time.deltaTime;
 
         if (spawnTimer >= spawnRate)
@@ -181,14 +183,14 @@ public class ItemSpawner : MonoBehaviour
         SpawnItem(itemPrefab, v3, rarity);
     }
 
-    public void SpawnItem(GameObject itemPrefab, Vector3 v3, WeaponRarity rarity)
+    public bool SpawnItem(GameObject itemPrefab, Vector3 v3, WeaponRarity rarity)
     {
         // Check if there is another object on the weapons layer within 1 units of the spawn location
         Collider2D collider = Physics2D.OverlapCircle(v3, 1f, LayerMask.NameToLayer("Item"));
         if (collider != null)
         {
             Debug.Log("Item overlaps with another item");
-            return;
+            return false;
         }
 
         bool isWeapon = itemPrefab.GetComponent<Weapon>() != null;
@@ -202,6 +204,8 @@ public class ItemSpawner : MonoBehaviour
         } else {
             Instantiate(itemPrefab, v3, Quaternion.identity);
         }
+
+        return true;
     }
 
 }

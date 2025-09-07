@@ -12,6 +12,8 @@ public class EnemyTracker : MonoBehaviour
 
     private int maxEnemies = 0;
 
+    public bool enableSpawning = true;
+
 
     HashSet<int> enemies = new HashSet<int>();
 

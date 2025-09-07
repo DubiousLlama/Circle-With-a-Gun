@@ -65,6 +65,8 @@ public class WaveSpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (enemyTracker.enableSpawning == false) { return; }
+
         difficulty += Time.deltaTime * difficultyIncrease;
         time += Time.deltaTime;
         timeSinceLastWave += Time.deltaTime * difficulty;

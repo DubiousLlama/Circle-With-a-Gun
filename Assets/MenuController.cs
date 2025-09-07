@@ -3,12 +3,20 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MenuController : MonoBehaviour
 {
 
     public GameObject HighScore;
     public MenuMusic menuMusic;
+    public GameObject tutorialToggle;
+
+    private void Start()
+    {
+        tutorialToggle.GetComponent<Toggle>().isOn = PlayerPrefs.GetInt("doTutorial", 1) == 1;
+        Debug.Log(PlayerPrefs.GetInt("doTutorial"));
+    }
 
     public void QuitGame()
     {
@@ -18,6 +26,12 @@ public class MenuController : MonoBehaviour
     public void PlayGame()
     { 
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    }
+
+    public void toggleTutorial()
+    {
+        int flag = (PlayerPrefs.GetInt("doTutorial") == 1) ? 0 : 1;
+        PlayerPrefs.SetInt("doTutorial", flag);
     }
 
     public void Awake()

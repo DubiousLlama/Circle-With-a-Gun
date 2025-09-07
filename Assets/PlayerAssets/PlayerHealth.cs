@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml.Serialization;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
@@ -91,8 +92,9 @@ public class PlayerHealth : MonoBehaviour
                     PlayerPrefs.SetInt("HighScore", scoreTracker.GetScore());
                 }
                 gameMusic.PlayEventTrack("death");
-                Invoke("EndGame", 6f);
+                Time.timeScale = 0f;
                 gameOverScreen.SetActive(true);
+                gameOverScreen.transform.Find("Score").GetComponent<TextMeshProUGUI>().text = "Score: " + scoreTracker.GetScore().ToString();
             }
         }
 

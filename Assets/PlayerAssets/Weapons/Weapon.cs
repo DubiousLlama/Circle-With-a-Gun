@@ -44,7 +44,7 @@ public class Weapon : MonoBehaviour
     protected Transform firePoint;
     protected RechargeBarController barController;
     
-    public bool isFiring {
+    protected bool isFiring {
         set {
             weaponsManager.isFiring[weaponType] = value;
         }
@@ -165,7 +165,6 @@ public class Weapon : MonoBehaviour
         {
 
             barController.SetMaxRecharge(cooldown);
-
             float charge = cooldown - cooldownRemaining;
 
             if (charge > 0 && charge <= cooldown)

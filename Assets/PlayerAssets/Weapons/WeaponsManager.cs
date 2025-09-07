@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.EventSystems;
 using System;
+using UnityEngine.UI;
+using System.Linq;
 
 public class WeaponsManager : MonoBehaviour
 {
@@ -26,6 +28,11 @@ public class WeaponsManager : MonoBehaviour
     public GameObject secondaryIndicatorActive;
 
     public PlayerMovement playerMovement;
+
+    public GameObject RechargeBar;
+
+    private Color transparent = new Color(0,0,0,0);
+    private Color white = new Color(1, 1, 1, 0);
 
     void Awake()
     {
@@ -99,6 +106,8 @@ public class WeaponsManager : MonoBehaviour
 
     void Update()
     {
+        if (Time.timeScale == 0f) return; // Don't update if game is paused
+
         // WeaponButton is used for mobile
         if (Platform.IsDesktop()) {
             // Primary weapon
@@ -124,10 +133,19 @@ public class WeaponsManager : MonoBehaviour
 
         // Handle secondary display logic
 
-        secondaryDisplay.SetActive(weapons[WeaponSlot.Two] != null);
-        secondaryIndicatorActive.SetActive(weapons[WeaponSlot.Two].cooldownRemaining <= 0);
-        secondaryInactive.SetActive(!playerMovement.isMoving());
-        secondaryActive.SetActive(weapons[WeaponSlot.Two].cooldownRemaining <= 0 && !playerMovement.isMoving());
+        if (weapons[WeaponSlot.Two] != null)
+        {
+            RechargeBar.GetComponent<CanvasGroup>().alpha = 1f;
+            secondaryDisplay.SetActive(true);
+            secondaryIndicatorActive.SetActive(weapons[WeaponSlot.Two].cooldownRemaining <= 0);
+            secondaryInactive.SetActive(!playerMovement.isMoving());
+            secondaryActive.SetActive(weapons[WeaponSlot.Two].cooldownRemaining <= 0 && !playerMovement.isMoving());
+        } else
+        {
+            RechargeBar.GetComponent<CanvasGroup>().alpha = 0f;
+            secondaryDisplay.SetActive(false);
+        }
+        
 
     }
 

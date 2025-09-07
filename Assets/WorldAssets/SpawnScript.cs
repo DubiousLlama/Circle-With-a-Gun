@@ -60,6 +60,8 @@ public class SpawnScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (enemyTracker.enableSpawning == false) { return; }
+
         difficulty += Time.deltaTime * difficultyIncrease;
 
         if (difficulty > 2.5f && !isHardMode)
@@ -67,7 +69,6 @@ public class SpawnScript : MonoBehaviour
             difficultyIncrease *= 0.25f;
             isHardMode = true;
         }
-
 
         spawnTimer -= (Time.deltaTime * difficulty * (isHardMode ? 0.5f : 1f));
         spawnGroupTimer -= (Time.deltaTime * difficulty * (isHardMode ? 0.25f : 1f));
@@ -112,13 +113,13 @@ public class SpawnScript : MonoBehaviour
 
     }
 
-    void SpawnEnemy(GameObject enemy, int i = 0)
+    public GameObject SpawnEnemy(GameObject enemy, int i = 0, bool close = false)
     {
 
         if (i > 50)
         {
             Debug.Log("SpawnGroup Error: Could not find a valid spawn position");
-            return;
+            return null;
         }
 
         //Generate a random float between -2 and 5
@@ -128,21 +129,21 @@ public class SpawnScript : MonoBehaviour
         Vector2 playerPos = player.GetComponent<Transform>().position;
 
         // Spawn an enemy at a random position appoximately SpawnRange units away from the player
+        if (close) {spawnDistVariation = -2f; }
         Vector2 spawnPosition =  playerPos + UnityEngine.Random.insideUnitCircle * (spawnRange + spawnDistVariation);
 
         // Check if the spawn position intersects with any other colliders
         Collider2D hitCollider = Physics2D.OverlapPoint(spawnPosition);
         if (hitCollider != null && hitCollider.gameObject.tag != "Item")
         {
-            SpawnEnemy(enemy, i+1);
-            return;
+            return SpawnEnemy(enemy, i + 1, close);
         }
 
         // Check if the enemy is within the play area
         if (!playArea.rect.Contains(spawnPosition - (Vector2)playArea.position))
         {
-            SpawnEnemy(enemy, i + 1);
-            return;
+            
+            return SpawnEnemy(enemy, i + 1, close);
         }
 
         // Instantiate the enemy prefab at the spawn position
@@ -153,13 +154,14 @@ public class SpawnScript : MonoBehaviour
         EnemyTracker enemyTracker = GetComponent<EnemyTracker>();
         if (enemyTracker != null)
         {
-            enemyTracker.RegisterEnemy(enemy);
+            enemyTracker.RegisterEnemy(spawnedEnemy);
         }
         else
         {
             Debug.LogWarning("EnemyTracker component not found on SpawnScript GameObject.");
         }
 
+        return spawnedEnemy;
     }
 
     void SpawnEnemyGroup(GameObject enemy, int numFoes, int j = 0)
@@ -252,6 +254,7 @@ public class SpawnScript : MonoBehaviour
         // Second, check if the spawn position is within 5 units of the player
         if (Vector3.Distance(spawnPosition, player.GetComponent<Transform>().position) < 5f)
         {
+            Debug.Log("Spawn too close.");
             return null;
         }
 
