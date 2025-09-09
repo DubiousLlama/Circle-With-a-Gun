@@ -3,16 +3,16 @@ using UnityEngine;
 
 public class FlowField
 {
-    public Cell[,] grid { get; private set; }
-    public float cellRadius { get; private set; }
-    public float cellDiameter { get; private set; }
+    public Cell[,] grid = null;
+    public float cellRadius = 0f;
+    public float cellDiameter = 0f;
 
-    public Cell destinationCell { get; set; }
+    public Cell destinationCell = null;
 
     RectTransform gridArea;
     float targetCellSize;
-    int rows;
-    int columns;
+    public int rows;
+    public int columns;
 
     public FlowField(RectTransform area, float cellSize)
     {
@@ -85,24 +85,41 @@ public class FlowField
             cell.integrationCost = uint.MaxValue;
         }
 
+        var neighborChecks = new (int dx, int dy)[]
+{
+            (0, 1),
+            (0, -1),
+            (1, 0),
+            (-1, 0),
+            (1, 1),
+            (-1, 1),
+            (1, -1),
+            (-1, -1)
+        };
+
         // Breadth-first search to propagate integration costs
+        
         Queue<Cell> cellsToCheck = new Queue<Cell>();
+
         cellsToCheck.Enqueue(destinationCell);
+        Cell neighborCell = null;
+        Cell currentCell = null;
         while (cellsToCheck.Count > 0)
         {
-            Cell currentCell = cellsToCheck.Dequeue();
-            foreach (Vector2Int direction in GridDirection.CardinalAndIntercardinalDirections)
+            currentCell = cellsToCheck.Dequeue();
+            foreach (var (dx, dy) in neighborChecks)
             {
-                Vector2Int neighborIndex = currentCell.gridIndex + direction;
-                if (neighborIndex.x >= 0 && neighborIndex.x < columns && neighborIndex.y >= 0 && neighborIndex.y < rows)
+                int neighborX = currentCell.gridX + dx;
+                int neighborY = currentCell.gridY + dy;
+                if (neighborX >= 0 && neighborX < columns && neighborY >= 0 && neighborY < rows)
                 {
-                    Cell neighborCell = grid[neighborIndex.x, neighborIndex.y];
+                    neighborCell = grid[neighborX, neighborY];
                     if (neighborCell.cost == short.MaxValue) // Skip impassable cells
                         continue;
                     uint newCost = currentCell.integrationCost + neighborCell.cost;
                     if (newCost < neighborCell.integrationCost)
                     {
-                        neighborCell.integrationCost = newCost;
+                        neighborCell.integrationCost = (ushort)newCost;
                         cellsToCheck.Enqueue(neighborCell);
                     }
                 }

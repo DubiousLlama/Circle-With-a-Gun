@@ -5,11 +5,13 @@ using UnityEngine;
 public class FlowFieldController : MonoBehaviour
 {
     public RectTransform gridArea;
-    public float cellSize = 0.4f;
+    public float cellSize = 1f;
 
     public FlowField flowField { get; private set; }
 
     public GameObject player;
+
+    float time = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -19,10 +21,35 @@ public class FlowFieldController : MonoBehaviour
 
         flowField.AssignCosts();
         // display the number of cells with max cost vs normal cost
-        Debug.Log("Costs initialized with " + flowField.GetNumTerrainCells() + " terrain cells.");
+        Debug.Log("Costs initialized with " + flowField.GetNumTerrainCells() + " terrain cells. " + flowField.rows * flowField.columns);
 
         flowField.DebugGrid();
     }
+
+    //private void Update()
+    //{
+    //    time+= Time.deltaTime;
+
+    //    if (time > 1f)
+    //    {
+    //        time = 0;
+
+    //        Cell playerCell = flowField.GetCellFromWorldPosition(player.transform.position);
+    //        flowField.destinationCell = playerCell;
+
+    //        // Time how long it takes to create the integration field and populate directions
+    //        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+    //        flowField.CreateIntegrationField();
+    //        stopwatch.Stop();
+    //        Debug.Log($"Integration field created in {stopwatch.ElapsedMilliseconds}ms ({stopwatch.ElapsedTicks} ticks)");
+
+    //        stopwatch = System.Diagnostics.Stopwatch.StartNew();
+    //        flowField.PopulateDirections();
+    //        stopwatch.Stop();
+    //        Debug.Log($"Directions populated in {stopwatch.ElapsedMilliseconds}ms ({stopwatch.ElapsedTicks} ticks)");
+    //    }
+
+    //}
 
     private void FixedUpdate()
     {
@@ -40,8 +67,6 @@ public class FlowFieldController : MonoBehaviour
         flowField.PopulateDirections();
         stopwatch.Stop();
         Debug.Log($"Directions populated in {stopwatch.ElapsedMilliseconds}ms ({stopwatch.ElapsedTicks} ticks)");
-        
-
     }
 
     private void OnDrawGizmos()
