@@ -59,7 +59,7 @@ public class ItemSpawner : MonoBehaviour
             }
         }
 
-        Debug.LogWarning("Item type weights: " + string.Join(", ", itemTypeWeights));
+        Debug.Log("Item type weights: " + string.Join(", ", itemTypeWeights));
     }
 
     // Update is called once per frame

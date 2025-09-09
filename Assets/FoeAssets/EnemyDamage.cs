@@ -13,13 +13,13 @@ public class EnemyDamage : MonoBehaviour
     public float fireDelay = 0f;
     public float mustBeInRangeFor = 0.5f;
     public GameObject LineRenderer;
+    public float moveSpeed = 100f;
 
     public float inRangeTimer = 0f;
-
     public bool isAttacking = false;
 
     private GameObject player;
-    private Pathfinding.AIPath pathfinding;
+    private FlowFieldController flowFieldController;
     private GameObject attackLine1;
     private GameObject attackLine2;
 
@@ -35,15 +35,14 @@ public class EnemyDamage : MonoBehaviour
 
     void Start()
     {
+        flowFieldController = GameObject.Find("PlayArea").GetComponent<FlowFieldController>();
         player = GameObject.Find("PC");
-        pathfinding = GetComponent<Pathfinding.AIPath>();
         corners = gameObject.transform.GetChild(1).GetComponentsInChildren<Transform>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        pathfinding.destination = player.transform.position;
 
         float distance = Vector3.Distance(player.GetComponent<Transform>().position, transform.position);
 
@@ -111,6 +110,24 @@ public class EnemyDamage : MonoBehaviour
             colorChangeTimer = 0.2f;
         }
         
+    }
+
+    void FixedUpdate()
+    {
+        // Move towards the player using the flow field
+        if (!isAttacking)
+        {
+            Cell currentCell = flowFieldController.flowField.GetCellFromWorldPosition(transform.position);
+            if (currentCell != null && !(currentCell.bestDirectionX == 0 && currentCell.bestDirectionY == 0));
+            {
+                // Convert the best direction to a normalized vector
+                Vector3 direction = new Vector3(currentCell.bestDirectionX, currentCell.bestDirectionY, 0).normalized;
+
+                // Apply a force to the rigidbody in that direction
+                GetComponent<Rigidbody2D>().AddForce(direction * moveSpeed);
+
+            }
+        }
     }
 
     private void OnDisable()

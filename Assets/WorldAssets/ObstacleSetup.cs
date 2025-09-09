@@ -1,148 +1,193 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using Pathfinding;
+using System.Collections.Generic;
 
-public class ObstacleSetup : MonoBehaviour
+class ObstacleSetup : MonoBehaviour
 {
     public GameObject obstaclePrefab;
-    
-    List<GameObject> obstacles;
-    RectTransform playArea;
+    public RectTransform arenaBounds;
 
-    void Awake()
+    [Header("Obstacle Settings")]
+    public float jitterAmount = 0.5f;
+    public float safetyMargin = 0.5f; // Distance from arena edges
+
+    [Header("Obstacle Type Distribution")]
+    [Range(0, 7)] public int numberOfSquares = 4;
+
+    [Header("Square Obstacles")]
+    public float minSquareSize = 1f;
+    public float maxSquareSize = 2f;
+
+    [Header("Rectangle Obstacles")]
+    public float minRectangleShortSide = 0.8f;
+    public float maxRectangleShortSide = 1.5f;
+    public float minRectangleLongSide = 2.5f;
+    public float maxRectangleLongSide = 4f;
+
+    private List<Bounds> placedObstacles = new List<Bounds>();
+
+    /*
+     * This script should place six obstacles around the arena at the start of the game.
+     * The obstacles should be evenly spaced around the arena: one each in the upper left, upper right, lower left, lower right, left center, and right center.
+     * Some of the obstacles should be long rectangles, and others should be squares.
+     * The obstacles should have random rotations and some random jitter on their placements, so that they are different each time the game is played.
+     * The obstacles should not extend beyond the bounds of the arena or overlap with each other.
+     * 
+     * Efficiency is paramount. The script should include logging of how long it takes to run.
+     */
+
+    private void Awake()
     {
-        playArea = GameObject.Find("PlayArea").GetComponent<RectTransform>();
+        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+        SetupObstacles();
+        stopwatch.Stop();
+        Debug.Log($"ObstacleSetup completed in {stopwatch.ElapsedMilliseconds}ms ({stopwatch.ElapsedTicks} ticks)");
+    }
 
-
-        if (playArea == null)
+    private void SetupObstacles()
+    {
+        if (obstaclePrefab == null || arenaBounds == null)
         {
-            Debug.LogError("PlayArea not found");
+            Debug.LogError("ObstacleSetup: Missing required references (obstaclePrefab or arenaBounds)");
+            return;
         }
 
-        obstacles = GenerateLocations();
-    }
-    
-    void Start()
-    {
-        AstarPath.active.Scan();
-    }
+        // Get arena bounds
+        Rect arenaRect = arenaBounds.rect;
+        Vector3 arenaCenter = arenaBounds.position;
 
-    public void OnDestroy()
-    {
-        foreach (GameObject obstacle in obstacles)
+        // Define the seven positions relative to arena bounds
+        Vector2[] positions = new Vector2[]
         {
-            Destroy(obstacle);
+            new Vector2(-arenaRect.width * 0.25f, arenaRect.height * 0.25f),   // Upper left
+            new Vector2(arenaRect.width * 0.25f, arenaRect.height * 0.25f),    // Upper right
+            new Vector2(-arenaRect.width * 0.25f, -arenaRect.height * 0.25f),  // Lower left
+            new Vector2(arenaRect.width * 0.25f, -arenaRect.height * 0.25f),   // Lower right
+            new Vector2(-arenaRect.width * 0.4f, 0f),                          // Left center
+            new Vector2(arenaRect.width * 0.4f, 0f),                           // Right center
+            new Vector2(0f, 0f)                                                // Center
+        };
+
+        // Generate random obstacle types based on configuration
+        List<bool> isRectangle = GenerateRandomObstacleTypes();
+
+        for (int i = 0; i < positions.Length; i++)
+        {
+            PlaceObstacle(positions[i], arenaCenter, arenaRect, isRectangle[i]);
         }
     }
 
-    // This function should return a list of RectTransforms that represent the locations of the obstacles
-    // The obsacles should not overlap with each other
-    // no point on any obstacle should be closer than buffer/2 units to any other obstacle
-    // The obstacles should not overlap with the player
-    // The obstacles should be completely within the play area
-    // 3-4 obstacles should be long rectangles with length 10-20 units and width 1.25 units, at random Z rotations
-    // 1-2 obstacles should be square obstacles with side length 5-10 units
-    // There should be 4-6 obstacles in total
-
-    List<GameObject> GenerateLocations()
+    private List<bool> GenerateRandomObstacleTypes()
     {
-        List<GameObject> generatedObstacles = new List<GameObject>();
+        List<bool> types = new List<bool>();
 
-        int rectangleObstacles = Random.Range(3, 5);
-        int squareObstacles = Random.Range(1, 3);
-
-        int buffer = 2;
-
-        int i = 0;
-
-        List<Vector2> obstaclePositions = new List<Vector2> {
-            new Vector2(-19.3f, -9.4f),
-            new Vector2(-3.4f, 4.8f),
-            new Vector2(1.2f, 18.4f),
-            new Vector2(-21.6f, 18.5f),
-            new Vector2(2.2f, -10.1f),
-            new Vector2(-20.3f, 4f),
-            new Vector2(-10f, 5f)
-            };
-
-        while (generatedObstacles.Count < rectangleObstacles)
+        // Add the specified number of squares (false)
+        for (int i = 0; i < numberOfSquares; i++)
         {
-            i++;
-
-            if (i > 300)
-            {
-                Debug.Log("Abort Generation");
-                break;
-            }
-
-            // Get a random item from the list of obstacle positions
-            Vector2 position = obstaclePositions[Random.Range(0, obstaclePositions.Count)];
-
-            // Add a bit of randomness to the position
-            position += Random.insideUnitCircle * 1.5f;
-
-            // Get a random rotation
-            float rotation = Random.Range(0, 360);
-
-            // Get a random length
-            float length = Random.Range(8, 20);
-
-            // Check if the obstacle would overlap with any other obstacle. The obstacles, player, and walls all have colliders
-            Collider2D overlap = Physics2D.OverlapBox(position, new Vector2(length + buffer, 1.25f + buffer), rotation);
-            if (overlap != null)
-            {
-                continue;
-            }
-
-            // We're good to go. Instantiate the obstacle
-            GameObject obstacle = Instantiate(obstaclePrefab, position, Quaternion.Euler(0, 0, rotation));
-            obstacle.transform.localScale = new Vector3(length, 1.25f, 1);
-
-            // remove the position we used from the list
-            obstaclePositions.Remove(position);
-            
-            generatedObstacles.Add(obstacle);
+            types.Add(false);
         }
 
-        while (generatedObstacles.Count < rectangleObstacles + squareObstacles)
+        // Add the remaining rectangles (true)
+        for (int i = 0; i < 7 - numberOfSquares; i++)
         {
-            i++;
+            types.Add(true);
+        }
 
-            if (i > 500)
-            {
-                Debug.Log("Abort generation");
-                break;
-            }
+        // Shuffle the list
+        for (int i = 0; i < types.Count; i++)
+        {
+            bool temp = types[i];
+            int randomIndex = Random.Range(i, types.Count);
+            types[i] = types[randomIndex];
+            types[randomIndex] = temp;
+        }
 
-            // Get a random position inside the play area
-            Vector2 position = obstaclePositions[Random.Range(0, obstaclePositions.Count)];
+        return types;
+    }
 
-            // Get a random rotation
+    private void PlaceObstacle(Vector2 basePosition, Vector3 arenaCenter, Rect arenaRect, bool isRectangle)
+    {
+        const int maxAttempts = 10;
+
+        for (int attempt = 0; attempt < maxAttempts; attempt++)
+        {
+            // Apply random jitter
+            Vector2 jitteredPosition = basePosition + new Vector2(
+                Random.Range(-jitterAmount, jitterAmount),
+                Random.Range(-jitterAmount, jitterAmount)
+            );
+
+            // Calculate world position
+            Vector3 worldPosition = arenaCenter + new Vector3(jitteredPosition.x, jitteredPosition.y, 0f);
+
+            // Generate obstacle dimensions
+            Vector2 size = GenerateObstacleSize(isRectangle);
             float rotation = Random.Range(0f, 360f);
 
-            // Get a random length
-            float length = Random.Range(3f, 6f);
+            // Check if placement is valid
+            Bounds obstacleBounds = new Bounds(worldPosition, new Vector3(size.x, size.y, 1f));
 
-            // Check if the obstacle would overlap with any other obstacle. The obstacles, player, and walls all have colliders
-            if (Physics2D.OverlapBox(position, new Vector2(length + buffer, length + buffer), rotation))
+            if (IsValidPlacement(obstacleBounds, arenaCenter, arenaRect))
             {
-                continue;
+                CreateObstacle(worldPosition, size, rotation);
+                placedObstacles.Add(obstacleBounds);
+                return;
             }
-
-            // We're good to go. Instantiate the obstacle
-            GameObject obstacle = Instantiate(obstaclePrefab, position, Quaternion.Euler(0, 0, rotation));
-            obstacle.transform.localScale = new Vector2(length, length);
-
-            generatedObstacles.Add(obstacle);
         }
 
-        Debug.Log("Iterations required to generate arena: " + i);
-
-        return generatedObstacles;
-
+        Debug.LogWarning($"Failed to place obstacle after {maxAttempts} attempts at position {basePosition}");
     }
 
+    private Vector2 GenerateObstacleSize(bool isRectangle)
+    {
+        if (isRectangle)
+        {
+            // Long rectangle: one dimension is significantly larger
+            float shortSide = Random.Range(minRectangleShortSide, maxRectangleShortSide);
+            float longSide = Random.Range(minRectangleLongSide, maxRectangleLongSide);
 
+            // Randomly choose orientation
+            return Random.value > 0.5f ?
+                new Vector2(longSide, shortSide) :
+                new Vector2(shortSide, longSide);
+        }
+        else
+        {
+            // Square: both dimensions similar
+            float size = Random.Range(minSquareSize, maxSquareSize);
+            return new Vector2(size, size);
+        }
+    }
+
+    private bool IsValidPlacement(Bounds obstacleBounds, Vector3 arenaCenter, Rect arenaRect)
+    {
+        // Check arena bounds
+        Vector3 arenaMin = arenaCenter + new Vector3(-arenaRect.width * 0.5f + safetyMargin, -arenaRect.height * 0.5f + safetyMargin, 0f);
+        Vector3 arenaMax = arenaCenter + new Vector3(arenaRect.width * 0.5f - safetyMargin, arenaRect.height * 0.5f - safetyMargin, 0f);
+
+        if (obstacleBounds.min.x < arenaMin.x || obstacleBounds.max.x > arenaMax.x ||
+            obstacleBounds.min.y < arenaMin.y || obstacleBounds.max.y > arenaMax.y)
+        {
+            return false;
+        }
+
+        // Check overlap with existing obstacles
+        foreach (var existingBounds in placedObstacles)
+        {
+            if (obstacleBounds.Intersects(existingBounds))
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private void CreateObstacle(Vector3 position, Vector2 size, float rotation)
+    {
+        obstaclePrefab.transform.localScale = new Vector3(size.x, size.y, 1f);
+        GameObject obstacle = Instantiate(obstaclePrefab, position, Quaternion.Euler(0f, 0f, rotation));
+
+        // Set parent for organization
+        obstacle.transform.SetParent(transform);
+    }
 }
