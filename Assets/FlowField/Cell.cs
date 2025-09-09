@@ -6,7 +6,7 @@ public class Cell
     public int gridX;
     public int gridY;
 
-    public ushort cost; // Cost to traverse this cell
+    public ushort cost = 1; // Cost to traverse this cell
     public uint integrationCost; // Cost from this cell to the target
 
     public int bestDirectionX;

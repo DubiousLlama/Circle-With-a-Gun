@@ -75,58 +75,45 @@ public class FlowField
             return;
         }
 
-        ushort startingcost = destinationCell.cost;
-        destinationCell.integrationCost = 0;
-        destinationCell.cost = 0;
-
-        // First, set all cells' integration costs to max value
+        // Reset costs
         foreach (Cell cell in grid)
         {
             cell.integrationCost = uint.MaxValue;
         }
 
         var neighborChecks = new (int dx, int dy)[]
-{
-            (0, 1),
-            (0, -1),
-            (1, 0),
-            (-1, 0),
-            (1, 1),
-            (-1, 1),
-            (1, -1),
-            (-1, -1)
+        {
+        (0, 1), (0, -1), (1, 0), (-1, 0),
+        (1, 1), (-1, 1), (1, -1), (-1, -1)
         };
 
-        // Breadth-first search to propagate integration costs
-        
         Queue<Cell> cellsToCheck = new Queue<Cell>();
-
+        destinationCell.integrationCost = 0;
         cellsToCheck.Enqueue(destinationCell);
-        Cell neighborCell = null;
-        Cell currentCell = null;
+
         while (cellsToCheck.Count > 0)
         {
-            currentCell = cellsToCheck.Dequeue();
+            var currentCell = cellsToCheck.Dequeue();
+
             foreach (var (dx, dy) in neighborChecks)
             {
-                int neighborX = currentCell.gridX + dx;
-                int neighborY = currentCell.gridY + dy;
-                if (neighborX >= 0 && neighborX < columns && neighborY >= 0 && neighborY < rows)
+                int nx = currentCell.gridX + dx;
+                int ny = currentCell.gridY + dy;
+
+                if (nx < 0 || nx >= columns || ny < 0 || ny >= rows)
+                    continue;
+
+                var neighbor = grid[nx, ny];
+                if (neighbor.cost == ushort.MaxValue) // impassable
+                    continue;
+
+                if (neighbor.integrationCost == uint.MaxValue) // not visited yet
                 {
-                    neighborCell = grid[neighborX, neighborY];
-                    if (neighborCell.cost == short.MaxValue) // Skip impassable cells
-                        continue;
-                    uint newCost = currentCell.integrationCost + neighborCell.cost;
-                    if (newCost < neighborCell.integrationCost)
-                    {
-                        neighborCell.integrationCost = (ushort)newCost;
-                        cellsToCheck.Enqueue(neighborCell);
-                    }
+                    neighbor.integrationCost = currentCell.integrationCost + 1;
+                    cellsToCheck.Enqueue(neighbor);
                 }
             }
         }
-
-        destinationCell.cost = startingcost;
     }
 
 
@@ -161,7 +148,12 @@ public class FlowField
 
                     if (neighborX >= 0 && neighborX <= maxX && neighborY >= 0 && neighborY <= maxY)
                     {
+                        // Check if neighbor is an obstacle BEFORE considering its cost
+                        if (grid[neighborX, neighborY].cost == ushort.MaxValue)
+                            continue;
+
                         uint neighborCost = grid[neighborX, neighborY].integrationCost;
+
                         if (neighborCost < cellCost) {
                             cellCost = neighborCost;
                             grid[x, y].bestDirectionX = dx;

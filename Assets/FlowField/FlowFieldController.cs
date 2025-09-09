@@ -11,7 +11,7 @@ public class FlowFieldController : MonoBehaviour
 
     public GameObject player;
 
-    float time = 0;
+    float fixedUpdates = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -26,32 +26,18 @@ public class FlowFieldController : MonoBehaviour
         flowField.DebugGrid();
     }
 
-    //private void Update()
-    //{
-    //    time+= Time.deltaTime;
+    // Update the player position 5 times per second
+    void FixedUpdate()
+    {
+        fixedUpdates++;
+        if (fixedUpdates % 12 == 0)
+        {
+            FlowUpdate();
+            fixedUpdates = 0;
+        }
+    }
 
-    //    if (time > 1f)
-    //    {
-    //        time = 0;
-
-    //        Cell playerCell = flowField.GetCellFromWorldPosition(player.transform.position);
-    //        flowField.destinationCell = playerCell;
-
-    //        // Time how long it takes to create the integration field and populate directions
-    //        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
-    //        flowField.CreateIntegrationField();
-    //        stopwatch.Stop();
-    //        Debug.Log($"Integration field created in {stopwatch.ElapsedMilliseconds}ms ({stopwatch.ElapsedTicks} ticks)");
-
-    //        stopwatch = System.Diagnostics.Stopwatch.StartNew();
-    //        flowField.PopulateDirections();
-    //        stopwatch.Stop();
-    //        Debug.Log($"Directions populated in {stopwatch.ElapsedMilliseconds}ms ({stopwatch.ElapsedTicks} ticks)");
-    //    }
-
-    //}
-
-    private void FixedUpdate()
+    private void FlowUpdate()
     {
         // Set the destination cell to the player
         Cell playerCell = flowField.GetCellFromWorldPosition(player.transform.position);
