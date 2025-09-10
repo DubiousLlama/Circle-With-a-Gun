@@ -68,12 +68,12 @@ public class LightningStrike : Weapon
         destination = foe.transform.position;
 
 
-        // The lighting strike object has a child called 'StrikePoint' which is the point where the lightning strikes
-        // Adjust the position of the lightning strike so that the StrikePoint is at the destination
+        // The lighting strikeSFX object has a child called 'StrikePoint' which is the point where the lightning strikes
+        // Adjust the position of the lightning strikeSFX so that the StrikePoint is at the destination
 
         Vector3 strikeOffset = new Vector3(0.27f * 0.4f, 10.8f * 0.4f, 0);
 
-        // Create the lightning strike 
+        // Create the lightning strikeSFX 
         GameObject lightningStrike = Instantiate(Resources.Load<GameObject>("LightningStrikeEffect"), destination + strikeOffset, Quaternion.identity);
         Destroy(lightningStrike, 2f);
         AudioManager.instance.PlaySfx(strike);

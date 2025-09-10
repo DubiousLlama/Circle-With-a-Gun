@@ -9,12 +9,21 @@ public class MenuController : MonoBehaviour
 {
 
     public GameObject HighScore;
-    public MenuMusic menuMusic;
     public GameObject tutorialToggle;
+    public GameObject menuCanvas;
+    public GameObject loadingScreen;
+    public GameObject characterSelectCanvas;
+    public Slider loadingBar;
+    public Image selectedChar;
 
-    private void Start()
+    public List<Image> charSprites;
+
+    int doTutorial;
+
+    void Start()
     {
-        tutorialToggle.GetComponent<Toggle>().isOn = PlayerPrefs.GetInt("doTutorial", 1) == 1;
+        doTutorial = PlayerPrefs.GetInt("doTutorial", 1);
+        tutorialToggle.GetComponent<Toggle>().isOn = doTutorial == 1;
         Debug.Log(PlayerPrefs.GetInt("doTutorial"));
     }
 
@@ -24,8 +33,60 @@ public class MenuController : MonoBehaviour
     }
 
     public void PlayGame()
-    { 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+    {
+        if (doTutorial == 1)
+        {
+            menuCanvas.SetActive(false);
+            loadingScreen.SetActive(true);
+            StartCoroutine(LoadSceneAsync());
+            return;
+        }
+        else
+        {
+            menuCanvas.SetActive(false);
+            characterSelectCanvas.SetActive(true);
+        }
+    }
+
+    public void CharacterSelected()
+    {
+        characterSelectCanvas.SetActive(false);
+        loadingScreen.SetActive(true);
+        StartCoroutine(LoadSceneAsync());
+    }
+
+    private IEnumerator LoadSceneAsync()
+    {
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex + 1);
+        
+        float targetProgress = 0f;
+        float currentProgress = 0f;
+        
+        while (!asyncLoad.isDone)
+        {
+            targetProgress = Mathf.Clamp01(asyncLoad.progress / 0.5f);
+            
+            if (targetProgress > currentProgress)
+            {
+                currentProgress = Mathf.MoveTowards(currentProgress, targetProgress, Time.deltaTime * 2f);
+            } else if (currentProgress < 1f)
+            {
+                currentProgress += Time.deltaTime * (1 - currentProgress);
+            }
+
+            loadingBar.value = Mathf.Clamp01(currentProgress);
+
+            yield return null;
+        }
+        
+        while (currentProgress < 1f)
+        {
+            currentProgress = Mathf.MoveTowards(currentProgress, 1f, Time.deltaTime * 2.5f);
+            loadingBar.value = currentProgress;
+            yield return null;
+        }
+        
+        loadingScreen.SetActive(false);
     }
 
     public void toggleTutorial()
@@ -42,6 +103,5 @@ public class MenuController : MonoBehaviour
         }
 
         HighScore.GetComponent<TextMeshProUGUI>().text = "High Score: " + PlayerPrefs.GetInt("HighScore");
-        menuMusic = MenuMusic.instance;
     }
 }

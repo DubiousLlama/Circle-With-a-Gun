@@ -7,6 +7,7 @@ public class Boomerang : Weapon
     private int damage;
     private float speed;
     private float  range = 1.25f;
+    public string sfx = "Boomerang";
 
     private GameObject boomerangPrefab;
 
@@ -76,6 +77,7 @@ public class Boomerang : Weapon
         BoomerScript bs = boomerang.GetComponent<BoomerScript>();
         
         bs.Launch(firePoint.up, speed);
+        audioManager.PlaySfx(sfx);
 
         bs.damage = damage;
         bs.lifetime = range;

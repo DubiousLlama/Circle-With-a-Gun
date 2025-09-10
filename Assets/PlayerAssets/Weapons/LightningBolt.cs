@@ -61,7 +61,7 @@ public class LightningBolt : Weapon
 
         Collider2D collider = strike.GetComponent<Collider2D>();
 
-        // Get all the colliders that the strike is touching
+        // Get all the colliders that the strikeSFX is touching
         ContactFilter2D filter = new ContactFilter2D();
         filter.useTriggers = true;
         List<Collider2D> results = new List<Collider2D>();
