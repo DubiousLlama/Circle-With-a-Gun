@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4009117032933166294}
   - component: {fileID: 4009117032933166295}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: BulletCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -87,7 +87,7 @@ GameObject:
   - component: {fileID: 4009117033137057337}
   - component: {fileID: 4009117033137057336}
   - component: {fileID: 4009117033137057339}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Octo
   m_TagString: Foe
   m_Icon: {fileID: 0}

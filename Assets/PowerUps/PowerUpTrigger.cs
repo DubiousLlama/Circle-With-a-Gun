@@ -62,20 +62,20 @@ public class PowerUpTrigger : MonoBehaviour
 
         foreach (GameObject enemy in enemies)
         {
+            EnemyHealth eh = enemy.GetComponent<EnemyHealth>();
+            if (eh == null) { continue; }
 
             // Figure out if the enemy is within 9 units of the bomb
             float distance = Vector2.Distance(enemy.transform.position, transform.position);
 
             if (distance <= 5f)
             {
-                EnemyHealth enemyHealth = enemy.GetComponent<EnemyHealth>();
-                enemyHealth.TakeDamage(500);
+                eh.TakeDamage(500);
             }
 
             if (distance <= 9f)
             {
-                EnemyHealth enemyHealth = enemy.GetComponent<EnemyHealth>();
-                enemyHealth.TakeDamage(100);
+                eh.TakeDamage(100);
             }
         }
     }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//[CreateAssetMenu(fileName="New Enemy Group", menuName = "EnemyGroup")]
+//[CreateAssetMenu(fileName="New Enemy Group", menuName = "ScriptableObjects/EnemyGroup")]
 [System.Serializable]
 public class EnemyGroup
 {

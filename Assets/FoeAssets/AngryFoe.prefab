@@ -257,6 +257,8 @@ MonoBehaviour:
   threshold3: 20
   threshold4: 10
   threshold5: 0
+  dropItem: 0
+  items: []
 --- !u!114 &8883215909727475611
 MonoBehaviour:
   m_ObjectHideFlags: 0

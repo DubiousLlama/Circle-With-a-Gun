@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Wave", menuName = "Wave")]
+[CreateAssetMenu(fileName = "New Wave", menuName = "ScriptableObjects/Wave")]
 public class Wave : ScriptableObject
 {
     public List<EnemyGroup> groups;

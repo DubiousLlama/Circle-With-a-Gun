@@ -1,60 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum Character
-{
-    Kevin,
-    BombsMcGee,
-    Commando,
-    ElectricJeff,
-    DemoMan,
-    Specialist,
-    ShockTrooper,
-    WackySteve,
-    MissMicrotransaction
-}
 
 public class CharacterSelect : MonoBehaviour
 {
-    private Dictionary<Character, string> questPrefs = new()
-    {
-        { Character.Kevin, "KevinQuest" },
-        { Character.BombsMcGee, "BombsMcGeeQuest" },
-        { Character.Commando, "CommandoQuest" },
-        { Character.ElectricJeff, "ElectricJeffQuest" },
-        { Character.DemoMan, "DemoManQuest" },
-        { Character.Specialist, "SpecialistQuest" },
-        { Character.ShockTrooper, "ShockTrooperQuest" },
-        { Character.WackySteve, "WackySteveQuest" },
-        { Character.MissMicrotransaction, "MissMicrotransactionQuest" }
-    };
-
-    private Dictionary<Character, string> unlockedPrefs = new()
-    {
-        { Character.Kevin, "KevinUnlocked" },
-        { Character.BombsMcGee, "BombsMcGeeUnlocked" },
-        { Character.Commando, "CommandoUnlocked" },
-        { Character.ElectricJeff, "ElectricJeffUnlocked" },
-        { Character.DemoMan, "DemoManUnlocked" },
-        { Character.Specialist, "SpecialistUnlocked" },
-        { Character.ShockTrooper, "ShockTrooperUnlocked" },
-        { Character.WackySteve, "WackySteveUnlocked" },
-        { Character.MissMicrotransaction, "MissMicrotransactionUnlocked" }
-    };
-
-    public Character selectedCharacter;
+    public Roster roster;
     public MenuController menuController;
 
-    [Header("Character GameObjects")]
+    public Character selectedCharacter;
+
+    [Header("Menu GameObjects")]
     public List<GameObject> characterGameObjects;
 
     // Start is called before the first frame update
     void Start()
     {
-        selectedCharacter = (Character)PlayerPrefs.GetInt("SelectedCharacter", 0);
+        PlayerPrefs.SetInt(roster.allCharacters[0].prefName + "Unlocked", 1); // Ensure the first character is always unlocked
+        selectedCharacter = roster.allCharacters.FirstOrDefault(c => c.id == PlayerPrefs.GetInt("SelectedCharacter", 0));
         updateChars();
     }
 
@@ -68,10 +34,14 @@ public class CharacterSelect : MonoBehaviour
     {
         for (int i = 0; i < characterGameObjects.Count; i++)
         {
-            Character ch = (Character)i;
+            Character ch = roster.allCharacters[i];
+            
+            string unlockedPrefName = ch.prefName + "Unlocked";
+            string questPrefName = ch.prefName + "Quest";
+            bool unlocked = PlayerPrefs.GetInt(unlockedPrefName, 0) == 1;
+            float questProgress = PlayerPrefs.GetFloat(questPrefName, 0f);
 
-            bool unlocked = PlayerPrefs.GetInt(unlockedPrefs[ch], 0) == 1;
-            float questProgress = PlayerPrefs.GetFloat(questPrefs[ch], 0f);
+            Debug.Log($"Character {ch.name} unlocked: {unlocked}, quest progress: {questProgress}");
 
             Button selector = characterGameObjects[i].transform.GetChild(0).GetComponent<Button>();
             selector.interactable = unlocked;
