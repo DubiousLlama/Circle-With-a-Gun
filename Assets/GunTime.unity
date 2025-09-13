@@ -1690,7 +1690,11 @@ PrefabInstance:
     - target: {fileID: 1935641815, guid: c8b91edf6d6d9d1479e0ad6d14d272f1, type: 3}
       propertyPath: defaultPrimaryWeapon
       value: 
-      objectReference: {fileID: 2920370379373296382, guid: e476e74bf2b64400bbb44cb96742abf3, type: 3}
+      objectReference: {fileID: 2920370379373296382, guid: 775717e84f9ebe34780073366529b467, type: 3}
+    - target: {fileID: 1935641815, guid: c8b91edf6d6d9d1479e0ad6d14d272f1, type: 3}
+      propertyPath: testingSecondaryWeapon
+      value: 
+      objectReference: {fileID: 2920370379373296382, guid: 0b24519d4d4cd2a489f3be1bf68a0481, type: 3}
     - target: {fileID: 1935641815, guid: c8b91edf6d6d9d1479e0ad6d14d272f1, type: 3}
       propertyPath: secondaryIndicatorActive
       value: 
@@ -4567,7 +4571,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1663428198}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7f107b2de37ddf44fb791701cd44d6ae, type: 3}
   m_Name: 
