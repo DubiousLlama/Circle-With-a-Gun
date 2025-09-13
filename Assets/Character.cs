@@ -11,4 +11,6 @@ public class Character : ScriptableObject
     public Sprite sprite;
     public GameObject primaryWeapon;
     public GameObject secondaryWeapon;
+
+    public Quest unlockQuest = null;
 }

@@ -1617,6 +1617,57 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 772361590}
   m_CullTransparentMesh: 1
+--- !u!1 &824101008
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 824101010}
+  - component: {fileID: 824101009}
+  m_Layer: 0
+  m_Name: QuestTracker
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &824101009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 824101008}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d30ea888dba3c54fa3be4e5145afb69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bombsMcGee: {fileID: 11400000, guid: 14fe89a21f33d0a4eaa1f6015a09710a, type: 2}
+  commando: {fileID: 11400000, guid: b18efa53fed09c948962ab1389627288, type: 2}
+  electricJeff: {fileID: 11400000, guid: 1cf2e6daccfe5ea4f85a3007ed7db2dd, type: 2}
+  demoMan: {fileID: 11400000, guid: 001e2278f5823d64886cb54cd7625a4f, type: 2}
+  specialist: {fileID: 11400000, guid: 1056214eddc23e445ba9dfba62ed26cc, type: 2}
+  shockTrooper: {fileID: 11400000, guid: bc2f18c22c5dae040b5213bb77365119, type: 2}
+  wackySteve: {fileID: 11400000, guid: b9d983dcca92e2e4483dc4188c699128, type: 2}
+--- !u!4 &824101010
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 824101008}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -16.546795, y: -12.137023, z: 31.731052}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &837363707
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1970,7 +2021,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 894957481}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7001ee74d2078134ca33c26bf037479c, type: 3}
   m_Name: 
@@ -2035,7 +2086,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 894957481}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ed8b0bd25f1dc488bb3705a389ee1f2f, type: 3}
   m_Name: 

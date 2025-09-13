@@ -4230,7 +4230,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roster: {fileID: 11400000, guid: 74c6116ae507dc14da845fb0e35aab20, type: 2}
   menuController: {fileID: 1991143950}
-  selectedCharacter: {fileID: 0}
   characterGameObjects:
   - {fileID: 1989833189}
   - {fileID: 1425784930}
@@ -7754,6 +7753,10 @@ PrefabInstance:
     - target: {fileID: 5016890781599075844, guid: 390e2ef18e1bccd4f9e36240aa6c73fe, type: 3}
       propertyPath: m_Name
       value: ProgressBar
+      objectReference: {fileID: 0}
+    - target: {fileID: 5016890781599075844, guid: 390e2ef18e1bccd4f9e36240aa6c73fe, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5016890781599075847, guid: 390e2ef18e1bccd4f9e36240aa6c73fe, type: 3}
       propertyPath: m_Pivot.x

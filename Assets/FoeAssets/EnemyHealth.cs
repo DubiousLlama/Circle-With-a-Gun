@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using UnityEngine;
+using UnityEngine.Events;
 
 [System.Serializable]
 public struct ItemDrop {
@@ -41,15 +43,18 @@ public class EnemyHealth : MonoBehaviour
     public bool dropItem = false;
     public ItemDrop[] items;
 
-    private GameObject Score;
     private ItemSpawner itemSpawner;
     private EnemyTracker enemyTracker;
 
     private bool dead = false;
 
+    public static event Action<OnDeathEventArgs> FoeDied;
+    public class OnDeathEventArgs : EventArgs {
+        public GameObject enemy;
+    }
+
     void Start()
     {
-        Score = GameObject.Find("Score");
         GameObject spawner = GameObject.Find("Spawner");
         itemSpawner = spawner.GetComponent<ItemSpawner>();
         enemyTracker = spawner.GetComponent<EnemyTracker>();
@@ -105,8 +110,7 @@ public class EnemyHealth : MonoBehaviour
         Destroy(effect, 0.5f);
         Destroy(gameObject);
 
-        // Increase the score when the enemy dies
-        Score.GetComponent<ScoreTracker>().IncreaseScore(scoreValue);
+        FoeDied?.Invoke(new OnDeathEventArgs { enemy = gameObject });
 
         if (dropItem) {
             float[] weights = new float[items.Length];

@@ -85,7 +85,7 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
         weapon.Fire();
-        weapon.cooldownRemaining = weapon.cooldown;
+        weapon.FireCleanup();
         Invoke(nameof(secondaryMoveStopDisable), 0.05f);
     }
 

@@ -31,6 +31,9 @@ public class MissileLogic : MonoBehaviour
         damageFalloff = falloff;
         isHoming = homing;
 
+        enemyLayer = LayerMask.GetMask("Foes");
+        physicsLayer = LayerMask.GetMask("Foes", "Obstacle");
+
         if (isHoming)
         {
             target = getHomingTarget();
@@ -41,16 +44,15 @@ public class MissileLogic : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        enemyLayer = LayerMask.GetMask("Foes");
-        physicsLayer = LayerMask.GetMask("Foes", "Obstacle");
-
-        Debug.Log(Convert.ToString(physicsLayer.value, 2).PadLeft(32, '0'));
     }
 
     private void Update()
     {
         timeAlive += Time.deltaTime;
     }
+
+    // I shouldn't need both of these. Foes currently have both a Trigger collider and a non-trigger collider, which are used for different things
+    // It seems that sometimes the projectile only hits one of the colliders, and this duplication fixes that issue for now.
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -113,12 +115,12 @@ public class MissileLogic : MonoBehaviour
             Vector2 rayDirection = Quaternion.AngleAxis(angle, Vector3.forward) * forward;
 
             // Cast the ray
-            RaycastHit2D hit = Physics2D.Raycast(transform.position + transform.up * 0.6f, rayDirection, raycastDistance, ~physicsLayer);
+            RaycastHit2D hit = Physics2D.Raycast(transform.position + transform.up * 0.6f, rayDirection, raycastDistance, physicsLayer);
             Debug.DrawLine(transform.position + transform.up * 0.6f, transform.position + transform.up * 0.6f + (Vector3)(rayDirection * raycastDistance), Color.green, 1f);
 
             if (hit.collider != null)
             {
-                Debug.Log("Ray " + i + " hit: " + hit.transform.name + " on layer " + hit.transform.gameObject.layer + " and the foe layer is " + LayerMask.NameToLayer("Foes"));
+                // Debug.Log("Ray " + i + " hit: " + hit.transform.name + " on layer " + hit.transform.gameObject.layer + " and the foe layer is " + LayerMask.NameToLayer("Foes"));
                 if (hit.transform.tag != "Foe" && hit.transform.parent.tag != "Foe") continue;
 
                 Debug.DrawLine(transform.position, hit.transform.position, Color.red, 1f);
@@ -167,7 +169,6 @@ public class MissileLogic : MonoBehaviour
         {
             if (foe.tag == "Foe")
             {
-                Debug.Log("Missile hit foe: " + foe.name);
                 float distance = Vector3.Distance(foe.transform.position, transform.position);
                 float damageMultiplier = 1 - Mathf.Pow(distance / blastRadius, damageFalloff);
                 int aoeDamage = Mathf.Max(0, Mathf.RoundToInt(damage * damageMultiplier));

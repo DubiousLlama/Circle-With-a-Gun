@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class BombLogic : MonoBehaviour
@@ -18,7 +19,12 @@ public class BombLogic : MonoBehaviour
     private float expansionTime = 0.25f;
     private float baseScale;
 
-    // Start is called before the first frame update
+    public static event Action<OnBombSecondaryExplosionEventArgs> OnBombSecondaryExplosion;
+    public class OnBombSecondaryExplosionEventArgs : EventArgs
+    {
+        public int foesKilled;
+    }
+
     public void InitalizeBomb(Vector3 launch, float dmg, float radius, float move, float rot = 360f, float falloff = 4.5f)
     {
         damage = dmg;
@@ -30,12 +36,12 @@ public class BombLogic : MonoBehaviour
         baseScale = transform.localScale.x;
 
         gameObject.GetComponent<Rigidbody2D>().AddForce(launchVector * moveSpeed);
-        gameObject.gameObject.GetComponent<Rigidbody2D>().rotation = Random.Range(0f, 360f);
-        gameObject.GetComponent<Rigidbody2D>().angularVelocity = rotationSpeed * (Random.value > 0.5f ? 1 : -1); // Multiply by either 1 or -1 to get a random direction
+        gameObject.gameObject.GetComponent<Rigidbody2D>().rotation = UnityEngine.Random.Range(0f, 360f);
+        gameObject.GetComponent<Rigidbody2D>().angularVelocity = rotationSpeed * (UnityEngine.Random.value > 0.5f ? 1 : -1); // Multiply by either 1 or -1 to get a random direction
 
     }
 
-    void Start()
+    void Awake()
     {
         enemyLayer = LayerMask.GetMask("Foes");
         timer = 0f;
@@ -74,6 +80,7 @@ public class BombLogic : MonoBehaviour
 
     private void Explode()
     {
+        int foesKilled = 0;
         // Get all foes in the AoE
         Collider2D[] foes = Physics2D.OverlapCircleAll(transform.position, blastRadius, enemyLayer);
         foreach (Collider2D foe in foes)
@@ -84,9 +91,20 @@ public class BombLogic : MonoBehaviour
                 float distance = Vector3.Distance(foe.transform.position, transform.position);
                 float damageMultiplier = 1 - Mathf.Pow(distance / blastRadius, damageFalloff);
                 int aoeDamage = Mathf.Max(0, Mathf.RoundToInt(damage * damageMultiplier));
-                foe.GetComponentInParent<EnemyHealth>().TakeDamage(aoeDamage);
+                EnemyHealth eh = foe.GetComponentInParent<EnemyHealth>();
+                if (eh != null)
+                {
+                    if (aoeDamage >= eh.health)
+                    {
+                        foesKilled++;
+                    }
+                    eh.TakeDamage(aoeDamage);
+                }
+
             }
         }
+
+        OnBombSecondaryExplosion?.Invoke(new OnBombSecondaryExplosionEventArgs { foesKilled = foesKilled });
 
         Destroy(gameObject);
     }

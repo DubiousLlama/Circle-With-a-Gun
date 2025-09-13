@@ -11,8 +11,6 @@ public class CharacterSelect : MonoBehaviour
     public Roster roster;
     public MenuController menuController;
 
-    public Character selectedCharacter;
-
     [Header("Menu GameObjects")]
     public List<GameObject> characterGameObjects;
 
@@ -20,7 +18,6 @@ public class CharacterSelect : MonoBehaviour
     void Start()
     {
         PlayerPrefs.SetInt(roster.allCharacters[0].prefName + "Unlocked", 1); // Ensure the first character is always unlocked
-        selectedCharacter = roster.allCharacters.FirstOrDefault(c => c.id == PlayerPrefs.GetInt("SelectedCharacter", 0));
         updateChars();
     }
 
@@ -39,7 +36,14 @@ public class CharacterSelect : MonoBehaviour
             string unlockedPrefName = ch.prefName + "Unlocked";
             string questPrefName = ch.prefName + "Quest";
             bool unlocked = PlayerPrefs.GetInt(unlockedPrefName, 0) == 1;
-            float questProgress = PlayerPrefs.GetFloat(questPrefName, 0f);
+            int questProgress = PlayerPrefs.GetInt(questPrefName, 0);
+            int questMaximum = ch.unlockQuest != null ? ch.unlockQuest.questCompletionThreshold : 1;
+
+            if (ch.unlockQuest != null && ch.unlockQuest.CheckCompletion() && !unlocked)
+            {
+                unlocked = true;
+                PlayerPrefs.SetInt(unlockedPrefName, 1);
+            }
 
             Debug.Log($"Character {ch.name} unlocked: {unlocked}, quest progress: {questProgress}");
 
@@ -60,7 +64,7 @@ public class CharacterSelect : MonoBehaviour
                 {
                     quest.gameObject.SetActive(true);
                     Slider questSlider = quest.transform.GetChild(0).GetComponent<Slider>();
-                    questSlider.value = questProgress;
+                    questSlider.value = (float)questProgress / (float)questMaximum;
 
                 }
             }

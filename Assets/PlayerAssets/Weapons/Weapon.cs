@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -31,6 +32,13 @@ public class Weapon : MonoBehaviour
         get {
             return rarity == WeaponRarity.Legendary;
         }
+    }
+
+    public static event Action<OnWeaponUsedArgs> OnWeaponUsed;
+    public class OnWeaponUsedArgs : EventArgs
+    {
+        public string weaponName;
+        public WeaponType weaponType;
     }
 
 
@@ -93,6 +101,12 @@ public class Weapon : MonoBehaviour
         Debug.Log("No weapon fire behavior implemented");
     }
 
+    public void FireCleanup()
+    {
+        cooldownRemaining = cooldown;
+        OnWeaponUsed?.Invoke(new OnWeaponUsedArgs { weaponName = getDisplayName(), weaponType = getFinalType() });
+    }
+
     public virtual string getDisplayName()
     {
         return "Name not set.";
@@ -153,7 +167,7 @@ public class Weapon : MonoBehaviour
                     }
                 }
                 Fire();
-                cooldownRemaining = cooldown;
+                FireCleanup();
             }
         }
         if (!isAutomatic)

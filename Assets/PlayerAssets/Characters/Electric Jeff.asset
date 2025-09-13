@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f822bf4aaaca294da0240274e2fb1d5, type: 3}
   m_Name: Electric Jeff
   m_EditorClassIdentifier: 
-  name: ' Electric Jeff'
+  name: Electric Jeff
   prefName: ElectricJeff
   id: 3
   sprite: {fileID: 21300000, guid: 0af8e12eb09a9c84980ddc280c64c345, type: 3}
   primaryWeapon: {fileID: 2920370379373296382, guid: e476e74bf2b64400bbb44cb96742abf3, type: 3}
   secondaryWeapon: {fileID: 2920370379373296382, guid: 5c27a87add5bdc745a88fd2335521fe2, type: 3}
+  unlockQuest: {fileID: 0}

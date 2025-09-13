@@ -18,3 +18,4 @@ MonoBehaviour:
   sprite: {fileID: 21300000, guid: b3de6eeba7595844793cdbecf8ca3640, type: 3}
   primaryWeapon: {fileID: 2920370379373296382, guid: 775717e84f9ebe34780073366529b467, type: 3}
   secondaryWeapon: {fileID: 2920370379373296382, guid: 3b706576849cef340bbf1330fb0f196a, type: 3}
+  unlockQuest: {fileID: 11400000, guid: 1056214eddc23e445ba9dfba62ed26cc, type: 2}

@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
+using Unity.VisualScripting;
+using UnityEngine;
 
 public class ScoreTracker : MonoBehaviour
 {
@@ -12,10 +14,39 @@ public class ScoreTracker : MonoBehaviour
 
     public int multiplier = 1;
 
+    public static event Action<FinalScoreArgs> FinalScore;
+    public class FinalScoreArgs : EventArgs
+    {
+        public int finalScore;
+    }
+
     void Start()
     {
         textObject = GetComponent<TextMeshProUGUI>();
+
+        // Subscribe to the FoeDied event from EnemyHealth
+        EnemyHealth.FoeDied += OnFoeDied;
+        ReturnMainMenu.OnReturnToMainMenu += ReportFinalScore;
+
+        Application.wantsToQuit += quitAttempt;
     }
+
+    bool quitAttempt()
+    {
+        ReportFinalScore();
+        return true;
+    }
+
+    void ReportFinalScore()
+    {
+        FinalScore?.Invoke(new FinalScoreArgs { finalScore = score });
+    }
+
+    void OnFoeDied(EnemyHealth.OnDeathEventArgs e)
+    {
+        IncreaseScore(e.enemy.GetComponent<EnemyHealth>().scoreValue);
+    }
+
     public void IncreaseScore(int increase)
     {
         if (gameOver == false)

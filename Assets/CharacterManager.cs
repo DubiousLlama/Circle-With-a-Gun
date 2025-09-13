@@ -17,7 +17,5 @@ public class CharacterManager : MonoBehaviour
         GetComponent<SpriteRenderer>().sprite = selectedCharacter.sprite;
         GetComponent<WeaponsManager>().EquipWeapon(Instantiate(selectedCharacter.primaryWeapon));
         GetComponent<WeaponsManager>().EquipWeapon(Instantiate(selectedCharacter.secondaryWeapon));
-
-        PlayerPrefs.SetInt("WackySteveUnlocked", 1); // For testing purposes, unlock Wacky Steve
     }
 }
