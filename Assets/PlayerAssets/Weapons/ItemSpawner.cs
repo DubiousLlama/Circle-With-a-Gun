@@ -2,12 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class WeightedItem
+{
+    [Tooltip("The item prefab to spawn")]
+    public GameObject item;
+    
+    [Tooltip("The spawn weight for this item (higher = more likely to spawn)")]
+    [Range(0f, 100f)]
+    public float weight = 1f;
+}
+
 public class ItemSpawner : MonoBehaviour
 {
     private RectTransform playArea;
 
     public GameObject weaponItem;
-    public GameObject[] items;
+
+    public int startingItems = 4;
+
+    [Tooltip("List of items and their individual spawn weights")]
+    public WeightedItem[] weightedItems;
 
     [Range(0.01f, 20)]
     public float spawnRate = 10f;
@@ -16,15 +31,7 @@ public class ItemSpawner : MonoBehaviour
     private Vector2 spawnLocation;
 
     private float[] itemTypeWeights;
-
-    public float powerUpWeight;
-    public float weaponWeight;
-    public float legendaryWeight;
-
-    public float commonOccurance;
-    public float uncommonOccurance;
-    public float rareOccurance;
-// Note
+    private GameObject[] items;
 
     GameObject player;
 
@@ -43,23 +50,22 @@ public class ItemSpawner : MonoBehaviour
             Debug.LogError("Player not found");
         }
 
-        itemTypeWeights = new float[items.Length];
-        for (int i = 0; i < items.Length; i++) {
-            Weapon weapon = items[i].GetComponent<Weapon>();
-            if (weapon != null) {
-                if (weapon.getFinalType() == WeaponType.Legendary)
-                {
-                    itemTypeWeights[i] = legendaryWeight;
-                } else
-                {
-                    itemTypeWeights[i] = weaponWeight;
-                }
-            } else {
-                itemTypeWeights[i] = powerUpWeight;
-            }
+        // Extract items and weights from the weightedItems array
+        items = new GameObject[weightedItems.Length];
+        itemTypeWeights = new float[weightedItems.Length];
+        
+        for (int i = 0; i < weightedItems.Length; i++)
+        {
+            items[i] = weightedItems[i].item;
+            itemTypeWeights[i] = weightedItems[i].weight;
         }
 
-        Debug.LogWarning("Item type weights: " + string.Join(", ", itemTypeWeights));
+        Debug.Log("Item type weights: " + string.Join(", ", itemTypeWeights));
+
+        for (int i = 0; i < startingItems; i++)
+        {
+            SpawnItemAtRandomLocation(items[WeightedRandom(itemTypeWeights)]);
+        }
     }
 
     // Update is called once per frame
@@ -113,16 +119,6 @@ public class ItemSpawner : MonoBehaviour
         // Select a location within the play area
         spawnLocation = new Vector3(Random.Range(playArea.rect.xMin + 1f, playArea.rect.xMax - 1f), Random.Range(playArea.rect.yMin + 1f, playArea.rect.yMax  - 1f), 5) + playArea.position;
 
-        //only run this code when in the editor
-#if UNITY_EDITOR
-        if (!playArea.rect.Contains(spawnLocation - (Vector2)playArea.position))
-        {
-            Debug.Log(spawnLocation);
-            Debug.Log("spawn location is not within the play area");
-            return;
-        }
-#endif
-
         Collider2D collider = Physics2D.OverlapCircle(spawnLocation, 1f,LayerMask.NameToLayer("Item"));
         
         // Check if the spawn loaction overlaps with another item
@@ -165,7 +161,7 @@ public class ItemSpawner : MonoBehaviour
             rarity = WeaponRarity.Legendary;
         } else
         {
-            rarity = (WeaponRarity)WeightedRandom(new float[] { commonOccurance, uncommonOccurance, rareOccurance });
+            rarity = WeaponRarity.Common;
         }
 
         // Check if the player has an item of the same type or better equipped

@@ -51,6 +51,11 @@ public class MenuMusic : MonoBehaviour
         {
             musicSource.volume = Mathf.Min(1, musicSource.volume + Time.deltaTime / fadeInTime);
         }
+
+        if (!musicSource.isPlaying && !leavingLevel)
+        {
+            musicSource.Play();
+        }
     }
 
     public void LeaveLevel()

@@ -61,7 +61,7 @@ public class MenuController : MonoBehaviour
         
         float targetProgress = 0f;
         float currentProgress = 0f;
-        
+
         while (!asyncLoad.isDone)
         {
             targetProgress = Mathf.Clamp01(asyncLoad.progress / 0.5f);
@@ -78,7 +78,9 @@ public class MenuController : MonoBehaviour
 
             yield return null;
         }
-        
+
+        MenuMusic.instance.LeaveLevel();
+
         while (currentProgress < 1f)
         {
             currentProgress = Mathf.MoveTowards(currentProgress, 1f, Time.deltaTime * 2.5f);

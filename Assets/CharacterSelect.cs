@@ -1,3 +1,4 @@
+using Pathfinding;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -64,7 +65,15 @@ public class CharacterSelect : MonoBehaviour
                 {
                     quest.gameObject.SetActive(true);
                     Slider questSlider = quest.transform.GetChild(0).GetComponent<Slider>();
-                    questSlider.value = (float)questProgress / (float)questMaximum;
+                    float realProgress =  (float)questProgress / (float)questMaximum;
+                    float minProgress = 0f;
+                    float maxProgress = 0.95f;
+                    if (realProgress > 0)
+                    {
+                        minProgress = 0.05f;
+                    }
+                    realProgress = Mathf.Clamp(realProgress, minProgress, maxProgress);
+                    questSlider.value = realProgress;
 
                 }
             }

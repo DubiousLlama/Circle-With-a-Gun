@@ -25,6 +25,9 @@ public class GameMusic : MonoBehaviour
 
     private MenuMusic menuMusic;
 
+    private bool lowHealth = false;
+    private bool death = false;
+
     void Awake()
     {
         if (instance == null)
@@ -62,13 +65,23 @@ public class GameMusic : MonoBehaviour
         // If the active source is not playing, play a new track
         if (!activeSource.isPlaying)
         {
-            activeSource.clip = getNewBaseTrack().clip;
+            if (death)
+            {
+                currentTrack = deathTrack;
+            } else if (lowHealth)
+            {
+                currentTrack = lowHealthTrack;
+            } else
+            {
+                currentTrack = getNewBaseTrack();
+            }
+            activeSource.clip = currentTrack.clip;
             activeSource.Play();
         }
 
         // Lower the volume of the inactive source and increase the volume of the active source
-        activeSource.volume = Mathf.Min(1, activeSource.volume + Time.deltaTime / transitionTime);
-        inactiveSource.volume = Mathf.Max(0, inactiveSource.volume - Time.deltaTime / transitionTime);
+        activeSource.volume = Mathf.Min(1, activeSource.volume + Time.unscaledDeltaTime / transitionTime);
+        inactiveSource.volume = Mathf.Max(0, inactiveSource.volume - Time.unscaledDeltaTime / transitionTime);
     }
 
     public void PlayEventTrack(string track)
@@ -83,7 +96,12 @@ public class GameMusic : MonoBehaviour
                 trackToPlay = lowHealthTrack;
                 break;
             case "death":
+                Debug.Log("Death track triggered");
                 trackToPlay = deathTrack;
+                death = true;
+                break;
+            case "base":
+                trackToPlay = getNewBaseTrack();
                 break;
             default:
                 Debug.LogWarning("Track: " + track + " not found!");
@@ -122,6 +140,19 @@ public class GameMusic : MonoBehaviour
                 return newTrack;
             }
         }
+    }
+
+    public void HealthLow(bool isLow)
+    {
+        if (isLow == lowHealth)
+        {
+            return;
+        }
+        if (!isLow && currentTrack == lowHealthTrack)
+        {
+            PlayEventTrack("base");
+        }
+        lowHealth = isLow;
     }
 }
 

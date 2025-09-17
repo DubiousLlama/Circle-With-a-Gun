@@ -50,15 +50,6 @@ public class WeaponsManager : MonoBehaviour
         player = GameObject.Find("PC");
 
         gameMusic = GameMusic.instance;
-        
-        EquipWeapon(Instantiate(defaultPrimaryWeapon));
-
-        #if UNITY_EDITOR
-        if (testingSecondaryWeapon != null)
-        {
-            EquipWeapon(Instantiate(testingSecondaryWeapon));
-        }
-        #endif
     }
 
     public Weapon GetEquippedWeapon(WeaponType weaponType)

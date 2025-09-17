@@ -8,8 +8,6 @@ public class WeaponItem : MonoBehaviour
     [HideInInspector]
     public GameObject weapon;
 
-    private float lifetime = 30f;
-
     void Start()
     {
         Weapon weaponComponent = weapon.GetComponent<Weapon>();
@@ -32,15 +30,6 @@ public class WeaponItem : MonoBehaviour
             SpriteRenderer sr = gameObject.transform.Find("Background").GetComponent<SpriteRenderer>();
             sr.color = new Color(sr.color.r, sr.color.g, sr.color.b, 0.9f);
             Destroy(gameObject, 0.1f);
-        }
-    }
-
-    private void Update()
-    {
-        lifetime -= Time.deltaTime;
-        if (lifetime <= 0)
-        {
-            Destroy(gameObject);
         }
     }
 }

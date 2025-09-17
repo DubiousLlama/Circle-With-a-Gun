@@ -77,8 +77,18 @@ public class PlayerHealth : MonoBehaviour
         if (health > maxHealth)
         {
             health = maxHealth;
+        } 
+        
+        
+        if (health < maxHealth * 0.33f)
+        {
+            gameMusic.HealthLow(true);
+        } else
+        {
+            gameMusic.HealthLow(false);
         }
-        sliderController.SetHealth((int)health);
+
+            sliderController.SetHealth((int)health);
         sliderController.SetMaxHealth((int)maxHealth);
 
         if (health <= 0)

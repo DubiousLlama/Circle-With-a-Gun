@@ -1769,7 +1769,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6332708186182667642, guid: c8b91edf6d6d9d1479e0ad6d14d272f1, type: 3}
       propertyPath: regenDelay
-      value: 20
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6332708186182667642, guid: c8b91edf6d6d9d1479e0ad6d14d272f1, type: 3}
       propertyPath: gameOverScreen
@@ -2025,7 +2025,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 894957481}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7001ee74d2078134ca33c26bf037479c, type: 3}
   m_Name: 
@@ -2090,28 +2090,23 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 894957481}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ed8b0bd25f1dc488bb3705a389ee1f2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   weaponItem: {fileID: 3295067330042803226, guid: 36531ad160ddb4705a46c680e401ef73, type: 3}
-  items:
-  - {fileID: 8153874603629096597, guid: 0892c2dd894162c438497773895727f5, type: 3}
-  - {fileID: 3677065510083006430, guid: 660f5836b5303ef4eb4f69c304765984, type: 3}
-  - {fileID: 4293107596892571966, guid: 20183e52023187c42b9fd1d11b1aab96, type: 3}
-  - {fileID: 2920370379373296382, guid: 9651df96b60a4c14aa481c9fccd09943, type: 3}
-  - {fileID: 2920370379373296382, guid: e476e74bf2b64400bbb44cb96742abf3, type: 3}
-  - {fileID: 2920370379373296382, guid: 5c27a87add5bdc745a88fd2335521fe2, type: 3}
-  - {fileID: 2920370379373296382, guid: 0edf60b7ebff98e4db713a4a7ba8b876, type: 3}
-  - {fileID: 3000582385287026008, guid: b408ef8ef8e5a4a95a2738ef2bdc6206, type: 3}
-  spawnRate: 8
-  powerUpWeight: 1.8
-  weaponWeight: 1
-  legendaryWeight: 1
-  commonOccurance: 5
-  uncommonOccurance: 2
-  rareOccurance: 0.5
+  startingItems: 2
+  weightedItems:
+  - item: {fileID: 4293107596892571966, guid: 20183e52023187c42b9fd1d11b1aab96, type: 3}
+    weight: 1.5
+  - item: {fileID: 8153874603629096597, guid: 0892c2dd894162c438497773895727f5, type: 3}
+    weight: 1.5
+  - item: {fileID: 3000582385287026008, guid: b408ef8ef8e5a4a95a2738ef2bdc6206, type: 3}
+    weight: 1
+  - item: {fileID: 3677065510083006430, guid: 660f5836b5303ef4eb4f69c304765984, type: 3}
+    weight: 1.25
+  spawnRate: 18
 --- !u!114 &894957488
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4372,7 +4367,7 @@ MonoBehaviour:
     volume: 1
   lowHealthTrack:
     name: lowhealth
-    clip: {fileID: 8300000, guid: 90c8f4783fe1b40d198ccfff6468ff77, type: 3}
+    clip: {fileID: 8300000, guid: 42404847e36b66e40b3d087ac3a2e660, type: 3}
     volume: 1
   deathTrack:
     name: death
@@ -4571,7 +4566,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1663428198}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7f107b2de37ddf44fb791701cd44d6ae, type: 3}
   m_Name: 

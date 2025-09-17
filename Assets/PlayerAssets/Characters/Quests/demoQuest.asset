@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04e529ddac7ea3e46bc7dcf91b82f997, type: 3}
   m_Name: demoQuest
   m_EditorClassIdentifier: 
-  questCompletionThreshold: 15
+  questCompletionThreshold: 10
   isActive: 1
   unlockCharacter: {fileID: 11400000, guid: a35c6db6457a8d4418073e93635df9c7, type: 2}

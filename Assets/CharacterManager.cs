@@ -12,7 +12,9 @@ public class CharacterManager : MonoBehaviour
 
     void Start()
     {
-        selectedCharacter = roster.allCharacters[PlayerPrefs.GetInt("SelectedCharacter", 0)];
+        //selectedCharacter = roster.allCharacters[PlayerPrefs.GetInt("SelectedCharacter", 0)];
+
+        selectedCharacter = roster.allCharacters[6];
 
         GetComponent<SpriteRenderer>().sprite = selectedCharacter.sprite;
         GetComponent<WeaponsManager>().EquipWeapon(Instantiate(selectedCharacter.primaryWeapon));
