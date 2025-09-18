@@ -176,7 +176,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 80
-  scoreValue: 30
+  scoreValue: 15
+  xpMax: 6
+  xpMin: 1
+  xpDropChance: 0.85
+  xpOrb: {fileID: 627206883550883058, guid: 965b639f71f161541bf51d30e09b66de, type: 3}
   deathEffect: {fileID: 139366, guid: b185c1a9cf067374586d095111b15bd1, type: 3}
   damage1: {fileID: 21300000, guid: d1bb28d31063ae54e88c7bcc337ecb23, type: 3}
   damage2: {fileID: 21300000, guid: a5c92dfdce4dd5243bef4d952fe3ec3a, type: 3}
@@ -188,8 +192,6 @@ MonoBehaviour:
   threshold3: 20
   threshold4: 10
   threshold5: 0
-  dropItem: 0
-  items: []
 --- !u!114 &4184842238469369798
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -70,7 +70,7 @@ public class QuestTracker : MonoBehaviour
         {
             if (PlayerPrefs.GetInt("SelectedCharacter", 0) == 5)
             {
-                specialist.SetProgress(e.finalScore);
+                shockTrooper.SetProgress(e.finalScore);
             }
         };
 

@@ -17,7 +17,6 @@ public class LightningStrike : Weapon
 
     public void Awake()
     {
-        cooldown = 3.5f;
         weaponType = getFinalType();
     }
 
@@ -30,7 +29,7 @@ public class LightningStrike : Weapon
     private Dictionary<WeaponRarity, int> r_aoeDamage = new Dictionary<WeaponRarity, int> {
         { WeaponRarity.Rare, 150 },
         { WeaponRarity.Uncommon, 100 },
-        { WeaponRarity.Common, 75 }
+        { WeaponRarity.Common, 80 }
     };
 
     public override void Equip()
@@ -87,7 +86,7 @@ public class LightningStrike : Weapon
         
 
         // Get all foes directly contacted
-        Collider2D[] foes = Physics2D.OverlapCircleAll(destination, 0.3f, enemyLayer);
+        Collider2D[] foes = Physics2D.OverlapCircleAll(destination, 0.5f, enemyLayer);
         foreach (Collider2D foe in foes)
         {
             if (foe.tag == "Foe") {
@@ -101,7 +100,7 @@ public class LightningStrike : Weapon
     private void LightningAoE()
     {
         // Get all foes in the AoE
-        Collider2D[] foes = Physics2D.OverlapCircleAll(destination, 1.75f, enemyLayer);
+        Collider2D[] foes = Physics2D.OverlapCircleAll(destination, 2f, enemyLayer);
         foreach (Collider2D foe in foes)
         {
             if (foe.tag == "Foe")

@@ -6,17 +6,17 @@ using System.Runtime.Serialization;
 using UnityEngine;
 using UnityEngine.Events;
 
-[System.Serializable]
-public struct ItemDrop {
-    public GameObject item;
-    public float weight;
-    public WeaponRarity rarity;
-}
-
 public class EnemyHealth : MonoBehaviour
 {
     public int health = 100;
     public int scoreValue = 10;
+
+    public int xpMax = 1;
+    public int xpMin = 1;
+    [Range(0.0f, 1.0f)]
+    public float xpDropChance = 1.0f; // 0.0 to 1.0
+
+    public GameObject xpOrb;
 
     public GameObject deathEffect;
 
@@ -40,8 +40,6 @@ public class EnemyHealth : MonoBehaviour
     public int threshold4 = 10;
     [OptionalField]
     public int threshold5 = 0;
-    public bool dropItem = false;
-    public ItemDrop[] items;
 
     private ItemSpawner itemSpawner;
     private EnemyTracker enemyTracker;
@@ -112,14 +110,57 @@ public class EnemyHealth : MonoBehaviour
 
         FoeDied?.Invoke(new OnDeathEventArgs { enemy = gameObject });
 
-        if (dropItem) {
-            float[] weights = new float[items.Length];
-            for (int i = 0; i < items.Length; i++) {
-                weights[i] = items[i].weight;
-            }
-            int index = ItemSpawner.WeightedRandom(weights);
-            ItemDrop itemDrop = items[index];
-            itemSpawner.SpawnItem(itemDrop.item, transform.position, itemDrop.rarity);
+        // Spawn XP orbs
+        List<int> orbs = DetermineXPOrbs();
+        foreach (int xp in orbs)
+        {
+            if (xp == 0)
+                continue;
+
+            // Get a random position within a radius of 0.4 units
+            float scale = UnityEngine.Random.Range(0.2f, 0.4f);
+            Vector3 offset = UnityEngine.Random.insideUnitCircle * scale;
+
+            offset.z = 1;
+
+
+            GameObject orb = Instantiate(xpOrb, transform.position + offset, Quaternion.identity);
+            orb.GetComponent<XPPickup>().SetXPAmount(xp);
         }
+    }
+
+    List<int> DetermineXPOrbs()
+    {
+        // Determine whether to drop XP
+        if (UnityEngine.Random.value > xpDropChance)
+        {
+            return new List<int> { 0 };
+        }
+        int totalXP = UnityEngine.Random.Range(xpMin, xpMax + 1);
+        List<int> orbs = new List<int>();
+
+        if (totalXP <= 5 || UnityEngine.Random.value < 0.1f)
+        {
+            orbs.Add(totalXP);
+            return orbs;
+        }
+        
+        if (totalXP < 10 || UnityEngine.Random.value < 0.25f)
+        {
+            int orb1 = UnityEngine.Random.Range(2, totalXP);
+            orbs.Add(orb1);
+            orbs.Add(totalXP - orb1);
+            return orbs;
+
+        } else
+        {
+            int orb1 = UnityEngine.Random.Range(2, Mathf.RoundToInt(totalXP * 0.5f));
+            int orb2 = UnityEngine.Random.Range(2, Mathf.RoundToInt((totalXP - orb1) * 0.75f));
+            orbs.Add(orb1);
+            orbs.Add(orb2);
+            orbs.Add(totalXP - orb1 - orb2);
+        }
+
+        return orbs;
     }
 }

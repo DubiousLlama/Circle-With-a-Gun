@@ -48,8 +48,10 @@ MonoBehaviour:
   weaponType: 0
   cooldown: 0.1
   lifetime: 10
+  isAutomatic: 0
   lifetimeRemaining: 0
   cooldownRemaining: 0
   weaponsManager: {fileID: 0}
   damage: 20
   bulletForce: 20
+  bulletPrefab: {fileID: 6050237885574287430, guid: 3b2ac1651221aec4dacc9c090652e806, type: 3}

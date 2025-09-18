@@ -7,8 +7,6 @@ public class RedButton : Weapon
     private string sfx = "teleport";
     RectTransform playArea;
     PlayerHealth playerHealth;
-    private float teleportDelay = 0.3f;
-    private float healAmount = 300;
 
     private Vector3 destination;
 
@@ -17,31 +15,14 @@ public class RedButton : Weapon
         weaponType = WeaponType.Secondary;
     }
 
-    private Dictionary<WeaponRarity, float> r_cooldown = new Dictionary<WeaponRarity, float> {
-        { WeaponRarity.Rare, 9f },
-        { WeaponRarity.Uncommon, 12f },
-        { WeaponRarity.Common, 15f }
-    };
+    float teleportDelay = 0.1f;
 
-    private Dictionary<WeaponRarity, float> r_delay = new Dictionary<WeaponRarity, float> {
-        { WeaponRarity.Rare, 0.2f },
-        { WeaponRarity.Uncommon, 0.25f },
-        { WeaponRarity.Common, 0.3f }
-    };
-
-    private Dictionary<WeaponRarity, int> heal = new Dictionary<WeaponRarity, int> {
-        { WeaponRarity.Rare, 700 },
-        { WeaponRarity.Uncommon, 500 },
-        { WeaponRarity.Common, 300 }
-    };
+    float healAmount = 400;
 
     public override void Equip()
     {
         base.Equip();
 
-        cooldown = r_cooldown[rarity];
-        teleportDelay = r_delay[rarity];
-        healAmount = heal[rarity];
         playArea = GameObject.Find("PlayArea").GetComponent<RectTransform>();
         playerHealth = transform.parent.GetComponent<PlayerHealth>();
     }

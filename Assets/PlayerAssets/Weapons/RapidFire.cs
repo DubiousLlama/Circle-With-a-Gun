@@ -11,9 +11,8 @@ public class RapidFire : Weapon
     [Range(10, 40)]
     public float bulletForce = 20f;
 
-    private GameObject bulletPrefab;
+    public GameObject bulletPrefab;
     private string sfx = "Gun";
-    private Color bulletColor = new Color(0.561111f, 0f, 1f, 1f);
 
     public void Awake()
     {
@@ -49,8 +48,6 @@ public class RapidFire : Weapon
     {
         base.Equip();
 
-        bulletPrefab = Resources.Load<GameObject>("Bullet");
-
         if (bulletPrefab == null)
         {
             Debug.LogError("Bullet prefab not found");
@@ -64,9 +61,7 @@ public class RapidFire : Weapon
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
         BulletScript bs = bullet.GetComponent<BulletScript>();
-        SpriteRenderer sr = bullet.GetComponent<SpriteRenderer>();
 
-        sr.color = bulletColor;
         bs.damage = damage;
 
         rb.AddForce(firePoint.up * bulletForce, ForceMode2D.Impulse);

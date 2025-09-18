@@ -9,6 +9,7 @@ TagManager:
   - Foe
   - Item
   - PowerUp
+  - XP
   layers:
   - Default
   - TransparentFX
@@ -23,7 +24,7 @@ TagManager:
   - Foes
   - 
   - Effects
-  - 
+  - XP
   - Item
   - Post
   - BackgroundObjects

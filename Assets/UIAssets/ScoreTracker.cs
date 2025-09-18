@@ -26,6 +26,7 @@ public class ScoreTracker : MonoBehaviour
 
         // Subscribe to the FoeDied event from EnemyHealth
         EnemyHealth.FoeDied += OnFoeDied;
+        XPPickup.XPPickedUp += OnXPPickedUP;
         ReturnMainMenu.OnReturnToMainMenu += ReportFinalScore;
 
         Application.wantsToQuit += quitAttempt;
@@ -45,6 +46,11 @@ public class ScoreTracker : MonoBehaviour
     void OnFoeDied(EnemyHealth.OnDeathEventArgs e)
     {
         IncreaseScore(e.enemy.GetComponent<EnemyHealth>().scoreValue);
+    }
+
+    void OnXPPickedUP(XPPickup.OnXPPickupEventArgs e)
+    {
+        IncreaseScore(e.xpAmount * 5);
     }
 
     public void IncreaseScore(int increase)

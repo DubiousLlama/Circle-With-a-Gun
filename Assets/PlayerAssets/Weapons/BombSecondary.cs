@@ -44,6 +44,6 @@ public class BombSecondary : Weapon
         // Create the bomb projectile
         GameObject bomb = Instantiate(bombProjectilePrefab, firePoint.position, Quaternion.identity);
         BombLogic bl = bomb.GetComponent<BombLogic>();
-        bl.InitalizeBomb(aimDirection, damage, blastRadius, moveSpeed * 100, Random.Range(350, 420), blastRadius);
+        bl.InitalizeBomb(aimDirection, damage, blastRadius, moveSpeed * 75, Random.Range(250, 500), blastRadius);
     }
 }

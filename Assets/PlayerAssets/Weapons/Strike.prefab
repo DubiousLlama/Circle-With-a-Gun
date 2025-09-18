@@ -46,8 +46,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: c9ca81f938ec7d34fb66fb0659747d72, type: 3}
   weaponType: 0
-  cooldown: 0.1
+  cooldown: 2
   lifetime: 10
+  isAutomatic: 0
   lifetimeRemaining: 0
   cooldownRemaining: 0
   weaponsManager: {fileID: 0}
