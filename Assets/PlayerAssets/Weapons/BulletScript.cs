@@ -9,11 +9,21 @@ public class BulletScript : MonoBehaviour
 
     private AudioManager audioManager;
 
+    private HashSet<GameObject> foesHit;
+
+    [HideInInspector] public int pierceCount = 0; // Number of enemies the projectile can pierce through, 0 means no piercing
+    [HideInInspector] public bool doesPierce = false;
+
     // When the bullet is created, destroy it after 5 seconds
     void Start()
     {
         Destroy(gameObject, 5f);
         audioManager = AudioManager.instance;
+
+        if (doesPierce)
+        {
+            foesHit = new HashSet<GameObject>();
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -27,6 +37,18 @@ public class BulletScript : MonoBehaviour
 
         if (enemy != null)
         {
+            if (doesPierce)
+            {
+                if (foesHit.Contains(collision.gameObject))
+                {
+                    return;
+                }
+
+                foesHit.Add(collision.gameObject);
+                pierceCount--;
+            }
+
+            Debug.Log("Hit enemy: " + collision.gameObject.name);
             enemy.TakeDamage(damage);
             if (enemy.health <= 0)
             {
@@ -38,22 +60,26 @@ public class BulletScript : MonoBehaviour
                 {
                     audioManager.PlaySfx("SmallShot", 0.15f);
                 }
-                
+
             }
 
         }
 
         hitEffect.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-        GameObject effect = Instantiate(hitEffect, transform.position, Quaternion.identity);
-        Destroy(effect, 0.5f);
-        Destroy(gameObject);
+        GameObject he = Instantiate(hitEffect, transform.position, Quaternion.identity);
+        Destroy(he, 0.5f);
+
+        if (!doesPierce || pierceCount <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
 
     //Destroy the bullet if it hits an object
     
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.layer == 8)
+        if (collision.gameObject.layer == 8 || (doesPierce && collision.gameObject.layer == 10))
         {
             return;
         }

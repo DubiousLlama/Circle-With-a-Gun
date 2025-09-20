@@ -107,6 +107,11 @@ public class Shotgun : Weapon
         bs.damage = damage;
 
         Destroy(bullet, rangeLife);
+        if (pierceCount > 0)
+        {
+            bs.pierceCount = pierceCount;
+            bs.doesPierce = true;
+        }
 
         rb.AddForce(bullet.transform.up * bulletForce, ForceMode2D.Impulse);
     }

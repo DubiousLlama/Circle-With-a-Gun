@@ -12,11 +12,20 @@ public class SniperBulletScript : MonoBehaviour
 
     private AudioManager audioManager;
 
+    private HashSet<GameObject> foesHit;
+
+    [HideInInspector] public int pierceCount = 0; // Number of enemies the projectile can pierce through, 0 means no piercing
+    [HideInInspector] public bool doesPierce = false;
+
     // When the bullet is created, destroy it after 5 seconds
     void Start()
     {
         Destroy(gameObject, 5f);
         audioManager = AudioManager.instance;
+        if (doesPierce)
+        {
+            foesHit = new HashSet<GameObject>();
+        }
     }
 
     void Update()
@@ -33,8 +42,19 @@ public class SniperBulletScript : MonoBehaviour
 
         EnemyHealth enemy = collision.gameObject.GetComponent<EnemyHealth>();
 
-        if (enemy != null)
+        if (collision.gameObject != null && enemy != null)
         {
+            if (doesPierce)
+            {
+                if (foesHit.Contains(collision.gameObject))
+                {
+                    return;
+                }
+
+                foesHit.Add(collision.gameObject);
+                pierceCount--;
+            }
+
             damage += Mathf.RoundToInt(timer * bonusDamagePerSecond); // Increase damage based on time bullet has been alive
             enemy.TakeDamage(damage);
             if (enemy.health <= 0)
@@ -55,14 +75,18 @@ public class SniperBulletScript : MonoBehaviour
         hitEffect.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
         GameObject effect = Instantiate(hitEffect, transform.position, Quaternion.identity);
         Destroy(effect, 0.5f);
-        Destroy(gameObject);
+
+        if (pierceCount <= 0)
+        {
+            Destroy(gameObject);
+        }
     }
 
     //Destroy the bullet if it hits an object
     
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.layer == 8)
+        if (collision.gameObject.layer == 8 || (doesPierce && collision.gameObject.layer == 10))
         {
             return;
         }

@@ -67,9 +67,13 @@ public class Weapon : MonoBehaviour
     public WeaponsManager weaponsManager;
     public WeaponRarity rarity { get; protected set; } = WeaponRarity.Common;
 
+    // Upgrade related
     [HideInInspector]
     public bool burstMode = false;
     bool isBursting = false;
+
+    [HideInInspector]
+    public int pierceCount = 0; // Number of enemies the projectile can pierce through, 0 means no piercing
 
     // Start is called before the first frame update
     public virtual void Equip()

@@ -59,6 +59,11 @@ public class Sniper : Weapon
         bs.bonusDamagePerSecond = bonusDamagePerSecond;
 
         rb.AddForce(firePoint.up * bulletForce, ForceMode2D.Impulse);
+        if (pierceCount > 0)
+        {
+            bs.pierceCount = pierceCount;
+            bs.doesPierce = true;
+        }
 
         audioManager.PlaySfx(sfx);
     }

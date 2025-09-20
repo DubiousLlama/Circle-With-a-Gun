@@ -10,14 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aae9e3fc5ea69b643905b890722f6b00, type: 3}
-  m_Name: Multishot
+  m_Name: BatteryPack
   m_EditorClassIdentifier: 
-  upgradeName: Multishot
-  displayName: Burst Mode
-  description: Fire an additional projectile each time you attack with your primary
-    weapon.
-  rarity: 1
+  upgradeName: BatteryPack
+  displayName: Battery Pack
+  description: Doubles the lifetime of legendary weapons.
+  rarity: 0
   requires: []
-  prevents:
-  - PiercingShots
-  weight: 1.2
+  prevents: []
+  weight: 0

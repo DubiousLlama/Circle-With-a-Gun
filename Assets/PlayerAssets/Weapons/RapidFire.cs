@@ -65,6 +65,11 @@ public class RapidFire : Weapon
         bs.damage = damage;
 
         rb.AddForce(firePoint.up * bulletForce, ForceMode2D.Impulse);
+        if (pierceCount > 0)
+        {
+            bs.pierceCount = pierceCount;
+            bs.doesPierce = true;
+        }
 
         audioManager.PlaySfx(sfx);
     }
