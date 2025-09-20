@@ -12,10 +12,14 @@ public class LevelUpManager : MonoBehaviour
     int currentXP = 0;
     public int nextLevelXP = 5;
 
+    public GameObject levelUpMenu;
+
     public Image indicatorFill;
     public TextMeshProUGUI levelText;
 
     float maxFillAmount = 0.99f;
+
+    public bool levelUpAllowed = true;
 
     public static event Action<OnLevelUpEventArgs> LevelUp;
     public class OnLevelUpEventArgs : EventArgs {
@@ -26,14 +30,16 @@ public class LevelUpManager : MonoBehaviour
     void Start()
     {
         XPPickup.XPPickedUp += OnXPPickedUp;
+        OfferLevelUp.LevelUpSelected += () => { levelUpAllowed = true; };
     }
 
     // Update is called once per frame
     void Update()
     {
 
-        if (indicatorFill.fillAmount >= maxFillAmount - 0.04f & currentXP >= nextLevelXP)
+        if (indicatorFill.fillAmount >= maxFillAmount - 0.04f & currentXP >= nextLevelXP && levelUpAllowed)
         {
+            levelUpAllowed = false;
             level++;
             currentXP -= nextLevelXP;
             nextLevelXP = Mathf.RoundToInt(nextLevelXP * 1.5f);
@@ -58,9 +64,8 @@ public class LevelUpManager : MonoBehaviour
     void TriggerLevelUpEvent()
     {
         Debug.Log($"Leveled up to {level}! Next level at {nextLevelXP} XP.");
+        levelUpMenu.SetActive(true);
         levelText.text = level.ToString();
         LevelUp?.Invoke(new OnLevelUpEventArgs { newLevel = level });
     }
-
-
 }

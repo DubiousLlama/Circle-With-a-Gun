@@ -7,17 +7,19 @@ public class PlayerMovement : MonoBehaviour
 {
     public float moveSpeed = 5f;
     float bonus = 0f;
-    float moveBonusTime = 0f;
     public Rigidbody2D rb;
     public Camera cam;
     public Joystick movementJoystick;
     public Joystick directionJoystick;
     private WeaponsManager weaponsManager;
+    private PlayerStats stats;
 
     [HideInInspector]
     public Vector2 movement;
     Vector2 lookDir;
     public bool secondaryMoveStop = false;
+
+    float initialScale = 0.4f;
 
     ICollection<string> slowIDs = new List<string>();
 
@@ -26,14 +28,19 @@ public class PlayerMovement : MonoBehaviour
         weaponsManager = GetComponent<WeaponsManager>();
     }
 
+    private void Start()
+    {
+        stats = PlayerStats.instance;
+    }
+
     // Update is called once per frame
     void Update()
     {
         // Get input from the joysticks or keyboard/mouse and set the movement and look direction vectors accordingly
         HandlePlayerInput();
 
-        // If the player has a speed bonus, decay it over time and shrink the player while the bonus is active
-        HandleSpeedBonusDecay();
+        // If the player has a speed bonus, shrink them porportionally
+        HandleSpeedBonusResize();
     }
 
     void FixedUpdate()
@@ -62,7 +69,7 @@ public class PlayerMovement : MonoBehaviour
 
         } else
         {
-            rb.AddForce(movement.normalized * (moveSpeed + bonus));
+            rb.AddForce(movement.normalized * (moveSpeed + bonus) * stats.GetStatMod(StatTypes.MoveSpeed));
 
             if (movement == Vector2.zero)
             {
@@ -99,50 +106,13 @@ public class PlayerMovement : MonoBehaviour
         secondaryMoveStop = true;
     }
 
-    public void Slow(float slowAmount, string slowID, float slowDuration)
+    private void HandleSpeedBonusResize()
     {
-        if (slowIDs.Contains(slowID) || slowAmount <= 0)
-        {
-            return;
-        }
-        else
-        {
-            slowIDs.Add(slowID);
-            moveSpeed = moveSpeed * slowAmount;
-            StartCoroutine(RemoveSlow(slowAmount, slowID, slowDuration));
-        }
-    }
-
-    public void SetSpeedBonus(float amount)
-    {
-        bonus = amount;
-    }
-
-    IEnumerator RemoveSlow(float slowAmount, string slowID, float slowDuration)
-    {
-        yield return new WaitForSeconds(slowDuration);
-        slowIDs.Remove(slowID);
-        moveSpeed = moveSpeed * (1 / slowAmount);
-    }
-
-    private void HandleSpeedBonusDecay()
-    {
-        if (bonus > 0)
-        {
-            bonus = bonus - (float)Math.Pow(2, moveBonusTime - 12f);
-            moveBonusTime += Time.deltaTime;
-
-            // Shrink the player by the ratio of the bonus to their moveSpeed
-            float bonusRatio = Mathf.Min(bonus / moveSpeed, 1);
-            float scale = (1 - bonusRatio / 4) * 0.4f;
-            transform.localScale = new Vector3(scale, scale, 1);
-        }
-        if (bonus <= 0)
-        {
-            bonus = 0;
-            moveBonusTime = 0;
-            transform.localScale = new Vector3(0.4f, 0.4f, 1);
-        }
+        // Shrink the player by the ratio of the bonus to their moveSpeed
+        float bonusRatio = Mathf.Min(PlayerStats.instance.GetStatMod(StatTypes.MoveSpeed) - 1, 1);
+        float scale = (1 - bonusRatio / 5) * 0.4f;
+        scale = Mathf.Clamp(scale, 0.2f, initialScale);
+        transform.localScale = new Vector3(scale, scale, 1);
     }
 
     public bool isMoving()

@@ -26,7 +26,7 @@ public class SniperBulletScript : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.layer == 8)
+        if (collision.gameObject.layer == 8 || collision.gameObject.layer == 13)
         {
             return;
         }
@@ -35,7 +35,6 @@ public class SniperBulletScript : MonoBehaviour
 
         if (enemy != null)
         {
-            Debug.Log("Bonus damage: " + Mathf.RoundToInt(timer * bonusDamagePerSecond));
             damage += Mathf.RoundToInt(timer * bonusDamagePerSecond); // Increase damage based on time bullet has been alive
             enemy.TakeDamage(damage);
             if (enemy.health <= 0)

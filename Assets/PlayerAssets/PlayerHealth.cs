@@ -27,6 +27,8 @@ public class PlayerHealth : MonoBehaviour
     GameMusic gameMusic;
     PostProcessVolume post;
 
+    PlayerStats stats;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -37,9 +39,9 @@ public class PlayerHealth : MonoBehaviour
 
         audioManager = AudioManager.instance;
         gameMusic = GameMusic.instance;
+        stats = PlayerStats.instance;
 
         post = GameObject.Find("PostEffects").GetComponent<PostProcessVolume>();
-
     }
 
     public void Damage(float damage)
@@ -63,16 +65,16 @@ public class PlayerHealth : MonoBehaviour
 
     void Update()
     {
-        maxHealth = startingMaxHealth;
+        maxHealth = startingMaxHealth * stats.GetStatMod(StatTypes.MaxHealth);
 
         if (regenTimer < regenDelay)
         {
-            regenTimer += Time.deltaTime;
+            regenTimer += Time.deltaTime * stats.GetStatMod(StatTypes.HealthRegenDelay);
         }
 
         if (health < maxHealth && regenTimer > regenDelay)
         {
-            health += regenRate * Time.deltaTime;
+            health += regenRate * Time.deltaTime * stats.GetStatMod(StatTypes.HealthRegenRate);
         }
         if (health > maxHealth)
         {

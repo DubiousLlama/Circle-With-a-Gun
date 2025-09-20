@@ -9,29 +9,27 @@ public class PowerUpTrigger : MonoBehaviour
 
     public GameObject explosion;
 
-    PlayerStats playerStats;
-    PowerUpManager powerUpManager;
+    private PlayerStats stats;
+
+    private void Start()
+    {
+        stats = PlayerStats.instance;
+    }
 
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Player")
         {
-            if (powerUpManager == null)
-            {
-                powerUpManager = collision.gameObject.GetComponent<PowerUpManager>();
-            }
-            if (playerStats == null)
-            {
-                playerStats = collision.gameObject.GetComponent<PlayerStats>();
-            }
-
-            Debug.Log("Power Up Triggered: " + powerUpName);
 
             switch (powerUpName)
             {
                 case "Speed":
-                    PlayerMovement playerMovement = collision.gameObject.GetComponent<PlayerMovement>();
-                    playerMovement.SetSpeedBonus(3.5f);
+                    string powerUpTag = "SpeedPowerUp";
+                    if (stats.DoesTagExist(powerUpTag))
+                    {
+                        stats.RemoveAllModifiersWithTag(powerUpTag);
+                    }
+                    stats.ModifyMultStat(StatTypes.MoveSpeed, 1.2f, false, 6f, powerUpTag, 2f);
                     AudioManager.instance.PlaySfx("Score1", 0.25f);
                     break;
                 case "Regen":

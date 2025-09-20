@@ -67,6 +67,10 @@ public class Weapon : MonoBehaviour
     public WeaponsManager weaponsManager;
     public WeaponRarity rarity { get; protected set; } = WeaponRarity.Common;
 
+    [HideInInspector]
+    public bool burstMode = false;
+    bool isBursting = false;
+
     // Start is called before the first frame update
     public virtual void Equip()
     {
@@ -104,6 +108,16 @@ public class Weapon : MonoBehaviour
     public void FireCleanup()
     {
         cooldownRemaining = cooldown;
+        if (burstMode && isBursting)
+        {
+            Debug.Log("Burst shot fired");
+            cooldownRemaining = cooldown / 5f;
+            isBursting = false;
+        } else if (burstMode && !isBursting)
+        {
+            isBursting = true;
+            cooldownRemaining = cooldown * 1.4f;
+        }
         OnWeaponUsed?.Invoke(new OnWeaponUsedArgs { weaponName = getDisplayName(), weaponType = getFinalType() });
     }
 
@@ -139,7 +153,14 @@ public class Weapon : MonoBehaviour
 
         if (cooldownRemaining > 0)
         {
-            cooldownRemaining -= Time.deltaTime;
+            if (weaponType == WeaponType.Primary || weaponType == WeaponType.Legendary)
+            {
+                cooldownRemaining -= Time.deltaTime * PlayerStats.instance.GetStatMod(StatTypes.AttackSpeed);
+            } else
+            {
+                cooldownRemaining -= Time.deltaTime * PlayerStats.instance.GetStatMod(StatTypes.SecondaryCooldown);
+            }
+            
         }
 
         if (isTemporary)
@@ -193,5 +214,6 @@ public class Weapon : MonoBehaviour
         weaponsManager.weapons[weaponSlot] = null;
         isFiring = false;
         Destroy(gameObject);
+        weaponsManager.OnPrimaryDown();
     }
 }

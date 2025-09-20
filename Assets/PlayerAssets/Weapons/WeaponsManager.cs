@@ -15,7 +15,6 @@ public class WeaponsManager : MonoBehaviour
     public Dictionary<WeaponType, bool> isFiring = new Dictionary<WeaponType, bool>();
 
     public GameObject defaultPrimaryWeapon;
-
     public GameObject testingSecondaryWeapon;
 
     private GameObject player;
@@ -30,9 +29,6 @@ public class WeaponsManager : MonoBehaviour
     public PlayerMovement playerMovement;
 
     public GameObject RechargeBar;
-
-    private Color transparent = new Color(0,0,0,0);
-    private Color white = new Color(1, 1, 1, 0);
 
     void Awake()
     {
@@ -120,23 +116,7 @@ public class WeaponsManager : MonoBehaviour
             {
                 OnSecondaryUp();
             }
-        }
-
-        // Handle secondary display logic
-
-        if (weapons[WeaponSlot.Two] != null)
-        {
-            RechargeBar.GetComponent<CanvasGroup>().alpha = 1f;
-            secondaryDisplay.SetActive(true);
-            secondaryIndicatorActive.SetActive(weapons[WeaponSlot.Two].cooldownRemaining <= 0);
-            secondaryInactive.SetActive(!playerMovement.isMoving());
-            secondaryActive.SetActive(weapons[WeaponSlot.Two].cooldownRemaining <= 0 && !playerMovement.isMoving());
-        } else
-        {
-            RechargeBar.GetComponent<CanvasGroup>().alpha = 0f;
-            secondaryDisplay.SetActive(false);
-        }
-        
+        } 
 
     }
 
