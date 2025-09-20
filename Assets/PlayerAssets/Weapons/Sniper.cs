@@ -5,26 +5,18 @@ using UnityEngine;
 using UnityEngine.Rendering;
 
 
-public class Sniper : Weapon
+public class Sniper : BulletWeapon
 {
-    public int damage = 20;
+    [Header("Sniper Settings")]
     public int bonusDamagePerSecond = 200;
 
-    public float bulletForce = 40f;
-
-    public GameObject bulletPrefab;
-    private string sfx = "Gun";
-
-    public void Awake()
+    protected override void Awake()
     {
+        // Set default values for sniper - these can still be overridden in inspector
+        if (bulletForce == 20f) bulletForce = 40f; // Only set if still at default
+        
         isAutomatic = true;
-        weaponType = WeaponType.Primary;
-        SetRarity(WeaponRarity.Common);
-    }
-
-    public override void SetRarity(WeaponRarity rarity)
-    {
-        base.SetRarity(rarity);
+        base.Awake();
     }
 
     public override string getDisplayName()
@@ -40,31 +32,34 @@ public class Sniper : Weapon
     public override void Equip()
     {
         base.Equip();
-
-        if (bulletPrefab == null)
-        {
-            Debug.LogError("Bullet prefab not found");
-        }
-
         Debug.Log("Weapon equipped: " + gameObject.name);
     }
 
-    public override void Fire()
+    protected override void ConfigureBullet(GameObject bullet)
     {
-        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
         SniperBulletScript bs = bullet.GetComponent<SniperBulletScript>();
 
-        bs.damage = damage;
-        bs.bonusDamagePerSecond = bonusDamagePerSecond;
-
-        rb.AddForce(firePoint.up * bulletForce, ForceMode2D.Impulse);
-        if (pierceCount > 0)
+        if (bs != null)
         {
-            bs.pierceCount = pierceCount;
-            bs.doesPierce = true;
+            bs.damage = damage;
+            bs.bonusDamagePerSecond = bonusDamagePerSecond;
+
+            if (pierceCount > 0)
+            {
+                bs.pierceCount = pierceCount;
+                bs.doesPierce = true;
+            }
         }
 
-        audioManager.PlaySfx(sfx);
+        if (rb != null)
+        {
+            rb.AddForce(bullet.transform.up * bulletForce, ForceMode2D.Impulse);
+        }
+    }
+
+    protected override void FireBullets()
+    {
+        CreateBullet(firePoint.position, firePoint.rotation);
     }
 }

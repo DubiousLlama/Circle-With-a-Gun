@@ -96,7 +96,7 @@ public class Weapon : MonoBehaviour
             barController.SetMaxRecharge(cooldown);
         }
 
-        lifetimeRemaining = lifetime;
+        lifetimeRemaining = lifetime * PlayerStats.instance.GetStatMod(StatTypes.LegendaryDuration);
     }
 
     public virtual void SetRarity(WeaponRarity rarity)

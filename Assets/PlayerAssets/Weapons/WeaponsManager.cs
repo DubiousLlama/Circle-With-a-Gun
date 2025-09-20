@@ -19,8 +19,6 @@ public class WeaponsManager : MonoBehaviour
 
     private GameObject player;
 
-    private GameMusic gameMusic;
-
     public GameObject secondaryDisplay;
     public GameObject secondaryInactive;
     public GameObject secondaryActive;
@@ -44,8 +42,6 @@ public class WeaponsManager : MonoBehaviour
     void Start()
     {
         player = GameObject.Find("PC");
-
-        gameMusic = GameMusic.instance;
     }
 
     public Weapon GetEquippedWeapon(WeaponType weaponType)

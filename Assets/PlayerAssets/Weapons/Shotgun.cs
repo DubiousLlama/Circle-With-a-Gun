@@ -3,25 +3,21 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-
-public class Shotgun : Weapon
+public class Shotgun : BulletWeapon
 {
-    int damage = 35;
+    [Header("Shotgun Settings")]
     int numBullets = 5;
     int spread = 40;
     float rangeLife = 0.25f;
-
-    [Range(10, 40)]
-    float bulletForce = 25f;
-
-    private GameObject bulletPrefab;
-    private string sfx = "Gun";
     private Color bulletColor = new Color(1f, 0.5569f, 0f, 1f);
 
-    public void Awake()
+    protected override void Awake()
     {
-        weaponType = WeaponType.Primary;
-        SetRarity(WeaponRarity.Common);
+        // Set default values for shotgun - these can still be overridden in inspector
+        if (damage == 20) damage = 35; // Only set if still at default
+        if (bulletForce == 20f) bulletForce = 25f; // Only set if still at default
+        
+        base.Awake();
     }
 
     private Dictionary<WeaponRarity, int> r_damage = new Dictionary<WeaponRarity, int> {
@@ -62,57 +58,35 @@ public class Shotgun : Weapon
         isAutomatic = true;
     }
 
-    public override void Equip()
+    protected override void LoadBulletPrefab()
     {
-        base.Equip();
-
         bulletPrefab = Resources.Load<GameObject>("Bullet");
-
-        if (bulletPrefab == null)
-        {
-            Debug.LogError("Bullet prefab not found");
-        }
     }
 
-    public override void Fire()
+    protected override void FireBullets()
     {
         float spreadAngleChange = spread / (numBullets-1);
         float startAngle = -spread / 2;
 
-        /* if (numBullets % 2 == 1)
-        {
-            FireOne(spreadAngle * numBullets / 2);
-        } */
-
         for (int i = 0; i < numBullets; i++)
         {
-            FireOne(startAngle + spreadAngleChange * i);
+            FireSingleBullet(startAngle + spreadAngleChange * i);
         }
-
-        audioManager.PlaySfx(sfx);
-        
     }
 
-    private void FireOne(float rot)
+    private void FireSingleBullet(float rot)
     {
         // The bullet angle is the rotation of the firepoint modified by the "rot" parameter
         Quaternion bulletRotation = firePoint.rotation * Quaternion.Euler(0, 0, rot);
 
-        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, bulletRotation);
-        Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
-        BulletScript bs = bullet.GetComponent<BulletScript>();
+        GameObject bullet = CreateBullet(firePoint.position, bulletRotation);
         SpriteRenderer sr = bullet.GetComponent<SpriteRenderer>();
 
-        sr.color = bulletColor;
-        bs.damage = damage;
-
-        Destroy(bullet, rangeLife);
-        if (pierceCount > 0)
+        if (sr != null)
         {
-            bs.pierceCount = pierceCount;
-            bs.doesPierce = true;
+            sr.color = bulletColor;
         }
 
-        rb.AddForce(bullet.transform.up * bulletForce, ForceMode2D.Impulse);
+        Destroy(bullet, rangeLife);
     }
 }

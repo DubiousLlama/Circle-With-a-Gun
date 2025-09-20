@@ -4,21 +4,12 @@ using UnityEditor;
 using UnityEngine;
 
 
-public class RapidFire : Weapon
+public class RapidFire : BulletWeapon
 {
-    public int damage = 20;
-
-    [Range(10, 40)]
-    public float bulletForce = 20f;
-
-    public GameObject bulletPrefab;
-    private string sfx = "Gun";
-
-    public void Awake()
+    protected override void Awake()
     {
         isAutomatic = true;
-        weaponType = WeaponType.Primary;
-        SetRarity(WeaponRarity.Common);
+        base.Awake();
     }
 
     private Dictionary<WeaponRarity, float> cooldowns = new Dictionary<WeaponRarity, float> {
@@ -47,30 +38,11 @@ public class RapidFire : Weapon
     public override void Equip()
     {
         base.Equip();
-
-        if (bulletPrefab == null)
-        {
-            Debug.LogError("Bullet prefab not found");
-        }
-
         Debug.Log("Weapon equipped: " + gameObject.name);
     }
 
-    public override void Fire()
+    protected override void FireBullets()
     {
-        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-        Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
-        BulletScript bs = bullet.GetComponent<BulletScript>();
-
-        bs.damage = damage;
-
-        rb.AddForce(firePoint.up * bulletForce, ForceMode2D.Impulse);
-        if (pierceCount > 0)
-        {
-            bs.pierceCount = pierceCount;
-            bs.doesPierce = true;
-        }
-
-        audioManager.PlaySfx(sfx);
+        CreateBullet(firePoint.position, firePoint.rotation);
     }
 }

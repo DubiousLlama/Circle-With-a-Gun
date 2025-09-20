@@ -7,15 +7,14 @@ public class BulletScript : MonoBehaviour
     public GameObject hitEffect;
     public int damage = 20;
 
-    private AudioManager audioManager;
-
-    private HashSet<GameObject> foesHit;
+    protected AudioManager audioManager;
+    protected HashSet<GameObject> foesHit;
 
     [HideInInspector] public int pierceCount = 0; // Number of enemies the projectile can pierce through, 0 means no piercing
     [HideInInspector] public bool doesPierce = false;
 
     // When the bullet is created, destroy it after 5 seconds
-    void Start()
+    protected virtual void Start()
     {
         Destroy(gameObject, 5f);
         audioManager = AudioManager.instance;
@@ -23,6 +22,43 @@ public class BulletScript : MonoBehaviour
         if (doesPierce)
         {
             foesHit = new HashSet<GameObject>();
+        }
+    }
+
+    // Virtual method for calculating damage - can be overridden by subclasses
+    protected virtual int CalculateDamage()
+    {
+        return damage;
+    }
+
+    // Virtual method for handling enemy hit logic - can be overridden by subclasses
+    protected virtual void OnEnemyHit(EnemyHealth enemy, GameObject enemyObject)
+    {
+        if (doesPierce)
+        {
+            if (foesHit.Contains(enemyObject))
+            {
+                return;
+            }
+
+            foesHit.Add(enemyObject);
+            pierceCount--;
+        }
+
+        Debug.Log("Hit enemy: " + enemyObject.name);
+        int finalDamage = CalculateDamage();
+        enemy.TakeDamage(finalDamage);
+        
+        if (enemy.health <= 0)
+        {
+            if (enemy.threshold1 > 60)
+            {
+                audioManager.PlaySfx("Bang", 0.25f);
+            }
+            else
+            {
+                audioManager.PlaySfx("SmallShot", 0.15f);
+            }
         }
     }
 
@@ -37,32 +73,7 @@ public class BulletScript : MonoBehaviour
 
         if (enemy != null)
         {
-            if (doesPierce)
-            {
-                if (foesHit.Contains(collision.gameObject))
-                {
-                    return;
-                }
-
-                foesHit.Add(collision.gameObject);
-                pierceCount--;
-            }
-
-            Debug.Log("Hit enemy: " + collision.gameObject.name);
-            enemy.TakeDamage(damage);
-            if (enemy.health <= 0)
-            {
-                if (enemy.threshold1 > 60)
-                {
-                    audioManager.PlaySfx("Bang", 0.25f);
-                }
-                else
-                {
-                    audioManager.PlaySfx("SmallShot", 0.15f);
-                }
-
-            }
-
+            OnEnemyHit(enemy, collision.gameObject);
         }
 
         hitEffect.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
@@ -89,6 +100,4 @@ public class BulletScript : MonoBehaviour
         Destroy(effect, 0.5f);
         Destroy(gameObject);
     }
-
-
 }
