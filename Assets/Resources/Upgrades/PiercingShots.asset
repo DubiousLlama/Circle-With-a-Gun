@@ -19,4 +19,5 @@ MonoBehaviour:
   requires: []
   prevents:
   - Multishot
+  - WallBounce
   weight: 1

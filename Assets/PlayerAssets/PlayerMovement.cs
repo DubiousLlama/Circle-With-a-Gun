@@ -21,8 +21,6 @@ public class PlayerMovement : MonoBehaviour
 
     float initialScale = 0.4f;
 
-    ICollection<string> slowIDs = new List<string>();
-
     void Awake()
     {
         weaponsManager = GetComponent<WeaponsManager>();

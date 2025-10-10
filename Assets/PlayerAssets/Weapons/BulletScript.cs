@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BulletScript : MonoBehaviour
@@ -12,6 +13,7 @@ public class BulletScript : MonoBehaviour
 
     [HideInInspector] public int pierceCount = 0; // Number of enemies the projectile can pierce through, 0 means no piercing
     [HideInInspector] public bool doesPierce = false;
+    [HideInInspector] public bool wallBounce = false;
 
     // When the bullet is created, destroy it after 5 seconds
     protected virtual void Start()
@@ -19,9 +21,21 @@ public class BulletScript : MonoBehaviour
         Destroy(gameObject, 5f);
         audioManager = AudioManager.instance;
 
-        if (doesPierce)
+        if (pierceCount > 0)
         {
+            doPierce(true);
             foesHit = new HashSet<GameObject>();
+        }
+
+        // Configure bullet physics for minimal force impact and clean bouncing
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            rb.mass = 0.001f; // Ultra-light mass to minimize force on enemies
+            rb.gravityScale = 0f; // Ensure no gravity affects the bullet
+            rb.drag = 0f; // No linear drag to maintain momentum
+            rb.angularDrag = 0f; // No angular drag to prevent unwanted rotation
+            rb.freezeRotation = true; // Prevent spinning completely
         }
     }
 
@@ -29,6 +43,13 @@ public class BulletScript : MonoBehaviour
     protected virtual int CalculateDamage()
     {
         return damage;
+    }
+
+    protected void doPierce(bool setTo)
+    {
+        doesPierce = setTo;
+        gameObject.GetComponent<Collider2D>().isTrigger = setTo;
+        transform.GetChild(0).gameObject.SetActive(setTo);
     }
 
     // Virtual method for handling enemy hit logic - can be overridden by subclasses
@@ -43,6 +64,10 @@ public class BulletScript : MonoBehaviour
 
             foesHit.Add(enemyObject);
             pierceCount--;
+            if (pierceCount == 0)
+            {
+                doPierce(false);
+            }
         }
 
         Debug.Log("Hit enemy: " + enemyObject.name);
@@ -64,11 +89,36 @@ public class BulletScript : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.layer == 8 || collision.gameObject.layer == 13)
+        NonPhysicsHit(collision);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (wallBounce && collision.gameObject.layer == 9)
         {
+
+            Rigidbody2D rb = GetComponent<Rigidbody2D>();
+
+            float angle = Mathf.Atan2(rb.velocity.y, rb.velocity.x) * Mathf.Rad2Deg;
+            rb.rotation = angle - 90f;
+
+
+            damage += damage / 2;
+            transform.GetChild(1).gameObject.SetActive(true);
+            wallBounce = false;
             return;
         }
 
+        NonPhysicsHit(collision.collider);
+
+        hitEffect.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+        GameObject he = Instantiate(hitEffect, collision.contacts[0].point, Quaternion.identity);
+        Destroy(he, 0.5f);
+    }
+
+    private void NonPhysicsHit(Collider2D collision)
+    {
+        Debug.Log("Bullet collided with: " + collision.gameObject.name);
         EnemyHealth enemy = collision.gameObject.GetComponent<EnemyHealth>();
 
         if (enemy != null)
@@ -76,28 +126,10 @@ public class BulletScript : MonoBehaviour
             OnEnemyHit(enemy, collision.gameObject);
         }
 
-        hitEffect.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-        GameObject he = Instantiate(hitEffect, transform.position, Quaternion.identity);
-        Destroy(he, 0.5f);
-
-        if (!doesPierce || pierceCount <= 0)
+        if (pierceCount <= 0 || (collision.gameObject.layer != 10 && collision.gameObject.layer != 18))
         {
+            Debug.Log("Bullet destroyed. Pierce count: " + pierceCount);
             Destroy(gameObject);
         }
-    }
-
-    //Destroy the bullet if it hits an object
-    
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.layer == 8 || (doesPierce && collision.gameObject.layer == 10))
-        {
-            return;
-        }
-
-        hitEffect.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-        GameObject effect = Instantiate(hitEffect, transform.position, Quaternion.identity);
-        Destroy(effect, 0.5f);
-        Destroy(gameObject);
     }
 }

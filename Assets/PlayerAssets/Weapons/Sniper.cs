@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 
 public class Sniper : BulletWeapon
@@ -37,25 +33,10 @@ public class Sniper : BulletWeapon
 
     protected override void ConfigureBullet(GameObject bullet)
     {
-        Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
+        base.ConfigureBullet(bullet);
+
         SniperBulletScript bs = bullet.GetComponent<SniperBulletScript>();
-
-        if (bs != null)
-        {
-            bs.damage = damage;
-            bs.bonusDamagePerSecond = bonusDamagePerSecond;
-
-            if (pierceCount > 0)
-            {
-                bs.pierceCount = pierceCount;
-                bs.doesPierce = true;
-            }
-        }
-
-        if (rb != null)
-        {
-            rb.AddForce(bullet.transform.up * bulletForce, ForceMode2D.Impulse);
-        }
+        bs.bonusDamagePerSecond = bonusDamagePerSecond;
     }
 
     protected override void FireBullets()

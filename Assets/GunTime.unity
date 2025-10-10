@@ -2723,7 +2723,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5fb0c9493639374196f47f8db94ddb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextLevelXP: 5
+  nextLevelXP: 80
   levelUpMenu: {fileID: 2011257147}
   indicatorFill: {fileID: 1161053524}
   levelText: {fileID: 545933365}

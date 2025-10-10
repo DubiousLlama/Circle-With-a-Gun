@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeName: MoveSpeed
   displayName: Swiftness
-  description: Move 10% faster.
+  description: Move 15% faster.
   rarity: 0
   requires: []
   prevents: []
-  weight: 0.9
+  weight: 900

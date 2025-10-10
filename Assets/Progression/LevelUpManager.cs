@@ -42,12 +42,12 @@ public class LevelUpManager : MonoBehaviour
             levelUpAllowed = false;
             level++;
             currentXP -= nextLevelXP;
-            nextLevelXP = Mathf.RoundToInt(nextLevelXP * 1.5f);
+            nextLevelXP = Mathf.RoundToInt(nextLevelXP * 2.5f);
             AudioManager.instance.PlaySfx("LevelUp", 1f);
-            Invoke("TriggerLevelUpEvent", 0.04f);
+            Invoke("TriggerLevelUpEvent", 0.01f);
         }
 
-        float lerpSpeed = GetTargetFillAmount() < indicatorFill.fillAmount ? 6f : 3f;
+        float lerpSpeed = GetTargetFillAmount() < indicatorFill.fillAmount ? 10f : 5f;
         indicatorFill.fillAmount = Mathf.Lerp(indicatorFill.fillAmount, GetTargetFillAmount(), Time.deltaTime * lerpSpeed);
     }
 

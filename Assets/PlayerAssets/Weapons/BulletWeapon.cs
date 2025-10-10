@@ -14,6 +14,8 @@ public abstract class BulletWeapon : Weapon
     
     protected string sfx = "Gun";
 
+    public bool wallBounce = false;
+
     protected virtual void Awake()
     {
         weaponType = WeaponType.Primary;
@@ -76,13 +78,20 @@ public abstract class BulletWeapon : Weapon
             if (pierceCount > 0)
             {
                 bs.pierceCount = pierceCount;
-                bs.doesPierce = true;
             }
+
+            bs.wallBounce = wallBounce;
+            Debug.Log("Configured bullet with damage: " + damage + ", pierceCount: " + bs.pierceCount + ", wallBounce: " + wallBounce);
+        } else
+        {
+            Debug.LogWarning("BulletScript component not found on bullet prefab.");
         }
+
+
 
         if (rb != null)
         {
-            rb.AddForce(bullet.transform.up * bulletForce, ForceMode2D.Impulse);
+            rb.AddForce(bullet.transform.up * bulletForce * rb.mass, ForceMode2D.Impulse);
         }
     }
 

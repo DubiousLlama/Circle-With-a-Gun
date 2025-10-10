@@ -24,6 +24,8 @@ public class OfferLevelUp : MonoBehaviour
     float uncommonWeight;
     float rareWeight;
 
+    bool isBoomerang = false;
+    List<string> noBoomerang = new List<string> { "Multishot", "Wallbounce" };
     List<Upgrade> allUpgrades = null;
     Dictionary<Upgrade, float> weightedUpgrades = new Dictionary<Upgrade, float>();
     List<string> currentUpgrades = new List<string>();
@@ -61,6 +63,8 @@ public class OfferLevelUp : MonoBehaviour
 
         Debug.Log("Time Scale set to 0");
         Time.timeScale = 0f; // Pause the game while selecting an upgrade
+
+        isBoomerang = PlayerPrefs.GetInt("SelectedCharacter") == 8;
     }
 
     private void OnDisable()
@@ -155,6 +159,10 @@ public class OfferLevelUp : MonoBehaviour
                 continue;
             }
             if (up.requires.Any() && !currentUpgrades.Any(x => up.requires.Contains(x)))
+            {
+                continue;
+            }
+            if (noBoomerang.Contains(up.name) && isBoomerang)
             {
                 continue;
             }

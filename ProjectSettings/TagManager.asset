@@ -28,8 +28,8 @@ TagManager:
   - Item
   - Post
   - BackgroundObjects
-  - 
-  - 
+  - BulletPhysics
+  - FoeNonBullet
   - 
   - 
   - 
