@@ -5,6 +5,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Steamworks;
 
 
 public class CharacterSelect : MonoBehaviour
@@ -106,8 +107,8 @@ public class CharacterSelect : MonoBehaviour
 
             Transform buyButton = characterGameObjects[i].transform.Find("BuyButton");
             if (buyButton != null)
-            {
-                if (unlocked)
+            {   // check if user owns miss microtransaction DLC
+                if (unlocked || Steamworks.SteamServer.UserHasLicenseForApp(SteamUser.GetSteamID(), (AppId_t)4137050))
                 {
                     buyButton.gameObject.SetActive(false);
                 }
