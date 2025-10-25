@@ -35,6 +35,7 @@ public class CharacterSelect : MonoBehaviour
         menuController.CharacterSelected();
     }
 
+
     private void ToggleMystery(GameObject chGo, bool state)
     {
         chGo.transform.Find("Mystery")?.gameObject.SetActive(state);
@@ -48,10 +49,12 @@ public class CharacterSelect : MonoBehaviour
 
     private void updateChars()
     {
+
         for (int i = 0; i < characterGameObjects.Count; i++)
         {
             Character ch = roster.allCharacters[i];
 
+            revealCriteria();
             bool hidden = PlayerPrefs.GetInt(ch.prefName + "Hidden", 0) == 0;
             ToggleMystery(characterGameObjects[i], hidden);
             if (hidden)
@@ -117,5 +120,42 @@ public class CharacterSelect : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void unhideIfUnlocked(int keyCharIndex, int charToUnhideIndex)
+    {
+        bool unlocked = PlayerPrefs.GetInt(roster.allCharacters[keyCharIndex].prefName + "Unlocked", 0) == 1;
+        if (unlocked)
+        {
+            PlayerPrefs.SetInt(roster.allCharacters[charToUnhideIndex].prefName + "Hidden", 1);
+        }
+        else
+        {
+            PlayerPrefs.SetInt(roster.allCharacters[charToUnhideIndex].prefName + "Quest", 0);
+            PlayerPrefs.SetInt(roster.allCharacters[charToUnhideIndex].prefName + "Hidden", 0);
+        }
+    }
+
+    public void revealCriteria()
+    {
+        // Electric Jeff
+        // Reveal when Commando is completed
+        unhideIfUnlocked(2, 3);
+
+        // Demo Man
+        // Reveal when Bombs McGee is completed
+        unhideIfUnlocked(1, 4);
+
+        // Specialist
+        // Reveal when Commando is completed
+        unhideIfUnlocked(2, 5);
+
+        // Shock Trooper
+        // Reveal when Specialist is completed
+        unhideIfUnlocked(5, 6);
+
+        // Wacky Steve
+        // Reveal when Electric Jeff is completed
+        unhideIfUnlocked(3, 7);
     }
 }
