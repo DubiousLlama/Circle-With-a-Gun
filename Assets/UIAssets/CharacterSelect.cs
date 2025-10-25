@@ -50,6 +50,12 @@ public class CharacterSelect : MonoBehaviour
 
     private void updateChars()
     {
+        bool MMUnlocked = SteamApps.BIsDlcInstalled((AppId_t)4137050);
+        if (MMUnlocked)
+        {
+            PlayerPrefs.SetInt(roster.allCharacters[8].prefName + "Unlocked", 1);
+            PlayerPrefs.SetInt(roster.allCharacters[8].prefName + "Hidden", 1);
+        }
 
         for (int i = 0; i < characterGameObjects.Count; i++)
         {
@@ -111,7 +117,7 @@ public class CharacterSelect : MonoBehaviour
             Transform buyButton = characterGameObjects[i].transform.Find("BuyButton");
             if (buyButton != null)
             {   // check if user owns miss microtransaction DLC
-                if (unlocked || Steamworks.SteamServer.UserHasLicenseForApp(SteamUser.GetSteamID(), (AppId_t)4137050))
+                if (unlocked)
                 {
                     buyButton.gameObject.SetActive(false);
                 }
