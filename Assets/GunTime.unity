@@ -7117,17 +7117,17 @@ MonoBehaviour:
   transitionTime: 0.45
   baseTracks:
   - name: track1
-    clip: {fileID: 8300000, guid: 7e37875e9c7dc438fa69555c049efe33, type: 3}
+    clip: {fileID: 8300000, guid: 7e6e2c73a3e811949bf62d153d06d47b, type: 3}
     volume: 1
   - name: track2
-    clip: {fileID: 8300000, guid: 4953f0d391c0f414dba9e27a397649a7, type: 3}
+    clip: {fileID: 8300000, guid: 4c353caab4c3fcc4fba1de384b2e6dd7, type: 3}
     volume: 1
   - name: track3
-    clip: {fileID: 8300000, guid: 6e7a2300f5f3d4e4098b3c1614588d96, type: 3}
+    clip: {fileID: 8300000, guid: ca58d8eaab3f0644f8c00f7177053287, type: 3}
     volume: 1
   legendaryTrack:
     name: legendary
-    clip: {fileID: 8300000, guid: d9e3753d906be744b9cb23bef5db3be8, type: 3}
+    clip: {fileID: 8300000, guid: bcc54e59ba0eef94ea9cb7d451fcbe28, type: 3}
     volume: 1
   lowHealthTrack:
     name: lowhealth
