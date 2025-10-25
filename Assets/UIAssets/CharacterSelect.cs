@@ -18,7 +18,14 @@ public class CharacterSelect : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        PlayerPrefs.SetInt(roster.allCharacters[0].prefName + "Unlocked", 1); // Ensure the first character is always unlocked
+        // Ensure the first character is always unlocked
+        PlayerPrefs.SetInt(roster.allCharacters[0].prefName + "Unlocked", 1);
+
+        // Ensure MM, Commando, Bombs, and Kevin are revealed from the start
+        PlayerPrefs.SetInt(roster.allCharacters[0].prefName + "Hidden", 1);
+        PlayerPrefs.SetInt(roster.allCharacters[1].prefName + "Hidden", 1);
+        PlayerPrefs.SetInt(roster.allCharacters[2].prefName + "Hidden", 1);
+        PlayerPrefs.SetInt(roster.allCharacters[8].prefName + "Hidden", 1);
         updateChars();
     }
 
@@ -28,17 +35,36 @@ public class CharacterSelect : MonoBehaviour
         menuController.CharacterSelected();
     }
 
+    private void ToggleMystery(GameObject chGo, bool state)
+    {
+        chGo.transform.Find("Mystery")?.gameObject.SetActive(state);
+        chGo.transform.Find("ComingSoon")?.gameObject.SetActive(state);
+
+        chGo.transform.Find("Image")?.gameObject.SetActive(!state);
+        chGo.transform.Find("Name")?.gameObject.SetActive(!state);
+        chGo.transform.Find("Quest")?.gameObject.SetActive(!state);
+        chGo.transform.Find("Unlocked")?.gameObject.SetActive(!state);
+    }
+
     private void updateChars()
     {
         for (int i = 0; i < characterGameObjects.Count; i++)
         {
             Character ch = roster.allCharacters[i];
-            
+
+            bool hidden = PlayerPrefs.GetInt(ch.prefName + "Hidden", 0) == 0;
+            ToggleMystery(characterGameObjects[i], hidden);
+            if (hidden)
+            {
+                continue;
+            }
+
             string unlockedPrefName = ch.prefName + "Unlocked";
             string questPrefName = ch.prefName + "Quest";
             bool unlocked = PlayerPrefs.GetInt(unlockedPrefName, 0) == 1;
             int questProgress = PlayerPrefs.GetInt(questPrefName, 0);
             int questMaximum = ch.unlockQuest != null ? ch.unlockQuest.questCompletionThreshold : 1;
+
 
             if (ch.unlockQuest != null && ch.unlockQuest.CheckCompletion() && !unlocked)
             {
