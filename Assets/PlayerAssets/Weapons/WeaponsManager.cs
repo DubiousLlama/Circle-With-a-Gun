@@ -112,8 +112,12 @@ public class WeaponsManager : MonoBehaviour
             {
                 OnSecondaryUp();
             }
-        } 
+        }
 
+        bool offCooldown = GetEquippedWeapon(WeaponType.Secondary).cooldownRemaining <= 0;
+        secondaryIndicatorActive.SetActive(offCooldown);
+        secondaryActive.SetActive(offCooldown && !isPlayerMoving());
+        secondaryInactive.SetActive(!isPlayerMoving());
     }
 
     public void EquipWeapon(GameObject weapon)
