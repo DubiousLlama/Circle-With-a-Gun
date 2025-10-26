@@ -8,6 +8,11 @@ public class ReturnMainMenu : MonoBehaviour
 {
     public static event Action OnReturnToMainMenu;
 
+    public void invokeMenuReturn()
+    {
+        OnReturnToMainMenu?.Invoke();
+    }
+
     public void returnMainMenu()
     {
         OnReturnToMainMenu?.Invoke();

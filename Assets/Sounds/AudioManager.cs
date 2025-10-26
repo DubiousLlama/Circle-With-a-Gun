@@ -11,6 +11,8 @@ public class AudioManager : MonoBehaviour
 
     private AudioSource SfxSource;
 
+    public float sfxVol = 1.0f;
+
     void Awake()
     {
         if (instance == null)
@@ -30,6 +32,8 @@ public class AudioManager : MonoBehaviour
 
     public void PlaySfx(string name, float vol=-1f)
     {
+        vol = (vol < 0f) ? sfxVol : vol;
+
         // Find the sound in the array
         Sound s = System.Array.Find(sfx, sound => sound.name == name);
         if (s == null)
@@ -39,6 +43,6 @@ public class AudioManager : MonoBehaviour
         }
 
         // Set the source's clip and volume
-        SfxSource.PlayOneShot(s.clip, vol == -1 ? s.volume : vol);
+        SfxSource.PlayOneShot(s.clip, vol * sfxVol);
     }
 }

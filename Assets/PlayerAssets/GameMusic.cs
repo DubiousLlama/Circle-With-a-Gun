@@ -28,6 +28,8 @@ public class GameMusic : MonoBehaviour
     private bool lowHealth = false;
     private bool death = false;
 
+    public float musicVolume = 1.0f;
+
     void Awake()
     {
         if (instance == null)
@@ -80,8 +82,8 @@ public class GameMusic : MonoBehaviour
         }
 
         // Lower the volume of the inactive source and increase the volume of the active source
-        activeSource.volume = Mathf.Min(1, activeSource.volume + Time.unscaledDeltaTime / transitionTime);
-        inactiveSource.volume = Mathf.Max(0, inactiveSource.volume - Time.unscaledDeltaTime / transitionTime);
+        activeSource.volume = Mathf.Min(1, activeSource.volume + Time.unscaledDeltaTime / transitionTime) * musicVolume;
+        inactiveSource.volume = Mathf.Max(0, inactiveSource.volume - Time.unscaledDeltaTime / transitionTime) * musicVolume;
     }
 
     public void PlayEventTrack(string track)
