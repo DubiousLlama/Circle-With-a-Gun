@@ -13,6 +13,13 @@ public class PauseMenuReveal : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            if (!isPaused)
+            {
+                Time.timeScale = 0f; // Pause the game
+            } else
+            {
+                Time.timeScale = 1f; // Unpause the game
+            }
             isPaused = !isPaused;
             foreach (Transform child in transform)
             {
@@ -20,13 +27,5 @@ public class PauseMenuReveal : MonoBehaviour
             }
         }
 
-        if (isPaused)
-        {
-            Time.timeScale = 0f;
-        }
-        else
-        {
-            Time.timeScale = 1f;
-        }
     }
 }
