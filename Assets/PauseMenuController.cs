@@ -17,6 +17,14 @@ public class PauseMenuController : MonoBehaviour
         scoreTracker = GameObject.Find("Score").GetComponent<ScoreTracker>();
     }
 
+    private void OnEnable()
+    {
+        float musicVol = PlayerPrefs.GetFloat("musicVol", 1f);
+        musicSlider.GetComponent<UnityEngine.UI.Slider>().value = musicVol;
+        float sfxVol = PlayerPrefs.GetFloat("sfxVol", 1f);
+        sfxSlider.GetComponent<UnityEngine.UI.Slider>().value = sfxVol;
+    }
+
     public void AbandonRun()
     {
         scoreTracker.GameOver();
@@ -31,12 +39,14 @@ public class PauseMenuController : MonoBehaviour
     {
         float volume = musicSlider.GetComponent<UnityEngine.UI.Slider>().value;
         GameMusic.instance.musicVolume = volTransform(volume);
+        PlayerPrefs.SetFloat("musicVol", volume);
     }
 
     public void OnSFXVolumeChange()
     {
         float volume = sfxSlider.GetComponent<UnityEngine.UI.Slider>().value;
         AudioManager.instance.sfxVol = volTransform(volume);
+        PlayerPrefs.SetFloat("sfxVol", volume);
     }
 
     float volTransform(float x)
