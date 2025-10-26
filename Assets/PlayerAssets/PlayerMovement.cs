@@ -101,6 +101,10 @@ public class PlayerMovement : MonoBehaviour
 
     public void SecondaryActivationWhileMoving()
     {
+        if (!secondaryMoveStop)
+        {
+            AudioManager.instance.PlaySfx("SecondaryWrong");
+        }
         secondaryMoveStop = true;
     }
 

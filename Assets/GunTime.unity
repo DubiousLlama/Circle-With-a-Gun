@@ -4913,7 +4913,7 @@ MonoBehaviour:
     volume: 0.5
   - name: Gun
     clip: {fileID: 8300000, guid: 6493b77dbb434fc44947e431416dd006, type: 3}
-    volume: 0.15
+    volume: 0.1
   - name: Explosion
     clip: {fileID: 8300000, guid: 52f28bbf3160f66419c88818cb6e4a7a, type: 3}
     volume: 0.5
@@ -4998,10 +4998,13 @@ MonoBehaviour:
   - name: LevelUp
     clip: {fileID: 8300000, guid: 1eb15aa42683e744c8fa0375ab48b149, type: 3}
     volume: 0.1
-  sfxVol: 1
   - name: SecondaryReady
-    clip: {fileID: 8300000, guid: 1eb15aa42683e744c8fa0375ab48b149, type: 3}
-    volume: 0.1
+    clip: {fileID: 8300000, guid: 4261636586b908a489880c2d9b0ddc00, type: 3}
+    volume: 0.25
+  - name: SecondaryWrong
+    clip: {fileID: 8300000, guid: 2e54ac2047c3e87409b150d70c2493a5, type: 3}
+    volume: 0.2
+  sfxVol: 1
 --- !u!4 &1052375758
 Transform:
   m_ObjectHideFlags: 0

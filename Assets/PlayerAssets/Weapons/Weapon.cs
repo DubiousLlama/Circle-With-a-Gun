@@ -173,6 +173,7 @@ public class Weapon : MonoBehaviour
         {
             // Secondary weapon just became ready - play sound
             audioManager.PlaySfx("SecondaryReady", 0.5f);
+            barController.BarFlash(true);
             wasOnCooldown = false;
         }
 
@@ -197,11 +198,19 @@ public class Weapon : MonoBehaviour
                     if (playerMovement.isMoving())
                     {
                         playerMovement.SecondaryActivationWhileMoving();
+                        barController.BarFlash(false);
                         return;
                     }
                 }
                 Fire();
                 FireCleanup();
+            } else
+            {
+                if (getFinalType() == WeaponType.Secondary)
+                {
+                    AudioManager.instance.PlaySfx("SecondaryWrong", 1f);
+                    barController.BarFlash(false);
+                }
             }
         }
         if (!isAutomatic)

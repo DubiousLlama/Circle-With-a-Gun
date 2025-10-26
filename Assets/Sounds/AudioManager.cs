@@ -32,8 +32,6 @@ public class AudioManager : MonoBehaviour
 
     public void PlaySfx(string name, float vol=-1f)
     {
-        vol = (vol < 0f) ? sfxVol : vol;
-
         // Find the sound in the array
         Sound s = System.Array.Find(sfx, sound => sound.name == name);
         if (s == null)
@@ -41,6 +39,8 @@ public class AudioManager : MonoBehaviour
             Debug.LogWarning("Sound: " + name + " not found!");
             return;
         }
+
+        vol = (vol < 0f) ? s.volume : vol;
 
         // Set the source's clip and volume
         SfxSource.PlayOneShot(s.clip, vol * sfxVol);
