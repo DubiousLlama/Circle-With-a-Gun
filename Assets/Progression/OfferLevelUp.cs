@@ -24,8 +24,10 @@ public class OfferLevelUp : MonoBehaviour
     float uncommonWeight;
     float rareWeight;
 
+    bool isShotgun = false;
     bool isBoomerang = false;
     List<string> noBoomerang = new List<string> { "Multishot", "Wallbounce" };
+    List<string> noShotgun = new List<string> {"Wallbounce" };
     List<Upgrade> allUpgrades = null;
     Dictionary<Upgrade, float> weightedUpgrades = new Dictionary<Upgrade, float>();
     List<string> currentUpgrades = new List<string>();
@@ -64,7 +66,9 @@ public class OfferLevelUp : MonoBehaviour
         Debug.Log("Time Scale set to 0");
         Time.timeScale = 0f; // Pause the game while selecting an upgrade
 
-        isBoomerang = PlayerPrefs.GetInt("SelectedCharacter") == 8;
+        string weaponName = GameObject.Find("PC").GetComponent<WeaponsManager>().GetEquippedWeapon(WeaponType.Primary).getDisplayName();
+        isBoomerang = weaponName == "Boomerang";
+        isShotgun = weaponName == "Shotgun";
     }
 
     private void OnDisable()
@@ -163,6 +167,10 @@ public class OfferLevelUp : MonoBehaviour
                 continue;
             }
             if (noBoomerang.Contains(up.name) && isBoomerang)
+            {
+                continue;
+            }
+            if (noShotgun.Contains(up.name) && isShotgun)
             {
                 continue;
             }
