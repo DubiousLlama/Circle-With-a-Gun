@@ -114,6 +114,7 @@ public class Weapon : MonoBehaviour
     public void FireCleanup()
     {
         cooldownRemaining = cooldown;
+        Debug.Log("Weapon fired: " + Time.realtimeSinceStartupAsDouble);
         if (burstMode && isBursting)
         {
             Debug.Log("Burst shot fired");
@@ -174,6 +175,7 @@ public class Weapon : MonoBehaviour
             // Secondary weapon just became ready - play sound
             audioManager.PlaySfx("SecondaryReady", 0.5f);
             barController.BarFlash(true);
+            Debug.Log("Weapon off cooldown: " + Time.realtimeSinceStartupAsDouble);
             wasOnCooldown = false;
         }
 

@@ -4916,64 +4916,64 @@ MonoBehaviour:
     volume: 0.1
   - name: Explosion
     clip: {fileID: 8300000, guid: 52f28bbf3160f66419c88818cb6e4a7a, type: 3}
-    volume: 0.5
+    volume: 0.828
   - name: SmallShot
     clip: {fileID: 8300000, guid: 16798b3c1d40ac448b2e6a77a6ca85e0, type: 3}
-    volume: 0.483
+    volume: 0.5
   - name: Bang
     clip: {fileID: 8300000, guid: 90c53d709d4049e439e23626118a152b, type: 3}
-    volume: 0.542
+    volume: 0.4
   - name: RetroLaser
     clip: {fileID: 8300000, guid: b033e8d36dc2ad34ca48fcd547467aac, type: 3}
-    volume: 0.5
+    volume: 0.3
   - name: SharpLaser
     clip: {fileID: 8300000, guid: 335575a85a58bec428c64df8beb8fb41, type: 3}
-    volume: 0.4
+    volume: 0.3
   - name: Coins1
     clip: {fileID: 8300000, guid: 67be7aa11e188054f903e50ca6677a5a, type: 3}
-    volume: 0.5
+    volume: 0.45
   - name: Coins2
     clip: {fileID: 8300000, guid: 1f39fb0c1c2b06a4587ec551806495e3, type: 3}
     volume: 0.5
   - name: Score1
     clip: {fileID: 8300000, guid: 0585ca8e91bfb9d4088b48200ab6a1bc, type: 3}
-    volume: 0.5
+    volume: 0.9
   - name: Score2
     clip: {fileID: 8300000, guid: 9f32e84bf301c3941950075fe5bad178, type: 3}
-    volume: 0.5
+    volume: 0.9
   - name: Score3
     clip: {fileID: 8300000, guid: e148768ca284ce94185dbd52a9d73f58, type: 3}
-    volume: 0.5
+    volume: 0.9
   - name: Score4
     clip: {fileID: 8300000, guid: afdeffe7e1f904947b62d7c3ab05eb80, type: 3}
-    volume: 0.5
+    volume: 0.9
   - name: WooshLightning
     clip: {fileID: 8300000, guid: 41d1e945e25578141a614391bea287cf, type: 3}
-    volume: 0.5
+    volume: 0.6
   - name: beam
     clip: {fileID: 8300000, guid: 88c611301fc9d4d45b84d3fa75a16062, type: 3}
-    volume: 0.2
+    volume: 0.6
   - name: ChargeUp
     clip: {fileID: 8300000, guid: 51f27e4f8b119814e8452154e94a45da, type: 3}
-    volume: 0.1
+    volume: 0.25
   - name: Woosh
     clip: {fileID: 8300000, guid: 51f27e4f8b119814e8452154e94a45da, type: 3}
-    volume: 0.1
+    volume: 0.25
   - name: damage1
     clip: {fileID: 8300000, guid: e968a61c94ccce14daa699379eb511e7, type: 3}
-    volume: 0.3
+    volume: 0.5
   - name: damage2
     clip: {fileID: 8300000, guid: 5b41a24bf08a9b24a9c80f00f9c77908, type: 3}
-    volume: 0.3
+    volume: 0.5
   - name: damage3
     clip: {fileID: 8300000, guid: 15d7c65475d9d0f4983a32716e0d0b2d, type: 3}
-    volume: 0.3
+    volume: 0.5
   - name: damage4
     clip: {fileID: 8300000, guid: 2e54ac2047c3e87409b150d70c2493a5, type: 3}
-    volume: 0.3
+    volume: 0.5
   - name: damage5
     clip: {fileID: 8300000, guid: a9483640ff3306c41b1743b97f39bf04, type: 3}
-    volume: 0.3
+    volume: 0.5
   - name: Lightning
     clip: {fileID: 8300000, guid: 8dda81d354724904eaa39fdf07099fcc, type: 3}
     volume: 1
@@ -4985,25 +4985,25 @@ MonoBehaviour:
     volume: 0.5
   - name: Boomerang
     clip: {fileID: 8300000, guid: 5b46affc1c24a4a468c45cc2ea6a5b29, type: 3}
-    volume: 0.1
+    volume: 0.12
   - name: SmallPickup
     clip: {fileID: 8300000, guid: 67be7aa11e188054f903e50ca6677a5a, type: 3}
-    volume: 0.1
+    volume: 0.3
   - name: MediumPickup
     clip: {fileID: 8300000, guid: 0585ca8e91bfb9d4088b48200ab6a1bc, type: 3}
-    volume: 0.1
+    volume: 0.35
   - name: LargePickup
     clip: {fileID: 8300000, guid: e148768ca284ce94185dbd52a9d73f58, type: 3}
-    volume: 0.1
+    volume: 0.4
   - name: LevelUp
     clip: {fileID: 8300000, guid: 1eb15aa42683e744c8fa0375ab48b149, type: 3}
-    volume: 0.1
+    volume: 0.6
   - name: SecondaryReady
     clip: {fileID: 8300000, guid: 4261636586b908a489880c2d9b0ddc00, type: 3}
-    volume: 0.25
+    volume: 0.8
   - name: SecondaryWrong
     clip: {fileID: 8300000, guid: 2e54ac2047c3e87409b150d70c2493a5, type: 3}
-    volume: 0.2
+    volume: 0.6
   sfxVol: 1
 --- !u!4 &1052375758
 Transform:

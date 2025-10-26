@@ -10,6 +10,8 @@ public class BombSecondary : Weapon
     public float cooldownConfig;
     public float moveSpeed = 5f;
 
+    private Vector3 bombOffset = new Vector3(0, 0, 1);
+
     public GameObject bombProjectilePrefab;
 
     public void Awake()
@@ -42,7 +44,7 @@ public class BombSecondary : Weapon
         //Vector3 rotatedDirection = Quaternion.AngleAxis(angleOffset, Vector3.forward) * aimDirection;
 
         // Create the bomb projectile
-        GameObject bomb = Instantiate(bombProjectilePrefab, firePoint.position, Quaternion.identity);
+        GameObject bomb = Instantiate(bombProjectilePrefab, firePoint.position + bombOffset, Quaternion.identity);
         BombLogic bl = bomb.GetComponent<BombLogic>();
         bl.InitalizeBomb(aimDirection, damage, blastRadius, moveSpeed * 75, Random.Range(250, 500), blastRadius);
     }
