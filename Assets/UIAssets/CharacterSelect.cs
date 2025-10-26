@@ -39,19 +39,13 @@ public class CharacterSelect : MonoBehaviour
 
     private void ToggleMystery(GameObject chGo, bool state)
     {
-        Transform mystery = chGo.transform.Find("Mystery");
-        Transform comingSoon = chGo.transform.Find("ComingSoon");
-        Transform image = chGo.transform.Find("Image");
-        Transform name = chGo.transform.Find("Name");
-        Transform quest = chGo.transform.Find("Quest");
-        Transform unlocked = chGo.transform.Find("Unlocked");
+        chGo.transform.Find("Mystery")?.gameObject.SetActive(state);
+        chGo.transform.Find("ComingSoon")?.gameObject.SetActive(state);
 
-        if (mystery != null) mystery.gameObject.SetActive(state);
-        if (comingSoon != null) comingSoon.gameObject.SetActive(state);
-        if (image != null) image.gameObject.SetActive(!state);
-        if (name != null) name.gameObject.SetActive(!state);
-        if (quest != null) quest.gameObject.SetActive(!state);
-        if (unlocked != null) unlocked.gameObject.SetActive(!state);
+        chGo.transform.Find("Image")?.gameObject.SetActive(!state);
+        chGo.transform.Find("Name")?.gameObject.SetActive(!state);
+        chGo.transform.Find("Quest")?.gameObject.SetActive(!state);
+        chGo.transform.Find("Unlocked")?.gameObject.SetActive(!state);
     }
 
     private void updateChars()
@@ -75,13 +69,11 @@ public class CharacterSelect : MonoBehaviour
             PlayerPrefs.SetInt(roster.allCharacters[8].prefName + "Hidden", 1);
         }
 
-        // Call revealCriteria ONCE before the loop, not inside it
-        revealCriteria();
-
         for (int i = 0; i < characterGameObjects.Count; i++)
         {
             Character ch = roster.allCharacters[i];
 
+            revealCriteria();
             bool hidden = PlayerPrefs.GetInt(ch.prefName + "Hidden", 0) == 0;
             ToggleMystery(characterGameObjects[i], hidden);
             if (hidden)
@@ -107,8 +99,11 @@ public class CharacterSelect : MonoBehaviour
             Button selector = characterGameObjects[i].transform.GetChild(0).GetComponent<Button>();
             selector.interactable = unlocked;
 
-            GameObject unlockedText = characterGameObjects[i].transform.GetChild(3).gameObject;
-            unlockedText.SetActive(unlocked);
+            Transform unlockedTransform = characterGameObjects[i].transform.Find("Unlocked");
+            if (unlockedTransform != null)
+            {
+                unlockedTransform.gameObject.SetActive(unlocked);
+            }
 
             Transform quest = characterGameObjects[i].transform.Find("Quest");
             if (quest != null)
