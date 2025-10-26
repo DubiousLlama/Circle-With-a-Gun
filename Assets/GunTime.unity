@@ -4096,6 +4096,9 @@ MonoBehaviour:
   - name: LevelUp
     clip: {fileID: 8300000, guid: 1eb15aa42683e744c8fa0375ab48b149, type: 3}
     volume: 0.1
+  - name: SecondaryReady
+    clip: {fileID: 8300000, guid: 1eb15aa42683e744c8fa0375ab48b149, type: 3}
+    volume: 0.1
 --- !u!4 &1052375758
 Transform:
   m_ObjectHideFlags: 0
