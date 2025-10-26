@@ -52,6 +52,8 @@ public class Weapon : MonoBehaviour
     protected Transform firePoint;
     protected RechargeBarController barController;
     
+    private bool wasOnCooldown = false;
+    
     protected bool isFiring {
         set {
             weaponsManager.isFiring[weaponType] = value;
@@ -165,6 +167,13 @@ public class Weapon : MonoBehaviour
                 cooldownRemaining -= Time.deltaTime * PlayerStats.instance.GetStatMod(StatTypes.SecondaryCooldown);
             }
             
+            wasOnCooldown = true;
+        }
+        else if (wasOnCooldown && weaponType == WeaponType.Secondary)
+        {
+            // Secondary weapon just became ready - play sound
+            audioManager.PlaySfx("SecondaryReady", 0.5f);
+            wasOnCooldown = false;
         }
 
         if (isTemporary)

@@ -65,18 +65,23 @@ public class GameMusic : MonoBehaviour
     private void Update()
     {
         // If the active source is not playing, play a new track
-        if (!activeSource.isPlaying)
+        // Don't restart music if death track has finished playing
+        if (!activeSource.isPlaying && !death)
         {
-            if (death)
-            {
-                currentTrack = deathTrack;
-            } else if (lowHealth)
+            if (lowHealth)
             {
                 currentTrack = lowHealthTrack;
             } else
             {
                 currentTrack = getNewBaseTrack();
             }
+            activeSource.clip = currentTrack.clip;
+            activeSource.Play();
+        }
+        else if (!activeSource.isPlaying && death && currentTrack != deathTrack)
+        {
+            // Death was triggered but death track hasn't played yet
+            currentTrack = deathTrack;
             activeSource.clip = currentTrack.clip;
             activeSource.Play();
         }
