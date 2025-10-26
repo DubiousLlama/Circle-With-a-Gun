@@ -39,25 +39,27 @@ public class RedButton : Weapon
 
     public override void Fire()
     {
-        int i = 0;
-        while (i < 200) {
-            i++;
+        int maxAttempts = 200;
+        float minDistance = 25f;
+        float minFoeDistance = 5f;
+        
+        for (int i = 0; i < maxAttempts; i++)
+        {
+            // Gradually relax constraints as we get more desperate
+            float currentMinDistance = Mathf.Max(10f, minDistance - (i * 0.05f));
+            float currentFoeDistance = Mathf.Max(2f, minFoeDistance - (i * 0.025f));
 
-            if (i == 100)
-            {
-                Debug.LogWarning("Failed to find a valid teleport location");
-                return;
-            }
+            // Generate random point in a ring around the player (more efficient than pure random)
+            // This ensures we're always at least trying to get away from current position
+            float angle = Random.Range(0f, 360f) * Mathf.Deg2Rad;
+            float distance = Random.Range(currentMinDistance, Mathf.Min(30f, Mathf.Max(playArea.rect.width, playArea.rect.height) / 2f));
+            
+            Vector3 offset = new Vector3(Mathf.Cos(angle) * distance, Mathf.Sin(angle) * distance, 0);
+            Vector3 randomPoint = transform.position + offset;
 
-            // Get a random point inside the play area
-            Vector3 randomPoint = new Vector3(Random.Range(playArea.rect.xMin, playArea.rect.xMax), Random.Range(playArea.rect.yMin, playArea.rect.yMax), 0);
-
-            // Check if the point is too close to the player (decreasing as we get desperate)
-            float distanceAway = 25f - (i * 0.05f);
-            if (Vector3.Distance(randomPoint, transform.position) < distanceAway)
-            {
-                continue;
-            }
+            // Clamp to play area bounds
+            randomPoint.x = Mathf.Clamp(randomPoint.x, playArea.rect.xMin + 1f, playArea.rect.xMax - 1f);
+            randomPoint.y = Mathf.Clamp(randomPoint.y, playArea.rect.yMin + 1f, playArea.rect.yMax - 1f);
 
             // Check if the point collides with anything
             Collider2D hit = Physics2D.OverlapPoint(randomPoint);
@@ -66,21 +68,30 @@ public class RedButton : Weapon
                 continue;
             }
 
-            // Check if there is a foe within 5 (decreasing as we get deseperate) units of the point
-            float foeRadius = 5f - (i * 0.025f);
-            Collider2D[] foes = Physics2D.OverlapCircleAll(randomPoint, foeRadius);
+            // Check if there is a foe within the safe radius
+            Collider2D[] foes = Physics2D.OverlapCircleAll(randomPoint, currentFoeDistance);
             if (foes.Length > 0)
             {
                 continue;
             }
 
-            // Play the teleport sound
+            // Found a valid spot!
             AudioManager.instance.PlaySfx(sfx);
             destination = randomPoint;
             Invoke("Teleport", teleportDelay);
-
-            break;
+            return;
         }
+
+        // If we still haven't found a spot after all attempts, just teleport to a random spot in play area
+        // (emergency fallback - better than doing nothing)
+        Debug.LogWarning("Using emergency teleport fallback");
+        destination = new Vector3(
+            Random.Range(playArea.rect.xMin + 5f, playArea.rect.xMax - 5f),
+            Random.Range(playArea.rect.yMin + 5f, playArea.rect.yMax - 5f),
+            0
+        );
+        AudioManager.instance.PlaySfx(sfx);
+        Invoke("Teleport", teleportDelay);
     }
 
     private void Teleport()

@@ -99,7 +99,7 @@ public class SteamManager : MonoBehaviour {
 			if (SteamAPI.RestartAppIfNecessary((AppId_t)4137040)) {
 				Debug.Log("[Steamworks.NET] Shutting down because RestartAppIfNecessary returned true. Steam will restart the application.");
 
-				Application.Quit();
+				// Application.Quit();
 				return;
 			}
 		}
