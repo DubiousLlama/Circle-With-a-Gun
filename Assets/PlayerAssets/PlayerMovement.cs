@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -21,9 +22,21 @@ public class PlayerMovement : MonoBehaviour
 
     float initialScale = 0.4f;
 
+    private PlayerInputActions inputActions;
+    private Vector2 moveInput;
+    private Vector2 lookInput;
+    private bool isUsingGamepad = false;
+
     void Awake()
     {
         weaponsManager = GetComponent<WeaponsManager>();
+        
+        // Initialize new Input System
+        inputActions = new PlayerInputActions();
+        inputActions.Player.Move.performed += OnMove;
+        inputActions.Player.Move.canceled += OnMove;
+        inputActions.Player.Look.performed += OnLook;
+        inputActions.Player.Look.canceled += OnLook;
     }
 
     private void Start()
@@ -31,9 +44,62 @@ public class PlayerMovement : MonoBehaviour
         stats = PlayerStats.instance;
     }
 
+    private void OnEnable()
+    {
+        inputActions?.Enable();
+    }
+
+    private void OnDisable()
+    {
+        inputActions?.Disable();
+    }
+
+    private void OnMove(InputAction.CallbackContext context)
+    {
+        moveInput = context.ReadValue<Vector2>();
+    }
+
+    private void OnLook(InputAction.CallbackContext context)
+    {
+        lookInput = context.ReadValue<Vector2>();
+        
+        // Detect if using gamepad based on the control device
+        isUsingGamepad = context.control.device is Gamepad;
+    }
+
     // Update is called once per frame
     void Update()
     {
+            // TEMPORARY DEBUG for new Input System
+        var gamepad = Gamepad.current;
+        if (gamepad != null)
+        {
+            Debug.Log($"Gamepad detected: {gamepad.name}");
+            if (gamepad.leftStick.ReadValue().magnitude > 0.1f)
+            {
+                Debug.Log($"Left Stick: {gamepad.leftStick.ReadValue()}");
+            }
+            if (gamepad.rightStick.ReadValue().magnitude > 0.1f)
+            {
+                Debug.Log($"Right Stick: {gamepad.rightStick.ReadValue()}");
+            }
+            if (gamepad.rightTrigger.ReadValue() > 0.1f)
+            {
+                Debug.Log($"Right Trigger: {gamepad.rightTrigger.ReadValue()}");
+            }
+            if (gamepad.leftTrigger.ReadValue() > 0.1f)
+            {
+                Debug.Log($"Left Trigger: {gamepad.leftTrigger.ReadValue()}");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("No gamepad detected by new Input System!");
+        }
+        
+        Debug.Log($"Move input: {moveInput}, Look input: {lookInput}, Using gamepad: {isUsingGamepad}");
+        // END DEBUG
+
         // Get input from the joysticks or keyboard/mouse and set the movement and look direction vectors accordingly
         HandlePlayerInput();
 
@@ -126,6 +192,7 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
 
+        // Check mobile joysticks first
         if (movementJoystick.Horizontal != 0 || movementJoystick.Vertical != 0)
         {
             movement.x = movementJoystick.Horizontal;
@@ -133,10 +200,11 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            movement.x = Input.GetAxisRaw("Horizontal");
-            movement.y = Input.GetAxisRaw("Vertical");
+            // Use new Input System for keyboard/gamepad
+            movement = moveInput;
         }
 
+        // Check mobile direction joystick first
         if (directionJoystick.Horizontal != 0 || directionJoystick.Vertical != 0)
         {
             lookDir.x = directionJoystick.Horizontal;
@@ -148,8 +216,18 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            Vector2 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
-            lookDir = mousePos - rb.position;
+            if (isUsingGamepad)
+            {
+                // Using gamepad right stick for aiming
+                lookDir = lookInput;
+            }
+            else
+            {
+                // Using mouse for aiming (lookInput contains screen position)
+                Vector2 mousePos = cam.ScreenToWorldPoint(lookInput);
+                lookDir = mousePos - rb.position;
+            }
+            
             if (Platform.IsMobile())
             {
                 weaponsManager.OnPrimaryUp();

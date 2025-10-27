@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 using System;
 using UnityEngine.UI;
 using System.Linq;
+using UnityEngine.InputSystem;
 
 public class WeaponsManager : MonoBehaviour
 {
@@ -28,6 +29,8 @@ public class WeaponsManager : MonoBehaviour
 
     public GameObject RechargeBar;
 
+    private PlayerInputActions inputActions;
+
     void Awake()
     {
         weapons[WeaponSlot.One] = null;
@@ -37,11 +40,48 @@ public class WeaponsManager : MonoBehaviour
         isFiring[WeaponType.Primary] = false;
         isFiring[WeaponType.Secondary] = false;
         isFiring[WeaponType.Legendary] = false;
+
+        // Initialize new Input System
+        inputActions = new PlayerInputActions();
+        inputActions.Player.Fire.started += OnFireStarted;
+        inputActions.Player.Fire.canceled += OnFireCanceled;
+        inputActions.Player.FireSecondary.started += OnFireSecondaryStarted;
+        inputActions.Player.FireSecondary.canceled += OnFireSecondaryCanceled;
     }
 
     void Start()
     {
         player = GameObject.Find("PC");
+    }
+
+    private void OnEnable()
+    {
+        inputActions?.Enable();
+    }
+
+    private void OnDisable()
+    {
+        inputActions?.Disable();
+    }
+
+    private void OnFireStarted(InputAction.CallbackContext context)
+    {
+        OnPrimaryDown();
+    }
+
+    private void OnFireCanceled(InputAction.CallbackContext context)
+    {
+        OnPrimaryUp();
+    }
+
+    private void OnFireSecondaryStarted(InputAction.CallbackContext context)
+    {
+        OnSecondaryDown();
+    }
+
+    private void OnFireSecondaryCanceled(InputAction.CallbackContext context)
+    {
+        OnSecondaryUp();
     }
 
     public Weapon GetEquippedWeapon(WeaponType weaponType)
@@ -91,33 +131,17 @@ public class WeaponsManager : MonoBehaviour
     {
         if (Time.timeScale == 0f) return; // Don't update if game is paused
 
-        // WeaponButton is used for mobile
-        if (Platform.IsDesktop()) {
-            // Primary weapon
-            if (Input.GetButtonDown("Fire1"))
-            {
-                OnPrimaryDown();
-            }
-            if (Input.GetButtonUp("Fire1"))
-            {
-                OnPrimaryUp();
-            }
+        // Mobile joystick buttons are handled by WeaponButton.cs
+        // Desktop keyboard/mouse/gamepad is now handled by the new Input System callbacks
 
-            // Secondary weapon
-            if (Input.GetButtonDown("Fire2"))
-            {
-                OnSecondaryDown();
-            }
-            if (Input.GetButtonUp("Fire2"))
-            {
-                OnSecondaryUp();
-            }
+        Weapon secondaryWeapon = GetEquippedWeapon(WeaponType.Secondary);
+        if (secondaryWeapon != null)
+        {
+            bool offCooldown = secondaryWeapon.cooldownRemaining <= 0;
+            secondaryIndicatorActive.SetActive(offCooldown);
+            secondaryActive.SetActive(offCooldown && !isPlayerMoving());
+            secondaryInactive.SetActive(!isPlayerMoving());
         }
-
-        bool offCooldown = GetEquippedWeapon(WeaponType.Secondary).cooldownRemaining <= 0;
-        secondaryIndicatorActive.SetActive(offCooldown);
-        secondaryActive.SetActive(offCooldown && !isPlayerMoving());
-        secondaryInactive.SetActive(!isPlayerMoving());
     }
 
     public void EquipWeapon(GameObject weapon)
@@ -134,14 +158,15 @@ public class WeaponsManager : MonoBehaviour
         {
             GameMusic.instance.PlayEventTrack("legendary");
 
-            if (Input.GetButton("Fire1"))
+            // Check if Fire action is pressed (works with both old and new input)
+            if (inputActions.Player.Fire.IsPressed())
             {
                 OnPrimaryDown();
             }
             isFiring[WeaponType.Primary] = false;
         }
 
-        if (weaponComponent.getFinalType() == WeaponType.Primary && Input.GetButton("Fire1"))
+        if (weaponComponent.getFinalType() == WeaponType.Primary && inputActions.Player.Fire.IsPressed())
         {
             OnPrimaryDown();
         }
