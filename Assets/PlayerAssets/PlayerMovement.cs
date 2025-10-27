@@ -21,6 +21,11 @@ public class PlayerMovement : MonoBehaviour
 
     float initialScale = 0.4f;
 
+    private Vector2 moveInput;
+    private Vector2 lookInput;
+    private bool isUsingGamepad = false;
+    private Vector2 lastGamepadLookDir = Vector2.right; // Store last gamepad aim direction
+
     void Awake()
     {
         weaponsManager = GetComponent<WeaponsManager>();
@@ -34,6 +39,41 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Get input from old Input System (supports gamepad, keyboard, mouse)
+        float horizMove = Input.GetAxisRaw("Horizontal");
+        float vertMove = Input.GetAxisRaw("Vertical");
+        moveInput = new Vector2(horizMove, vertMove);
+        
+        // Check if using gamepad for aiming
+        float horizLook = Input.GetAxisRaw("RightStickX");
+        float vertLook = -Input.GetAxisRaw("RightStickY"); // Invert Y-axis for proper up/down
+        
+        if (Mathf.Abs(horizLook) > 0.1f || Mathf.Abs(vertLook) > 0.1f)
+        {
+            isUsingGamepad = true;
+            lookInput = new Vector2(horizLook, vertLook);
+            // Store this as the last gamepad direction
+            lastGamepadLookDir = lookInput.normalized;
+        }
+        else if (isUsingGamepad)
+        {
+            // Stick released but still in gamepad mode - keep last direction
+            lookInput = lastGamepadLookDir;
+        }
+        else
+        {
+            // Using mouse
+            lookInput = Input.mousePosition;
+        }
+        
+        // Check for mouse movement to switch back to mouse mode
+        if (Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0)
+        {
+            isUsingGamepad = false;
+        }
+        
+        Debug.Log($"Move: {moveInput}, Look: {lookInput}, Gamepad: {isUsingGamepad}");
+
         // Get input from the joysticks or keyboard/mouse and set the movement and look direction vectors accordingly
         HandlePlayerInput();
 
@@ -148,8 +188,18 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            Vector2 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
-            lookDir = mousePos - rb.position;
+            if (isUsingGamepad)
+            {
+                // Using gamepad right stick for aiming - lookInput already contains direction
+                lookDir = lookInput;
+            }
+            else
+            {
+                // Using mouse for aiming (lookInput contains screen position)
+                Vector2 mousePos = cam.ScreenToWorldPoint(lookInput);
+                lookDir = mousePos - rb.position;
+            }
+            
             if (Platform.IsMobile())
             {
                 weaponsManager.OnPrimaryUp();

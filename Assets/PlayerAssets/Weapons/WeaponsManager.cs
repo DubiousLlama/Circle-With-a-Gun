@@ -28,6 +28,9 @@ public class WeaponsManager : MonoBehaviour
 
     public GameObject RechargeBar;
 
+    private bool wasPressingRightTrigger = false;
+    private bool wasPressingLeftTrigger = false;
+
     void Awake()
     {
         weapons[WeaponSlot.One] = null;
@@ -42,6 +45,55 @@ public class WeaponsManager : MonoBehaviour
     void Start()
     {
         player = GameObject.Find("PC");
+    }
+
+    void Update()
+    {
+        if (Time.timeScale == 0f) return; // Don't update if game is paused
+
+        // Handle input from old Input System (mouse, keyboard, gamepad)
+        if (!Platform.IsMobile())
+        {
+            // Check triggers
+            float rightTrigger = Input.GetAxis("RightTrigger");
+            float leftTrigger = Input.GetAxis("LeftTrigger");
+            bool pressingRightTrigger = rightTrigger > 0.5f;
+            bool pressingLeftTrigger = leftTrigger > 0.5f;
+            
+            // Primary fire (Left Click OR Right Trigger)
+            if (Input.GetButtonDown("Fire1") || (pressingRightTrigger && !wasPressingRightTrigger))
+            {
+                OnPrimaryDown();
+            }
+            if (Input.GetButtonUp("Fire1") || (!pressingRightTrigger && wasPressingRightTrigger))
+            {
+                OnPrimaryUp();
+            }
+            
+            // Secondary fire (Right Click OR Left Trigger)
+            if (Input.GetButtonDown("Fire2") || (pressingLeftTrigger && !wasPressingLeftTrigger))
+            {
+                OnSecondaryDown();
+            }
+            if (Input.GetButtonUp("Fire2") || (!pressingLeftTrigger && wasPressingLeftTrigger))
+            {
+                OnSecondaryUp();
+            }
+            
+            wasPressingRightTrigger = pressingRightTrigger;
+            wasPressingLeftTrigger = pressingLeftTrigger;
+        }
+        
+        // Mobile joystick buttons are handled by WeaponButton.cs
+
+        Weapon secondaryWeapon = GetEquippedWeapon(WeaponType.Secondary);
+        if (secondaryWeapon != null)
+        {
+            bool offCooldown = secondaryWeapon.cooldownRemaining <= 0;
+            secondaryIndicatorActive.SetActive(offCooldown);
+            secondaryActive.SetActive(offCooldown && !isPlayerMoving());
+            secondaryInactive.SetActive(!isPlayerMoving());
+        }
     }
 
     public Weapon GetEquippedWeapon(WeaponType weaponType)
@@ -87,39 +139,6 @@ public class WeaponsManager : MonoBehaviour
         isFiring[WeaponType.Secondary] = false;
     }
 
-    void Update()
-    {
-        if (Time.timeScale == 0f) return; // Don't update if game is paused
-
-        // WeaponButton is used for mobile
-        if (Platform.IsDesktop()) {
-            // Primary weapon
-            if (Input.GetButtonDown("Fire1"))
-            {
-                OnPrimaryDown();
-            }
-            if (Input.GetButtonUp("Fire1"))
-            {
-                OnPrimaryUp();
-            }
-
-            // Secondary weapon
-            if (Input.GetButtonDown("Fire2"))
-            {
-                OnSecondaryDown();
-            }
-            if (Input.GetButtonUp("Fire2"))
-            {
-                OnSecondaryUp();
-            }
-        }
-
-        bool offCooldown = GetEquippedWeapon(WeaponType.Secondary).cooldownRemaining <= 0;
-        secondaryIndicatorActive.SetActive(offCooldown);
-        secondaryActive.SetActive(offCooldown && !isPlayerMoving());
-        secondaryInactive.SetActive(!isPlayerMoving());
-    }
-
     public void EquipWeapon(GameObject weapon)
     {
         // Change parent of weapon to player
@@ -134,14 +153,15 @@ public class WeaponsManager : MonoBehaviour
         {
             GameMusic.instance.PlayEventTrack("legendary");
 
-            if (Input.GetButton("Fire1"))
+            // Check if Fire1 button is pressed
+            if (Input.GetButton("Fire1") || Input.GetAxis("RightTrigger") > 0.5f)
             {
                 OnPrimaryDown();
             }
             isFiring[WeaponType.Primary] = false;
         }
 
-        if (weaponComponent.getFinalType() == WeaponType.Primary && Input.GetButton("Fire1"))
+        if (weaponComponent.getFinalType() == WeaponType.Primary && (Input.GetButton("Fire1") || Input.GetAxis("RightTrigger") > 0.5f))
         {
             OnPrimaryDown();
         }
