@@ -2255,10 +2255,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8e1b3c56c1de6b4e9d64afef0d1b419, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentState: 0
+  perCharLength: 14
+  baseLength: 35
+  revealTime: 0.5
+  hideTime: 0.5
+  hideDelay: 0.25
   enemyPrefab: {fileID: 3908111154662281100, guid: 8a156f7f3cfc65642b1d3fc1899f27bb, type: 3}
-  secondaryPrefab: {fileID: 2920370379373296382, guid: 5c27a87add5bdc745a88fd2335521fe2, type: 3}
-  spawner: {fileID: 894957481}
 --- !u!1 &445099288 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3881087803549984437, guid: ec536a7718376554185e4a856d5ae230, type: 3}
