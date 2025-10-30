@@ -5000,10 +5000,10 @@ MonoBehaviour:
     volume: 0.6
   - name: SecondaryReady
     clip: {fileID: 8300000, guid: 4261636586b908a489880c2d9b0ddc00, type: 3}
-    volume: 0.8
+    volume: 0.9
   - name: SecondaryWrong
     clip: {fileID: 8300000, guid: 2e54ac2047c3e87409b150d70c2493a5, type: 3}
-    volume: 0.6
+    volume: 0.7
   sfxVol: 1
 --- !u!4 &1052375758
 Transform:

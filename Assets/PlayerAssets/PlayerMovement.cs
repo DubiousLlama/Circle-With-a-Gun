@@ -71,8 +71,6 @@ public class PlayerMovement : MonoBehaviour
         {
             isUsingGamepad = false;
         }
-        
-        Debug.Log($"Move: {moveInput}, Look: {lookInput}, Gamepad: {isUsingGamepad}");
 
         // Get input from the joysticks or keyboard/mouse and set the movement and look direction vectors accordingly
         HandlePlayerInput();
