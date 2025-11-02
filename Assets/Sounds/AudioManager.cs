@@ -28,6 +28,11 @@ public class AudioManager : MonoBehaviour
     private void Start()
     {
         SfxSource = gameObject.AddComponent<AudioSource>();
+        
+        // Load saved SFX volume from PlayerPrefs
+        float savedSfxVol = PlayerPrefs.GetFloat("sfxVol", 1f);
+        float b = 1f / (1 - Mathf.Exp(-5f)); // Using falloff value from PauseMenuController
+        sfxVol = ((-1 * Mathf.Exp(-5f * savedSfxVol)) + 1) * b;
     }
 
     public void PlaySfx(string name, float vol=-1f)
