@@ -2602,6 +2602,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a624418f056aa746959256b31317dbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  levelUpMenu: {fileID: 2011257147}
+  gameOverScreen: {fileID: 364951439}
 --- !u!1 &470930566
 GameObject:
   m_ObjectHideFlags: 0
