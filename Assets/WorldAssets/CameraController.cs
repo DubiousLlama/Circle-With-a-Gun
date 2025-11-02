@@ -11,12 +11,36 @@ public class CameraController : MonoBehaviour
     public Transform target;
     public float smoothTime = 0.2f;
 
+    [Header("Camera Bounds (optional)")]
+    [Tooltip("Enable to constrain camera at map edges")]
+    public bool useBounds = false;
+    
+    [Tooltip("Minimum X position for camera")]
+    public float minX = -50f;
+    
+    [Tooltip("Maximum X position for camera")]
+    public float maxX = 50f;
+    
+    [Tooltip("Minimum Y position for camera")]
+    public float minY = -50f;
+    
+    [Tooltip("Maximum Y position for camera")]
+    public float maxY = 50f;
+
 
     // Update is called once per frame
     void Update()
     {
         Vector3 targetPosition = target.position + offset;
-        transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
+        Vector3 newPosition = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
 
+        // Clamp camera position to bounds if enabled
+        if (useBounds)
+        {
+            newPosition.x = Mathf.Clamp(newPosition.x, minX, maxX);
+            newPosition.y = Mathf.Clamp(newPosition.y, minY, maxY);
+        }
+
+        transform.position = newPosition;
     }
 }
