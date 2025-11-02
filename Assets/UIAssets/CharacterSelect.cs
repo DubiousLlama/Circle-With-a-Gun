@@ -94,7 +94,7 @@ public class CharacterSelect : MonoBehaviour
                 PlayerPrefs.SetInt(unlockedPrefName, 1);
             }
 
-            Debug.Log($"Character {ch.name} unlocked: {unlocked}, quest progress: {questProgress}");
+            // Debug.Log($"Character {ch.name} unlocked: {unlocked}, quest progress: {questProgress}");
 
             Button selector = characterGameObjects[i].transform.GetChild(0).GetComponent<Button>();
             selector.interactable = unlocked;

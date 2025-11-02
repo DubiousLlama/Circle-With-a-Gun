@@ -114,10 +114,9 @@ public class Weapon : MonoBehaviour
     public void FireCleanup()
     {
         cooldownRemaining = cooldown;
-        Debug.Log("Weapon fired: " + Time.realtimeSinceStartupAsDouble);
         if (burstMode && isBursting)
         {
-            Debug.Log("Burst shot fired");
+            // Debug.Log("Burst shot fired");
             cooldownRemaining = cooldown / 5f;
             isBursting = false;
         } else if (burstMode && !isBursting)
@@ -173,9 +172,8 @@ public class Weapon : MonoBehaviour
         else if (wasOnCooldown && weaponType == WeaponType.Secondary)
         {
             // Secondary weapon just became ready - play sound
-            audioManager.PlaySfx("SecondaryReady", 0.5f);
+            audioManager.PlaySfx("SecondaryReady");
             barController.BarFlash(true);
-            Debug.Log("Weapon off cooldown: " + Time.realtimeSinceStartupAsDouble);
             wasOnCooldown = false;
         }
 
@@ -210,7 +208,7 @@ public class Weapon : MonoBehaviour
             {
                 if (getFinalType() == WeaponType.Secondary)
                 {
-                    AudioManager.instance.PlaySfx("SecondaryWrong", 1f);
+                    AudioManager.instance.PlaySfx("SecondaryWrong");
                     barController.BarFlash(false);
                 }
             }

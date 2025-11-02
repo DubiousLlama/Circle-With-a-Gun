@@ -5002,10 +5002,10 @@ MonoBehaviour:
     volume: 0.6
   - name: SecondaryReady
     clip: {fileID: 8300000, guid: 4261636586b908a489880c2d9b0ddc00, type: 3}
-    volume: 0.9
+    volume: 0.95
   - name: SecondaryWrong
     clip: {fileID: 8300000, guid: 2e54ac2047c3e87409b150d70c2493a5, type: 3}
-    volume: 0.7
+    volume: 0.8
   sfxVol: 1
 --- !u!4 &1052375758
 Transform:
@@ -9606,7 +9606,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8097a0ddb6fd4d94dbc2fa45a9827e39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attractionRadius: 4
+  attractionRadius: 4.5
   weightFactor: 1
   minRadiusMultiplier: 0.5
 --- !u!1001 &2882209904331333009

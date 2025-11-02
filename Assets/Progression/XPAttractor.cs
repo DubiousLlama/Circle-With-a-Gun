@@ -34,8 +34,8 @@ public class XPAttractor : MonoBehaviour
             float effectiveRadius = Mathf.Clamp(weightRadius, attractionRadius * minRadiusMultiplier, attractionRadius);
 
             // Calculate attraction speed with exponential increase for closeness
-            float baseAttractionSpeed = 0.5f / weight; // Heavier orbs move slower
-            float maxSpeed = 12f / weight; // Max speed also reduced by weight
+            float baseAttractionSpeed = 1f / weight; // Heavier orbs move slower
+            float maxSpeed = 16f / weight; // Max speed also reduced by weight
 
             // If outside the effective radius, decrease attraction speed significantly
             if (distance > effectiveRadius)

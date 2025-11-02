@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class MissileLogic : MonoBehaviour
 {
     private float moveSpeed = 0f;
-    private float damage = 0f;
+    private int damage = 0;
     private float blastRadius = 0f;
     private float damageFalloff = 0f; // 4.5 is approx full damage out to 1/2 the radius, then exponential falloff to 0 at the edge of the radius
     private bool isHoming = false;
@@ -23,7 +23,7 @@ public class MissileLogic : MonoBehaviour
 
     private Rigidbody2D rb;
 
-    public void InitalizeMissile(float dmg, float radius, float move, bool homing,  float falloff = 4.5f)
+    public void InitalizeMissile(int dmg, float radius, float move, bool homing,  float falloff = 4.5f)
     {
         damage = dmg;
         blastRadius = radius;
@@ -37,7 +37,7 @@ public class MissileLogic : MonoBehaviour
         if (isHoming)
         {
             target = getHomingTarget();
-            Debug.Log("Homing target: " + (target != null ? target.name : "None"));
+            // Debug.Log("Homing target: " + (target != null ? target.name : "None"));
         }
     }
 
@@ -156,7 +156,7 @@ public class MissileLogic : MonoBehaviour
     private void SummonExplosion()
     {
         GameObject b = Instantiate(explosion, transform.position, Quaternion.identity);
-        b.transform.localScale = new Vector3(blastRadius * 0.4f, blastRadius * 0.4f, 1);
+        b.transform.localScale = new Vector3(blastRadius * 0.3f, blastRadius * 0.3f, blastRadius * 0.3f);
         Destroy(b, 0.5f);
         AudioManager.instance.PlaySfx("SmallShot", 0.55f);
     }
@@ -170,8 +170,9 @@ public class MissileLogic : MonoBehaviour
             if (foe.tag == "Foe")
             {
                 float distance = Vector3.Distance(foe.transform.position, transform.position);
-                float damageMultiplier = 1 - Mathf.Pow(distance / blastRadius, damageFalloff);
-                int aoeDamage = Mathf.Max(0, Mathf.RoundToInt(damage * damageMultiplier));
+                int aoeDamage = 60;
+                if (distance > blastRadius) continue;
+                if (distance < 1.4f) { aoeDamage = damage; }
                 foe.GetComponentInParent<EnemyHealth>().TakeDamage(aoeDamage);
             }
         }

@@ -24,7 +24,7 @@ public class MenuController : MonoBehaviour
     {
         doTutorial = PlayerPrefs.GetInt("doTutorial", 1);
         tutorialToggle.GetComponent<Toggle>().isOn = doTutorial == 1;
-        Debug.Log(PlayerPrefs.GetInt("doTutorial"));
+        Debug.Log("Tutorial selected:" + PlayerPrefs.GetInt("doTutorial"));
     }
 
     public void QuitGame()

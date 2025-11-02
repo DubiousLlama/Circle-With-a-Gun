@@ -52,7 +52,9 @@ MonoBehaviour:
   lifetimeRemaining: 0
   cooldownRemaining: 0
   weaponsManager: {fileID: 0}
+  burstMode: 0
+  pierceCount: 0
   damage: 200
-  blastRadius: 2.25
+  blastRadius: 3.2
   moveSpeed: 10
   missileProjectilePrefab: {fileID: 7883408809866168832, guid: 27ca142a8acc60b4a89287dee2ce7347, type: 3}

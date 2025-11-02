@@ -32,6 +32,12 @@ public class TutorialScript : MonoBehaviour
         spawner = GameObject.Find("Spawner").GetComponent<EnemyTracker>();
         spawner.GetComponent<EnemyTracker>().enableSpawning = false;
 
+        if (PlayerPrefs.GetInt("doTutorial", 1) == 0)
+        {
+            spawner.GetComponent<EnemyTracker>().enableSpawning = true;
+            Destroy(gameObject);
+            return;
+        }
         StartCoroutine(RunTutorial());
     }
 
@@ -43,7 +49,7 @@ public class TutorialScript : MonoBehaviour
         yield return StartCoroutine(SecondarySection());
 
         PlayerPrefs.SetInt("doTutorial", 0);
-        spawner.GetComponent<EnemyTracker>().enableSpawning = false;
+        spawner.GetComponent<EnemyTracker>().enableSpawning = true;
     }
 
 

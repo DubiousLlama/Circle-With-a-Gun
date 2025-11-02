@@ -60,8 +60,6 @@ public class ItemSpawner : MonoBehaviour
             itemTypeWeights[i] = weightedItems[i].weight;
         }
 
-        Debug.Log("Item type weights: " + string.Join(", ", itemTypeWeights));
-
         for (int i = 0; i < startingItems; i++)
         {
             SpawnItemAtRandomLocation(items[WeightedRandom(itemTypeWeights)]);

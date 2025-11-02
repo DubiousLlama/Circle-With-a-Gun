@@ -81,7 +81,7 @@ public abstract class BulletWeapon : Weapon
             }
 
             bs.wallBounce = wallBounce;
-            Debug.Log("Configured bullet with damage: " + damage + ", pierceCount: " + bs.pierceCount + ", wallBounce: " + wallBounce);
+            // Debug.Log("Configured bullet with damage: " + damage + ", pierceCount: " + bs.pierceCount + ", wallBounce: " + wallBounce);
         } else
         {
             Debug.LogWarning("BulletScript component not found on bullet prefab.");

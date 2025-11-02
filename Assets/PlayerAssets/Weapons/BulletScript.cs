@@ -21,6 +21,8 @@ public class BulletScript : MonoBehaviour
         Destroy(gameObject, 5f);
         audioManager = AudioManager.instance;
 
+        hitEffect.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+
         if (pierceCount > 0)
         {
             doPierce(true);
@@ -105,20 +107,19 @@ public class BulletScript : MonoBehaviour
 
             damage += damage / 2;
             transform.GetChild(1).gameObject.SetActive(true);
+            hitEffect.transform.localScale = new Vector3(0.15f, 0.15f, 0.15f);
             wallBounce = false;
             return;
         }
 
         NonPhysicsHit(collision.collider);
-
-        hitEffect.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+        if (hitEffect.transform.localScale.x != 0.15f) { hitEffect.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f); }
         GameObject he = Instantiate(hitEffect, collision.contacts[0].point, Quaternion.identity);
         Destroy(he, 0.5f);
     }
 
     private void NonPhysicsHit(Collider2D collision)
     {
-        Debug.Log("Bullet collided with: " + collision.gameObject.name);
         EnemyHealth enemy = collision.gameObject.GetComponent<EnemyHealth>();
 
         if (enemy != null)
@@ -128,7 +129,7 @@ public class BulletScript : MonoBehaviour
 
         if (pierceCount <= 0 || (collision.gameObject.layer != 10 && collision.gameObject.layer != 18))
         {
-            Debug.Log("Bullet destroyed. Pierce count: " + pierceCount);
+            // Debug.Log("Bullet destroyed. Pierce count: " + pierceCount);
             Destroy(gameObject);
         }
     }

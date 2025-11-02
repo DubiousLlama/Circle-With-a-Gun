@@ -11,10 +11,20 @@ public class SniperBulletScript : BulletScript
     void Update()
     {
         timer += Time.deltaTime;
+
+        if (timer >= 0.10f)
+        {
+            transform.GetChild(1).gameObject.SetActive(true);
+        }
+        if (timer >= 0.14f)
+        {
+            hitEffect.transform.localScale = new Vector3(0.15f, 0.15f, 0.15f);
+        }
     }
 
     protected override int CalculateDamage()
     {
+        Debug.Log("Sniper bullet timer: " + timer);
         return damage + Mathf.RoundToInt(timer * bonusDamagePerSecond);
     }
 }

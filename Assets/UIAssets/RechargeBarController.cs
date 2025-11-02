@@ -30,7 +30,7 @@ public class RechargeBarController : MonoBehaviour
 
     IEnumerator FlashCoroutine(Color color)
     {
-        Debug.Log("Flash Coroutine started");
+        // Debug.Log("Flash Coroutine started");
         barFlashImage.color = color;
         yield return new WaitForSeconds(flashDuration);
         barFlashImage.color = clear;

@@ -29,7 +29,7 @@ public class XPPickup : MonoBehaviour
         if (col.CompareTag("Player"))
         {
             XPPickedUp?.Invoke(new OnXPPickupEventArgs { xpAmount = xpAmount });
-            Debug.Log($"Picked up {xpAmount} XP");
+            // Debug.Log($"Picked up {xpAmount} XP");
             Destroy(gameObject);
 
             string useSfx;

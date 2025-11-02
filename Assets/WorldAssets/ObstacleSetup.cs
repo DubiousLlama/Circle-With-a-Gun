@@ -47,7 +47,6 @@ class ObstacleSetup : MonoBehaviour
         AstarPath.active.Scan();
         stopwatch.Stop();
         Debug.Log($"A* scan completed in {stopwatch.ElapsedMilliseconds}ms ({stopwatch.ElapsedTicks} ticks)");
-        Debug.Log(Time.time);
     }
 
     private void SetupObstacles()

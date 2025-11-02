@@ -6,9 +6,8 @@ public class BombLogic : MonoBehaviour
     private float moveSpeed = 0f;
     private float rotationSpeed = 0f; // degrees per second
     private Vector3 launchVector = Vector3.zero;
-    private float damage = 0f;
+    private int damage = 0;
     private float blastRadius = 0f;
-    private float damageFalloff = 0f; // 4.5 is approx full damage out to 1/2 the radius, then exponential falloff to 0 at the edge of the radius
 
     private float timer;
     private LayerMask enemyLayer;
@@ -25,13 +24,12 @@ public class BombLogic : MonoBehaviour
         public int foesKilled;
     }
 
-    public void InitalizeBomb(Vector3 launch, float dmg, float radius, float move, float rot = 360f, float falloff = 4.5f)
+    public void InitalizeBomb(Vector3 launch, int dmg, float radius, float move, float rot = 360f, float falloff = 4.5f)
     {
         damage = dmg;
         blastRadius = radius;
         moveSpeed = move;
         rotationSpeed = rot;
-        damageFalloff = falloff;
         launchVector = launch;
         baseScale = transform.localScale.x;
 
@@ -87,10 +85,13 @@ public class BombLogic : MonoBehaviour
         {
             if (foe.tag == "Foe")
             {
-                Debug.Log("Bomb hit foe: " + foe.name);
                 float distance = Vector3.Distance(foe.transform.position, transform.position);
-                float damageMultiplier = 1 - Mathf.Pow(distance / blastRadius, damageFalloff);
-                int aoeDamage = Mathf.Max(0, Mathf.RoundToInt(damage * damageMultiplier));
+                if (distance > blastRadius) continue;
+                int aoeDamage = 40;
+                if (distance < blastRadius * 0.75f) { aoeDamage = 60; }
+                if (distance < blastRadius * 0.6f) { aoeDamage = 80; }
+                if (distance < blastRadius * 0.5f) { aoeDamage = damage; }
+
                 EnemyHealth eh = foe.GetComponentInParent<EnemyHealth>();
                 if (eh != null)
                 {
