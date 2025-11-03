@@ -1,0 +1,9 @@
+Kevin = kv_hs
+Bombs McGee = bg_hs
+Commando = cm_hs
+Electric Jeff = ej_hs
+Demo Man = dm_hs
+Specialist = sp_hs
+Shock Trooper = st_hs
+Wacky Steve = ws_hs
+Ms. Microtransaction = mm_hs

@@ -126,7 +126,8 @@ public class SteamManager : MonoBehaviour {
 			return;
 		}
 
-		s_EverInitialized = true;
+		Debug.Log("[Steamworks.NET] SteamAPI_Init() successful. App Id:" + SteamUtils.GetAppID());
+        s_EverInitialized = true;
 	}
 
 	// This should only ever get called on first load and after an Assembly reload, You should never Disable the Steamworks Manager yourself.
