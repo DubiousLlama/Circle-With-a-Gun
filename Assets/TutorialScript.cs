@@ -98,7 +98,7 @@ public class TutorialScript : MonoBehaviour
     {
         SpawnTestDummy();
         if (testDummy == null) yield break;
-        textObject.text = Gamepad.all.Count > 0 ? "Right trigger while still for a powerful special attack." : "Right click while still for a powerful special attack.";
+        textObject.text = Gamepad.all.Count > 0 ? "Left trigger while still for a powerful special attack." : "Right click while still for a powerful special attack.";
         yield return StartCoroutine(ShowBox());
 
         // Wait for player to shoot dummy with secondary
