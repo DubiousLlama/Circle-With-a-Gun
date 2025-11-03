@@ -2124,6 +2124,7 @@ GameObject:
   - component: {fileID: 364951440}
   - component: {fileID: 364951442}
   - component: {fileID: 364951441}
+  - component: {fileID: 364951443}
   m_Layer: 5
   m_Name: GameOver
   m_TagString: Untagged
@@ -2248,6 +2249,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 364951439}
   m_CullTransparentMesh: 1
+--- !u!114 &364951443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 364951439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e04a2a2af1c5974881d94dd428a7c2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  firstSelectedButton: {fileID: 1392415119}
+  autoFindFirstButton: 1
+  watchForActivation: 0
 --- !u!1 &393237199 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2353267493902569445, guid: c8b91edf6d6d9d1479e0ad6d14d272f1, type: 3}
@@ -2473,6 +2489,7 @@ GameObject:
   - component: {fileID: 463946424}
   - component: {fileID: 463946423}
   - component: {fileID: 463946428}
+  - component: {fileID: 463946429}
   m_Layer: 5
   m_Name: PauseMenu
   m_TagString: Untagged
@@ -2604,6 +2621,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelUpMenu: {fileID: 2011257147}
   gameOverScreen: {fileID: 364951439}
+--- !u!114 &463946429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 463946421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e04a2a2af1c5974881d94dd428a7c2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  firstSelectedButton: {fileID: 297018370}
+  autoFindFirstButton: 1
+  watchForActivation: 1
 --- !u!1 &470930566
 GameObject:
   m_ObjectHideFlags: 0
@@ -8761,6 +8793,7 @@ GameObject:
   - component: {fileID: 2011257150}
   - component: {fileID: 2011257149}
   - component: {fileID: 2011257154}
+  - component: {fileID: 2011257155}
   m_Layer: 5
   m_Name: LevelUpMenu
   m_TagString: Untagged
@@ -8912,6 +8945,21 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &2011257155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2011257147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e04a2a2af1c5974881d94dd428a7c2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  firstSelectedButton: {fileID: 0}
+  autoFindFirstButton: 1
+  watchForActivation: 0
 --- !u!1 &2028692303 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3881087803549984437, guid: ec536a7718376554185e4a856d5ae230, type: 3}

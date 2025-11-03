@@ -16,7 +16,10 @@ public class PauseMenuReveal : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        // Check for Escape key or Menu button (joystick button 7)
+        bool pausePressed = Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.JoystickButton7);
+        
+        if (pausePressed)
         {
             // Don't allow pausing if upgrade menu or game over screen is active
             if (IsOtherMenuActive())
