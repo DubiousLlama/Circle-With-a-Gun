@@ -12,6 +12,9 @@ public class NewHighScoreAnimation : MonoBehaviour
     public Roster roster;
     public GameObject scoreDisplayPrefab;
     public ScrollRect scrollRect;
+
+    public PopulateScores ps;
+
     public float scrollSpeed = 8f; // How fast the scroll follows the moving score
 
     public float fadeInDuration = 0.5f;
@@ -21,64 +24,6 @@ public class NewHighScoreAnimation : MonoBehaviour
     public float accelIncrease = 0.95f;
 
     private float accelFactor = 1f;
-
-    public class ScoreData
-    {
-        public int score;
-        public string playerName;
-        public string characterUsed;
-        public GameObject scoreObject;
-
-        public ScoreData(int score, string playerName, string characterUsed)
-        {
-            this.score = score;
-            this.playerName = playerName;
-            this.characterUsed = characterUsed;
-            this.scoreObject = null;
-        }
-    }
-
-    List<ScoreData> highScores = new List<ScoreData>()
-    {
-        new ScoreData(162375, "samjett", "BombsMcGee"),
-        new ScoreData(161910, "samjett", "Kevin"),
-        new ScoreData(87210, "Transcendent Pig", "MissMicro"),
-        new ScoreData(64435, "samjett", "ElectricJeff"),
-        new ScoreData(51995, "Transcendent Pig", "BombsMcGee"),
-        new ScoreData(51995, "Transcendent Pig", "BombsMcGee"),
-        new ScoreData(51995, "Transcendent Pig", "BombsMcGee"),
-        new ScoreData(51995, "Transcendent Pig", "BombsMcGee"),
-        new ScoreData(10, "John", "Kevin"),
-    };
-
-    private void Start()
-    {
-        // Create UI for all existing high scores
-        CreateScoreUI();
-        
-        // Test animation
-        // NewHighScore(new ScoreData(200000, "John", "MissMicro"));
-    }
-
-    void CreateScoreUI()
-    {
-        // Clear any existing score objects in content
-        foreach (Transform child in content.transform)
-        {
-            Destroy(child.gameObject);
-        }
-        
-        // Create UI for each score in the list
-        for (int i = 0; i < highScores.Count; i++)
-        {
-            GameObject scoreObj = Instantiate(scoreDisplayPrefab, content.transform);
-            highScores[i].scoreObject = scoreObj;
-            UpdateScoreDisplay(scoreObj, highScores[i]);
-            UpdateRank(scoreObj, i + 1);
-        }
-        
-        Canvas.ForceUpdateCanvases();
-    }
 
     public void NewHighScore(ScoreData newScore)
     {
@@ -92,7 +37,7 @@ public class NewHighScoreAnimation : MonoBehaviour
     IEnumerator AnimateNewHighScore(ScoreData newScore)
     {
         // Find old personal best
-        ScoreData oldPersonalBest = highScores.FindLast(s => s.playerName == newScore.playerName);
+        ScoreData oldPersonalBest = ps.highScores.FindLast(s => s.playerName == newScore.playerName);
         
         // Calculate where the new score should go
         int targetPosition = CalculateTargetPosition(newScore.score);
@@ -111,7 +56,7 @@ public class NewHighScoreAnimation : MonoBehaviour
         newScoreCG.alpha = 1f;
         
         // Position new score right below old personal best
-        int startIndex = oldPersonalBest != null ? highScores.IndexOf(oldPersonalBest) + 1 : highScores.Count;
+        int startIndex = oldPersonalBest != null ? ps.highScores.IndexOf(oldPersonalBest) + 1 : ps.highScores.Count;
         newScoreObject.transform.SetSiblingIndex(startIndex);
         
         // Force layout update
@@ -125,9 +70,9 @@ public class NewHighScoreAnimation : MonoBehaviour
         List<GameObject> scoresToSmash = new List<GameObject>();
         for (int i = startIndex - 1; i >= targetPosition; i--)
         {
-            if (i >= 0 && i < highScores.Count && highScores[i].scoreObject != null)
+            if (i >= 0 && i < ps.highScores.Count && ps.highScores[i].scoreObject != null)
             {
-                scoresToSmash.Add(highScores[i].scoreObject);
+                scoresToSmash.Add(ps.highScores[i].scoreObject);
             }
         }
         
@@ -167,19 +112,19 @@ public class NewHighScoreAnimation : MonoBehaviour
             {
                 Destroy(oldPersonalBest.scoreObject);
             }
-            highScores.Remove(oldPersonalBest);
+            ps.highScores.Remove(oldPersonalBest);
         }
         
         // Insert new score into list
         targetPosition = CalculateTargetPosition(newScore.score);
-        highScores.Insert(targetPosition, newScore);
+        ps.highScores.Insert(targetPosition, newScore);
         
-        // Update all ranks (single source of truth: highScores list)
-        for (int i = 0; i < highScores.Count; i++)
+        // Update all ranks (single source of truth: ps.highScores list)
+        for (int i = 0; i < ps.highScores.Count; i++)
         {
-            if (highScores[i].scoreObject != null)
+            if (ps.highScores[i].scoreObject != null)
             {
-                UpdateRank(highScores[i].scoreObject, i + 1);
+                UpdateRank(ps.highScores[i].scoreObject, i + 1);
             }
         }
         
@@ -246,14 +191,14 @@ public class NewHighScoreAnimation : MonoBehaviour
 
     int CalculateTargetPosition(int score)
     {
-        for (int i = 0; i < highScores.Count; i++)
+        for (int i = 0; i < ps.highScores.Count; i++)
         {
-            if (score > highScores[i].score)
+            if (score > ps.highScores[i].score)
             {
                 return i;
             }
         }
-        return highScores.Count;
+        return ps.highScores.Count;
     }
 
     IEnumerator FadeInScores(List<GameObject> scoreObjects)

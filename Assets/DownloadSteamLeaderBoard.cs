@@ -1,4 +1,5 @@
 using Steamworks;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -7,26 +8,8 @@ using UnityEngine.SocialPlatforms.Impl;
 
 public class DownloadSteamLeaderBoard : MonoBehaviour
 {
-    // Class to store leaderboard entry data
-    public class LeaderboardEntry
-    {
-        public int rank;
-        public string playerName;
-        public int score;
-        public CSteamID steamID;
-
-        public LeaderboardEntry(int rank, string playerName, int score, CSteamID steamID = default)
-        {
-            this.rank = rank;
-            this.playerName = playerName;
-            this.score = score;
-            this.steamID = steamID;
-        }
-    }
-
     public GameObject success;
     public GameObject failure;
-
 
     Dictionary<string, string> LeaderboardNames = new Dictionary<string, string>()
     {
@@ -41,32 +24,55 @@ public class DownloadSteamLeaderBoard : MonoBehaviour
         { "High Score: Miss Microtransaction", "MissMicrotransaction" },
     };
 
-
-    // Store leaderboard handle
-    private SteamLeaderboard_t currentLeaderboard;
+    // Store leaderboard handles per character
+    private Dictionary<string, SteamLeaderboard_t> leaderboardHandles = new Dictionary<string, SteamLeaderboard_t>();
     
-    // Callbacks for Steam API
-    private CallResult<LeaderboardFindResult_t> findLeaderboardCallResult;
-    private CallResult<LeaderboardScoresDownloaded_t> downloadLeaderboardCallResult;
+    // Callbacks for Steam API - one set per leaderboard
+    private Dictionary<string, CallResult<LeaderboardFindResult_t>> findLeaderboardCallResults = new Dictionary<string, CallResult<LeaderboardFindResult_t>>();
+    private Dictionary<string, CallResult<LeaderboardScoresDownloaded_t>> downloadFriendsCallResults = new Dictionary<string, CallResult<LeaderboardScoresDownloaded_t>>();
+    private Dictionary<string, CallResult<LeaderboardScoresDownloaded_t>> downloadGlobalCallResults = new Dictionary<string, CallResult<LeaderboardScoresDownloaded_t>>();
+
     private CallResult<LeaderboardScoreUploaded_t> uploadLeaderboardCallResult;
 
-    // Store downloaded entries
-    private List<LeaderboardEntry> leaderboardEntries = new List<LeaderboardEntry>();
+    // Store downloaded user+friends entries per leaderboard
+    private Dictionary<string, List<LeaderboardEntry_t>> friendleaderboardEntries = new Dictionary<string, List<LeaderboardEntry_t>>();
+
+    // Store downloaded user+global top 50 entries per leaderboard
+    private Dictionary<string, List<LeaderboardEntry_t>> globalleaderboardEntries = new Dictionary<string, List<LeaderboardEntry_t>>();
 
     void Awake()
     {
         if (!SteamManager.Initialized) return;
         bool x = SteamAPI.Init();
         
-        // Initialize callbacks
-        findLeaderboardCallResult = CallResult<LeaderboardFindResult_t>.Create(OnLeaderboardFound);
-        downloadLeaderboardCallResult = CallResult<LeaderboardScoresDownloaded_t>.Create(OnLeaderboardScoresDownloaded);
+        // Initialize callbacks for upload
         uploadLeaderboardCallResult = CallResult<LeaderboardScoreUploaded_t>.Create(OnLeaderboardScoreUploaded);
+
+        // Initialize callback dictionaries for each leaderboard
+        foreach (var leaderboardName in LeaderboardNames.Keys)
+        {
+            findLeaderboardCallResults[leaderboardName] = CallResult<LeaderboardFindResult_t>.Create(
+                (result, bIOFailure) => OnLeaderboardFound(result, bIOFailure, leaderboardName));
+            
+            downloadFriendsCallResults[leaderboardName] = CallResult<LeaderboardScoresDownloaded_t>.Create(
+                (result, bIOFailure) => OnFriendsLeaderboardScoresDownloaded(result, bIOFailure, leaderboardName));
+
+            downloadGlobalCallResults[leaderboardName] = CallResult<LeaderboardScoresDownloaded_t>.Create(
+                (result, bIOFailure) => OnGlobalLeaderboardScoresDownloaded(result, bIOFailure, leaderboardName));
+
+            friendleaderboardEntries[leaderboardName] = new List<LeaderboardEntry_t>();
+            globalleaderboardEntries[leaderboardName] = new List<LeaderboardEntry_t>();
+        }
+    }
+
+    public List<ScoreData> GetLeaderboard(ScoreLists sl)
+    {
+        return null;
     }
 
     private void Start()
     {
-        GetTop20Entries();
+        GetTop20EntriesAllLeaderboards();
     }
 
     private void Update()
@@ -74,14 +80,14 @@ public class DownloadSteamLeaderBoard : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.U))
         {
             UploadTestScore();
-            GetTop20Entries();
+            GetTop20EntriesAllLeaderboards();
         }
     }
 
     /// <summary>
-    /// Gets the top 20 entries from the "kv_hs" global leaderboard
+    /// Gets the top 20 entries from all nine leaderboards in parallel
     /// </summary>
-    public void GetTop20Entries()
+    public void GetTop20EntriesAllLeaderboards()
     {
         if (!SteamManager.Initialized)
         {
@@ -89,52 +95,62 @@ public class DownloadSteamLeaderBoard : MonoBehaviour
             return;
         }
 
-        // Find the leaderboard first
-        SteamAPICall_t handle = SteamUserStats.FindLeaderboard("High Score: Kevin");
-        findLeaderboardCallResult.Set(handle);
+        // Request all leaderboards in parallel
+        foreach (var leaderboardName in LeaderboardNames.Keys)
+        {
+            SteamAPICall_t handle = SteamUserStats.FindLeaderboard(leaderboardName);
+            findLeaderboardCallResults[leaderboardName].Set(handle);
+            Debug.Log($"Requested leaderboard: {leaderboardName}");
+        }
     }
 
     /// <summary>
-    /// Callback when the leaderboard is found
+    /// Callback when a leaderboard is found
     /// </summary>
-    private void OnLeaderboardFound(LeaderboardFindResult_t result, bool bIOFailure)
+    private void OnLeaderboardFound(LeaderboardFindResult_t result, bool bIOFailure, string leaderboardName)
     {
         if (bIOFailure || result.m_bLeaderboardFound == 0)
         {
-            Debug.LogError("Failed to find leaderboard 'High Score: Kevin'");
-            failure.SetActive(true);
-            failure.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = SteamUtils.GetAppID().ToString();
+            Debug.LogError($"Failed to find leaderboard '{leaderboardName}'");
             return;
         }
 
-        Debug.Log("Leaderboard found!");
-        currentLeaderboard = result.m_hSteamLeaderboard;
+        Debug.Log($"Leaderboard found: {leaderboardName}");
+        leaderboardHandles[leaderboardName] = result.m_hSteamLeaderboard;
 
-        // Download the top 20 global entries
-        SteamAPICall_t handle = SteamUserStats.DownloadLeaderboardEntries(
-            currentLeaderboard,
-            ELeaderboardDataRequest.k_ELeaderboardDataRequestGlobal,
-            1,  // Start rank (1-based)
-            20  // End rank
+        // Download the friends leaderboard (user + friends)
+        SteamAPICall_t friendsHandle = SteamUserStats.DownloadLeaderboardEntries(
+            result.m_hSteamLeaderboard,
+            ELeaderboardDataRequest.k_ELeaderboardDataRequestFriends,
+            0,  // Start index (ignored for friends)
+            0   // End index (ignored for friends)
         );
-        
-        downloadLeaderboardCallResult.Set(handle);
+        downloadFriendsCallResults[leaderboardName].Set(friendsHandle);
+
+        // Download the global top 50 entries (including user)
+        SteamAPICall_t globalHandle = SteamUserStats.DownloadLeaderboardEntries(
+            result.m_hSteamLeaderboard,
+            ELeaderboardDataRequest.k_ELeaderboardDataRequestGlobalAroundUser,
+            -25, // Start: 25 entries before user
+            25   // End: 25 entries after user (total 51 including user)
+        );
+        downloadGlobalCallResults[leaderboardName].Set(globalHandle);
     }
 
     /// <summary>
-    /// Callback when leaderboard scores are downloaded
+    /// Callback when friends leaderboard scores are downloaded
     /// </summary>
-    private void OnLeaderboardScoresDownloaded(LeaderboardScoresDownloaded_t result, bool bIOFailure)
+    private void OnFriendsLeaderboardScoresDownloaded(LeaderboardScoresDownloaded_t result, bool bIOFailure, string leaderboardName)
     {
         if (bIOFailure)
         {
-            Debug.LogError("Failed to download leaderboard scores");
+            Debug.LogError($"Failed to download friends leaderboard scores for '{leaderboardName}'");
             return;
         }
 
-        Debug.Log($"Downloaded {result.m_cEntryCount} leaderboard entries");
+        Debug.Log($"Downloaded {result.m_cEntryCount} friends leaderboard entries for '{leaderboardName}'");
 
-        leaderboardEntries.Clear();
+        friendleaderboardEntries[leaderboardName].Clear();
 
         // Process each entry
         for (int i = 0; i < result.m_cEntryCount; i++)
@@ -144,25 +160,45 @@ public class DownloadSteamLeaderBoard : MonoBehaviour
             
             if (SteamUserStats.GetDownloadedLeaderboardEntry(result.m_hSteamLeaderboardEntries, i, out entry, details, 0))
             {
-                string playerName = SteamFriends.GetFriendPersonaName(entry.m_steamIDUser);
-                LeaderboardEntry leaderboardEntry = new LeaderboardEntry(
-                    entry.m_nGlobalRank,
-                    playerName,
-                    entry.m_nScore,
-                    entry.m_steamIDUser
-                );
-                
-                leaderboardEntries.Add(leaderboardEntry);
-                Debug.Log($"Rank {leaderboardEntry.rank}: {leaderboardEntry.playerName} - Score: {leaderboardEntry.score}");
+                friendleaderboardEntries[leaderboardName].Add(entry);
             }
         }
     }
 
     /// <summary>
-    /// Uploads a test score to the "kv_hs" leaderboard
+    /// Callback when global leaderboard scores are downloaded
     /// </summary>
-    /// <param name="testScore">The score value to upload (default is 12345)</param>
-    public void UploadTestScore(int testScore = 678910)
+    private void OnGlobalLeaderboardScoresDownloaded(LeaderboardScoresDownloaded_t result, bool bIOFailure, string leaderboardName)
+    {
+        if (bIOFailure)
+        {
+            Debug.LogError($"Failed to download global leaderboard scores for '{leaderboardName}'");
+            return;
+        }
+
+        Debug.Log($"Downloaded {result.m_cEntryCount} global leaderboard entries for '{leaderboardName}'");
+
+        globalleaderboardEntries[leaderboardName].Clear();
+
+        // Process each entry
+        for (int i = 0; i < result.m_cEntryCount; i++)
+        {
+            LeaderboardEntry_t entry;
+            int[] details = new int[0];
+            
+            if (SteamUserStats.GetDownloadedLeaderboardEntry(result.m_hSteamLeaderboardEntries, i, out entry, details, 0))
+            {
+                globalleaderboardEntries[leaderboardName].Add(entry);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Uploads a test score to the leaderboard for a specific character
+    /// </summary>
+    /// <param name="characterName">The character name key (e.g., "Kevin")</param>
+    /// <param name="testScore">The score value to upload (default is 678910)</param>
+    public void UploadTestScore(string characterName = "Kevin", int testScore = 678910)
     {
         if (!SteamManager.Initialized)
         {
@@ -170,9 +206,32 @@ public class DownloadSteamLeaderBoard : MonoBehaviour
             return;
         }
 
+        // Find the leaderboard name for this character
+        string leaderboardName = null;
+        foreach (var kvp in LeaderboardNames)
+        {
+            if (kvp.Value == characterName)
+            {
+                leaderboardName = kvp.Key;
+                break;
+            }
+        }
+
+        if (leaderboardName == null || !leaderboardHandles.ContainsKey(leaderboardName))
+        {
+            Debug.LogError($"Leaderboard handle not found for character '{characterName}'. Make sure leaderboards have been fetched first.");
+            return;
+        }
+
         // Upload the test score
-        SteamAPICall_t handle = SteamUserStats.UploadLeaderboardScore(currentLeaderboard, ELeaderboardUploadScoreMethod.k_ELeaderboardUploadScoreMethodKeepBest, testScore, null, 0);
+        SteamAPICall_t handle = SteamUserStats.UploadLeaderboardScore(
+            leaderboardHandles[leaderboardName], 
+            ELeaderboardUploadScoreMethod.k_ELeaderboardUploadScoreMethodKeepBest, 
+            testScore, 
+            null, 
+            0);
         uploadLeaderboardCallResult.Set(handle);
+        Debug.Log($"Uploading score {testScore} to {characterName} leaderboard");
     }
 
     /// <summary>
@@ -192,7 +251,7 @@ public class DownloadSteamLeaderBoard : MonoBehaviour
             return;
         }
 
-        Debug.Log($"Successfully uploaded score!");
+        Debug.Log("Successfully uploaded score!");
         success.SetActive(true);
     }
 }

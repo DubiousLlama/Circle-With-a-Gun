@@ -38,7 +38,7 @@ public class MenuController : MonoBehaviour
         {
             menuCanvas.SetActive(false);
             loadingScreen.SetActive(true);
-            StartCoroutine(LoadSceneAsync());
+            StartCoroutine(LoadSceneAsync(1));
             return;
         }
         else
@@ -48,16 +48,21 @@ public class MenuController : MonoBehaviour
         }
     }
 
+    public void viewScores()
+    {
+        StartCoroutine(LoadSceneAsync(2));
+    }
+
     public void CharacterSelected()
     {
         characterSelectCanvas.SetActive(false);
         loadingScreen.SetActive(true);
-        StartCoroutine(LoadSceneAsync());
+        StartCoroutine(LoadSceneAsync(1));
     }
 
-    private IEnumerator LoadSceneAsync()
+    private IEnumerator LoadSceneAsync(int indexAdd)
     {
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex + 1);
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex + indexAdd);
         
         float targetProgress = 0f;
         float currentProgress = 0f;
