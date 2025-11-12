@@ -38,13 +38,9 @@ public class PopulateScores : MonoBehaviour
         new ScoreData(10, "John", "Kevin"),
     };
 
-    // STEAMWORKS 
-
-
-
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
+        CreateScoreUI();
     }
 
     void CreateScoreUI()

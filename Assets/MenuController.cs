@@ -25,6 +25,13 @@ public class MenuController : MonoBehaviour
         doTutorial = PlayerPrefs.GetInt("doTutorial", 1);
         tutorialToggle.GetComponent<Toggle>().isOn = doTutorial == 1;
         Debug.Log("Tutorial selected:" + PlayerPrefs.GetInt("doTutorial"));
+
+        if (GameManager.Instance.ShowCharacterSelectOnMenuLoad)
+        {
+            GameManager.Instance.ShowCharacterSelectOnMenuLoad = false;
+            menuCanvas.SetActive(false);
+            characterSelectCanvas.SetActive(true);
+        }
     }
 
     public void QuitGame()

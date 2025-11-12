@@ -1474,8 +1474,9 @@ GameObject:
   - component: {fileID: 259990477}
   - component: {fileID: 259990479}
   - component: {fileID: 259990478}
+  - component: {fileID: 259990480}
   m_Layer: 0
-  m_Name: SteamManager
+  m_Name: GameAndSteamManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1530,6 +1531,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2b7e6ae51d49b9d4abce1f87b90c2d3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &259990480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 259990475}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1b8d54a081544942aa2126747cc9258, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &260476169

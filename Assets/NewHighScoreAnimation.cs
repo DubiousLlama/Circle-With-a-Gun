@@ -13,7 +13,7 @@ public class NewHighScoreAnimation : MonoBehaviour
     public GameObject scoreDisplayPrefab;
     public ScrollRect scrollRect;
 
-    public PopulateScores ps;
+    public DownloadSteamLeaderBoard ps;
 
     public float scrollSpeed = 8f; // How fast the scroll follows the moving score
 
@@ -24,23 +24,64 @@ public class NewHighScoreAnimation : MonoBehaviour
     public float accelIncrease = 0.95f;
 
     private float accelFactor = 1f;
+    
+    private ScoreData pendingScore = null;
+    private bool friendsDataReady = false;
+
+    private void OnEnable()
+    {
+        DownloadSteamLeaderBoard.OnFriendLeaderboardsDownloaded += OnFriendsDataReady;
+    }
+
+    private void OnDisable()
+    {
+        DownloadSteamLeaderBoard.OnFriendLeaderboardsDownloaded -= OnFriendsDataReady;
+    }
+
+    private void OnFriendsDataReady()
+    {
+        friendsDataReady = true;
+        
+        // If we have a pending score, play the animation now
+        if (pendingScore != null && !playing)
+        {
+            StartCoroutine(PlayNewHighScoreAnimation(pendingScore));
+            pendingScore = null;
+        }
+    }
 
     public void NewHighScore(ScoreData newScore)
     {
         if (playing) return;
         
-        playing = true;
-        accelFactor = 1f; // Reset acceleration factor
-        StartCoroutine(AnimateNewHighScore(newScore));
+        // If friends data is ready, play immediately; otherwise, queue it
+        if (friendsDataReady)
+        {
+            StartCoroutine(PlayNewHighScoreAnimation(newScore));
+        }
+        else
+        {
+            pendingScore = newScore;
+        }
     }
 
-    IEnumerator AnimateNewHighScore(ScoreData newScore)
+    IEnumerator PlayNewHighScoreAnimation(ScoreData newScore)
     {
+        playing = true;
+        accelFactor = 1f; // Reset acceleration factor
+        
+        // Switch to Friends list before playing
+        ps.SwitchScoreList(ScoreLists.Friends);
+        yield return null; // Wait one frame for UI to update
+        
+        // Get the friends score list
+        List<ScoreData> highScores = ps.GetLeaderboard(ScoreLists.Friends);
+        
         // Find old personal best
-        ScoreData oldPersonalBest = ps.highScores.FindLast(s => s.playerName == newScore.playerName);
+        ScoreData oldPersonalBest = highScores.FindLast(s => s.playerName == newScore.playerName);
         
         // Calculate where the new score should go
-        int targetPosition = CalculateTargetPosition(newScore.score);
+        int targetPosition = CalculateTargetPosition(newScore.score, highScores);
         
         // Create new score GameObject
         GameObject newScoreObject = Instantiate(scoreDisplayPrefab, content.transform);
@@ -56,7 +97,7 @@ public class NewHighScoreAnimation : MonoBehaviour
         newScoreCG.alpha = 1f;
         
         // Position new score right below old personal best
-        int startIndex = oldPersonalBest != null ? ps.highScores.IndexOf(oldPersonalBest) + 1 : ps.highScores.Count;
+        int startIndex = oldPersonalBest != null ? highScores.IndexOf(oldPersonalBest) + 1 : highScores.Count;
         newScoreObject.transform.SetSiblingIndex(startIndex);
         
         // Force layout update
@@ -70,9 +111,9 @@ public class NewHighScoreAnimation : MonoBehaviour
         List<GameObject> scoresToSmash = new List<GameObject>();
         for (int i = startIndex - 1; i >= targetPosition; i--)
         {
-            if (i >= 0 && i < ps.highScores.Count && ps.highScores[i].scoreObject != null)
+            if (i >= 0 && i < highScores.Count && highScores[i].scoreObject != null)
             {
-                scoresToSmash.Add(ps.highScores[i].scoreObject);
+                scoresToSmash.Add(highScores[i].scoreObject);
             }
         }
         
@@ -112,19 +153,19 @@ public class NewHighScoreAnimation : MonoBehaviour
             {
                 Destroy(oldPersonalBest.scoreObject);
             }
-            ps.highScores.Remove(oldPersonalBest);
+            highScores.Remove(oldPersonalBest);
         }
         
         // Insert new score into list
-        targetPosition = CalculateTargetPosition(newScore.score);
-        ps.highScores.Insert(targetPosition, newScore);
+        targetPosition = CalculateTargetPosition(newScore.score, highScores);
+        highScores.Insert(targetPosition, newScore);
         
-        // Update all ranks (single source of truth: ps.highScores list)
-        for (int i = 0; i < ps.highScores.Count; i++)
+        // Update all ranks (single source of truth: highScores list)
+        for (int i = 0; i < highScores.Count; i++)
         {
-            if (ps.highScores[i].scoreObject != null)
+            if (highScores[i].scoreObject != null)
             {
-                UpdateRank(ps.highScores[i].scoreObject, i + 1);
+                UpdateRank(highScores[i].scoreObject, i + 1);
             }
         }
         
@@ -189,16 +230,16 @@ public class NewHighScoreAnimation : MonoBehaviour
         return Mathf.Clamp01(1f - normalizedScroll);
     }
 
-    int CalculateTargetPosition(int score)
+    int CalculateTargetPosition(int score, List<ScoreData> highScores)
     {
-        for (int i = 0; i < ps.highScores.Count; i++)
+        for (int i = 0; i < highScores.Count; i++)
         {
-            if (score > ps.highScores[i].score)
+            if (score > highScores[i].score)
             {
                 return i;
             }
         }
-        return ps.highScores.Count;
+        return highScores.Count;
     }
 
     IEnumerator FadeInScores(List<GameObject> scoreObjects)
