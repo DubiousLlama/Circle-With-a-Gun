@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -21,14 +19,18 @@ public class PlayerMovement : MonoBehaviour
 
     float initialScale = 0.4f;
 
+    private PlayerInputActions inputActions;
     private Vector2 moveInput;
     private Vector2 lookInput;
-    private bool isUsingGamepad = false;
-    private Vector2 lastGamepadLookDir = Vector2.right; // Store last gamepad aim direction
 
     void Awake()
     {
         weaponsManager = GetComponent<WeaponsManager>();
+        
+        if (!Platform.IsMobile())
+        {
+            inputActions = new PlayerInputActions();
+        }
     }
 
     private void Start()
@@ -36,46 +38,31 @@ public class PlayerMovement : MonoBehaviour
         stats = PlayerStats.instance;
     }
 
-    // Update is called once per frame
+    private void OnEnable()
+    {
+        if (!Platform.IsMobile())
+        {
+            inputActions.Enable();
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (!Platform.IsMobile())
+        {
+            inputActions.Disable();
+        }
+    }
+
     void Update()
     {
-        // Get input from old Input System (supports gamepad, keyboard, mouse)
-        float horizMove = Input.GetAxisRaw("Horizontal");
-        float vertMove = Input.GetAxisRaw("Vertical");
-        moveInput = new Vector2(horizMove, vertMove);
-        
-        // Check if using gamepad for aiming
-        float horizLook = Input.GetAxisRaw("RightStickX");
-        float vertLook = -Input.GetAxisRaw("RightStickY"); // Invert Y-axis for proper up/down
-        
-        if (Mathf.Abs(horizLook) > 0.1f || Mathf.Abs(vertLook) > 0.1f)
+        if (!Platform.IsMobile())
         {
-            isUsingGamepad = true;
-            lookInput = new Vector2(horizLook, vertLook);
-            // Store this as the last gamepad direction
-            lastGamepadLookDir = lookInput.normalized;
-        }
-        else if (isUsingGamepad)
-        {
-            // Stick released but still in gamepad mode - keep last direction
-            lookInput = lastGamepadLookDir;
-        }
-        else
-        {
-            // Using mouse
-            lookInput = Input.mousePosition;
+            moveInput = inputActions.Player.Move.ReadValue<Vector2>();
+            lookInput = inputActions.Player.Look.ReadValue<Vector2>();
         }
         
-        // Check for mouse movement to switch back to mouse mode
-        if (Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0)
-        {
-            isUsingGamepad = false;
-        }
-
-        // Get input from the joysticks or keyboard/mouse and set the movement and look direction vectors accordingly
         HandlePlayerInput();
-
-        // If the player has a speed bonus, shrink them porportionally
         HandleSpeedBonusResize();
     }
 
@@ -99,7 +86,6 @@ public class PlayerMovement : MonoBehaviour
             }
             else
             {
-                // Slow the player down quickly if they can't move
                 rb.velocity = rb.velocity * 0.8f;
             }
 
@@ -109,14 +95,24 @@ public class PlayerMovement : MonoBehaviour
 
             if (movement == Vector2.zero)
             {
-                // Slow the player down quickly if they can't move
                 rb.velocity = rb.velocity * 0.8f;
             }
         }
 
         float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg + 90f;
 
-        rb.rotation = angle;
+        Transform firePoint = transform.Find("FirePoint");
+        if (lookDir != Vector2.zero)
+        {
+            // Always rotate the player to face the aim direction
+            rb.rotation = angle;
+
+            // Rotate the FirePoint as the source of bullets
+            if (firePoint != null)
+            {
+                firePoint.up = lookDir.normalized;
+            }
+        }
     }
 
     private void SecondaryFire()
@@ -148,7 +144,6 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleSpeedBonusResize()
     {
-        // Shrink the player by the ratio of the bonus to their moveSpeed
         float bonusRatio = Mathf.Min(PlayerStats.instance.GetStatMod(StatTypes.MoveSpeed) - 1, 1);
         float scale = (1 - bonusRatio / 5) * 0.4f;
         scale = Mathf.Clamp(scale, 0.2f, initialScale);
@@ -171,8 +166,7 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            movement.x = Input.GetAxisRaw("Horizontal");
-            movement.y = Input.GetAxisRaw("Vertical");
+            movement = moveInput;
         }
 
         if (directionJoystick.Horizontal != 0 || directionJoystick.Vertical != 0)
@@ -186,16 +180,24 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            if (isUsingGamepad)
+            if (!Platform.IsMobile())
             {
-                // Using gamepad right stick for aiming - lookInput already contains direction
-                lookDir = lookInput;
-            }
-            else
-            {
-                // Using mouse for aiming (lookInput contains screen position)
-                Vector2 mousePos = cam.ScreenToWorldPoint(lookInput);
-                lookDir = mousePos - rb.position;
+                var currentDevice = InputSystem.GetDevice<Gamepad>();
+                bool isGamepadActive = currentDevice != null && 
+                    (Mathf.Abs(currentDevice.rightStick.x.ReadValue()) > 0.1f || 
+                     Mathf.Abs(currentDevice.rightStick.y.ReadValue()) > 0.1f);
+
+                if (isGamepadActive)
+                {
+                    lookDir = lookInput;
+                }
+                else
+                {
+                    Vector2 mousePos = cam.ScreenToWorldPoint(lookInput);
+                    Transform firePoint = transform.Find("FirePoint");
+                    Vector2 referencePos = firePoint != null ? (Vector2)firePoint.position : rb.position;
+                    lookDir = mousePos - referencePos;
+                }
             }
             
             if (Platform.IsMobile())
