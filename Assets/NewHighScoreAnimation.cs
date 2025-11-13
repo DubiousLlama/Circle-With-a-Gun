@@ -38,14 +38,40 @@ public class NewHighScoreAnimation : MonoBehaviour
         DownloadSteamLeaderBoard.OnFriendLeaderboardsDownloaded -= OnFriendsDataReady;
     }
 
+    private void Start()
+    {
+        // Check if GameManager has a new high score to display
+        if (GameManager.Instance != null && GameManager.Instance.NewHighScore)
+        {
+            int score = GameManager.Instance.NewHighScoreValue;
+            string characterUsed = GameManager.Instance.NewHighScoreCharacter;
+            
+            // Get player name from Steam
+            string playerName = "Player";
+            if (SteamManager.Initialized)
+            {
+                playerName = Steamworks.SteamFriends.GetFriendPersonaName(Steamworks.SteamUser.GetSteamID());
+            }
+            
+            ScoreData newScore = new ScoreData(score, playerName, characterUsed);
+            NewHighScore(newScore);
+            
+            // Clear the flag so it doesn't trigger again
+            GameManager.Instance.NewHighScore = false;
+        }
+    }
+
     private void OnFriendsDataReady()
     {
         friendsDataReady = true;
         
-        // If we have a pending score, play the animation now
+        // If we have a pending score, check if it's a high score and play the animation
         if (pendingScore != null && !playing)
         {
-            StartCoroutine(PlayNewHighScoreAnimation(pendingScore));
+            if (IsNewHighScore(pendingScore))
+            {
+                StartCoroutine(PlayNewHighScoreAnimation(pendingScore));
+            }
             pendingScore = null;
         }
     }
@@ -54,15 +80,37 @@ public class NewHighScoreAnimation : MonoBehaviour
     {
         if (playing) return;
         
-        // If friends data is ready, play immediately; otherwise, queue it
+        // If friends data is ready, check if it's a high score and play immediately if so; otherwise, queue it
         if (friendsDataReady)
         {
-            StartCoroutine(PlayNewHighScoreAnimation(newScore));
+            if (IsNewHighScore(newScore))
+            {
+                StartCoroutine(PlayNewHighScoreAnimation(newScore));
+            }
         }
         else
         {
             pendingScore = newScore;
         }
+    }
+
+    private bool IsNewHighScore(ScoreData newScore)
+    {
+        // Get the friends leaderboard
+        List<ScoreData> highScores = ps.GetLeaderboard(ScoreLists.Friends);
+        
+        // Find the previous best score by this player with this character
+        ScoreData previousBest = highScores.FindLast(s => 
+            s.playerName == newScore.playerName && s.characterUsed == newScore.characterUsed);
+        
+        // If no previous score exists, it's a new high score
+        if (previousBest == null)
+        {
+            return true;
+        }
+        
+        // Otherwise, check if the new score is higher than the previous best
+        return newScore.score > previousBest.score;
     }
 
     IEnumerator PlayNewHighScoreAnimation(ScoreData newScore)
@@ -173,7 +221,27 @@ public class NewHighScoreAnimation : MonoBehaviour
         yield return StartCoroutine(FadeInScores(smashedScores));
         
         AudioManager.instance.PlaySfx("Victory");
+        
+        // Upload score to Steam after animation completes
+        UploadScoreToSteam(newScore);
+        
         playing = false;
+    }
+
+    private void UploadScoreToSteam(ScoreData score)
+    {
+        if (DownloadSteamLeaderBoard.Instance != null)
+        {
+            DownloadSteamLeaderBoard.Instance.UploadScore(
+                score.score, 
+                score.characterUsed, 
+                () => Debug.Log($"Successfully uploaded score {score.score} for {score.characterUsed} to Steam")
+            );
+        }
+        else
+        {
+            Debug.LogWarning("DownloadSteamLeaderBoard instance not found, cannot upload score");
+        }
     }
 
     IEnumerator ScrollToChild(RectTransform target, float duration)
