@@ -28,8 +28,8 @@ public class CameraController : MonoBehaviour
     public float maxY = 50f;
 
 
-    // Update is called once per frame
-    void Update()
+    // LateUpdate is called once per frame, after other stuff
+    void LateUpdate()
     {
         Vector3 targetPosition = target.position + offset;
         Vector3 newPosition = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, smoothTime);
