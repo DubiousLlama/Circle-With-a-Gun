@@ -41,7 +41,8 @@ public class SteamLeaderboardManager : MonoBehaviour
 
     private List<ScoreData> friendsScoreList = new List<ScoreData>();
     private List<ScoreData> globalScoreList = new List<ScoreData>();
-    
+
+#pragma warning disable CS0414 // Unity's static analysis incorrectly flags some of these as unused
     private bool friendsDataReady = false;
     private bool globalDataReady = false;
     private ScoreLists currentScoreList = ScoreLists.Friends;
@@ -60,6 +61,8 @@ public class SteamLeaderboardManager : MonoBehaviour
     private int lastUploadedScore = 0;
     private string lastUploadedCharacter = "";
     private bool lastUploadSucceeded = false;
+
+#pragma warning restore CS0414
 
     #region Serializable Classes
 

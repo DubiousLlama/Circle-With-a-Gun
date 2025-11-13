@@ -12,11 +12,8 @@ public class WeaponItem : MonoBehaviour
     {
         Weapon weaponComponent = weapon.GetComponent<Weapon>();
         SpriteRenderer weaponIcon = transform.Find("WeaponIcon").GetComponent<SpriteRenderer>();
-        SpriteRenderer rarityBackground = transform.Find("RarityBackground").GetComponent<SpriteRenderer>();
         SpriteRenderer background = transform.Find("Background").GetComponent<SpriteRenderer>();
-        TextMeshPro rarityText = rarityBackground.transform.Find("RarityText").GetComponent<TextMeshPro>();
         weaponIcon.sprite = weaponComponent.sprite;
-        rarityText.text = ((int) weaponComponent.rarity + 1).ToString();
         background.color = WeaponIndicator.rarityColors[weaponComponent.rarity];
     }
 

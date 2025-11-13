@@ -7,7 +7,7 @@ public class BoomerScript : MonoBehaviour
     public int damage = 200;
     public float lifetime = 3.5f;
 
-    enum BoomerState { Going, Returning};
+    enum BoomerState { Going, Returning };
 
     private BoomerState state = BoomerState.Going;
 
@@ -17,10 +17,14 @@ public class BoomerScript : MonoBehaviour
 
     private float timer = 0f;
 
-    private GameObject player;
+    private Transform playerTransform;
+    private Collider2D col;
 
     private HashSet<GameObject> hitGoing = new HashSet<GameObject>();
     private HashSet<GameObject> hitReturning = new HashSet<GameObject>();
+
+    private static readonly Vector3 ROTATION_VECTOR = new Vector3(0, 0, 540);
+    private Vector3 playerDirection;
 
     // On collision with player, deal damage
     private void OnTriggerEnter2D(Collider2D collision)
@@ -60,14 +64,21 @@ public class BoomerScript : MonoBehaviour
         this.speed = speed;
     }
 
-    private void Start()
+    private void OnDestroy()
     {
-
-        player = GameObject.Find("PC");
+        if (col != null)
+        {
+            col.enabled = false;
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Start()
+    {
+        playerTransform = GameObject.Find("PC").transform;
+        col = GetComponent<Collider2D>();
+    }
+
+    void FixedUpdate()
     {
         if (timer >= lifetime)
         {
@@ -77,14 +88,14 @@ public class BoomerScript : MonoBehaviour
         {
             case BoomerState.Going:
                 // Spin the boomerang
-                transform.Rotate(new Vector3(0, 0, 540) * Time.deltaTime);
+                transform.Rotate(ROTATION_VECTOR * Time.deltaTime);
                 transform.Translate(direction * speed * Time.deltaTime, Space.World);
                 timer += Time.deltaTime;
                 break;
             case BoomerState.Returning:
                 // Move at speed in direction of player
-                transform.Rotate(new Vector3(0, 0, 540) * Time.deltaTime);
-                Vector2 playerDirection = (player.transform.position - transform.position).normalized;
+                transform.Rotate(ROTATION_VECTOR * Time.deltaTime);
+                playerDirection = (playerTransform.position - transform.position).normalized;
                 transform.Translate(playerDirection * speed * Time.deltaTime, Space.World);
                 break;
         }
