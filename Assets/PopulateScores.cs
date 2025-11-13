@@ -55,7 +55,6 @@ public class PopulateScores : MonoBehaviour
         for (int i = 0; i < highScores.Count; i++)
         {
             GameObject scoreObj = Instantiate(scoreDisplayPrefab, content.transform);
-            highScores[i].scoreObject = scoreObj;
             UpdateScoreDisplay(scoreObj, highScores[i]);
             UpdateRank(scoreObj, i + 1);
         }

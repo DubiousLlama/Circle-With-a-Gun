@@ -611,7 +611,7 @@ MonoBehaviour:
   roster: {fileID: 11400000, guid: 74c6116ae507dc14da845fb0e35aab20, type: 2}
   scoreDisplayPrefab: {fileID: 2065241153137521444, guid: 4aea63bee1de2b849973bdc5d3431582, type: 3}
   scrollRect: {fileID: 373061594}
-  ps: {fileID: 0}
+  leaderboardManager: {fileID: 0}
   scrollSpeed: 2
   fadeInDuration: 0.5
   smashInterval: 0.5
@@ -625,7 +625,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 373061591}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8bd79dca195d4be41903fe65ca809d8e, type: 3}
+  m_Script: {fileID: 11500000, guid: f3b0bd4ea87574245bfe24ea906f843f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   loadingMessage: {fileID: 715770664}

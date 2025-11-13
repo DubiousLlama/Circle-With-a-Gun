@@ -13,7 +13,7 @@ public class NewHighScoreAnimation : MonoBehaviour
     public GameObject scoreDisplayPrefab;
     public ScrollRect scrollRect;
 
-    public DownloadSteamLeaderBoard ps;
+    public SteamLeaderboardManager leaderboardManager;
 
     public float scrollSpeed = 8f; // How fast the scroll follows the moving score
 
@@ -30,16 +30,18 @@ public class NewHighScoreAnimation : MonoBehaviour
 
     private void OnEnable()
     {
-        DownloadSteamLeaderBoard.OnFriendLeaderboardsDownloaded += OnFriendsDataReady;
+        SteamLeaderboardManager.OnFriendLeaderboardsDownloaded += OnFriendsDataReady;
     }
 
     private void OnDisable()
     {
-        DownloadSteamLeaderBoard.OnFriendLeaderboardsDownloaded -= OnFriendsDataReady;
+        SteamLeaderboardManager.OnFriendLeaderboardsDownloaded -= OnFriendsDataReady;
     }
 
     private void Start()
     {
+        leaderboardManager = SteamLeaderboardManager.Instance;
+
         // Check if GameManager has a new high score to display
         if (GameManager.Instance != null && GameManager.Instance.NewHighScore)
         {
@@ -97,7 +99,7 @@ public class NewHighScoreAnimation : MonoBehaviour
     private bool IsNewHighScore(ScoreData newScore)
     {
         // Get the friends leaderboard
-        List<ScoreData> highScores = ps.GetLeaderboard(ScoreLists.Friends);
+        List<ScoreData> highScores = leaderboardManager.GetLeaderboard(ScoreLists.Friends);
         
         // Find the previous best score by this player with this character
         ScoreData previousBest = highScores.FindLast(s => 
@@ -118,22 +120,45 @@ public class NewHighScoreAnimation : MonoBehaviour
         playing = true;
         accelFactor = 1f; // Reset acceleration factor
         
-        // Switch to Friends list before playing
-        ps.SwitchScoreList(ScoreLists.Friends);
         yield return null; // Wait one frame for UI to update
         
         // Get the friends score list
-        List<ScoreData> highScores = ps.GetLeaderboard(ScoreLists.Friends);
+        List<ScoreData> highScores = leaderboardManager.GetLeaderboard(ScoreLists.Friends);
+        if (highScores == null) highScores = new List<ScoreData>();
         
-        // Find old personal best
-        ScoreData oldPersonalBest = highScores.FindLast(s => s.playerName == newScore.playerName);
+        // Find old personal best (same player, same character)
+        ScoreData oldPersonalBest = highScores.FindLast(s => 
+            s.playerName == newScore.playerName && s.characterUsed == newScore.characterUsed);
+        GameObject oldPersonalBestObject = null;
+        
+        // Find the GameObject corresponding to the old personal best
+        if (oldPersonalBest != null)
+        {
+            for (int i = 0; i < content.transform.childCount; i++)
+            {
+                Transform scoreTransform = content.transform.GetChild(i);
+                if (scoreTransform != null)
+                {
+                    // Check if this score matches the old personal best
+                    TextMeshProUGUI scoreText = scoreTransform.Find("Score").GetComponent<TextMeshProUGUI>();
+                    if (scoreText != null && scoreText.text == oldPersonalBest.score.ToString("N0"))
+                    {
+                        TextMeshProUGUI playerNameText = scoreTransform.Find("HorizLayout").GetChild(2).GetComponent<TextMeshProUGUI>();
+                        if (playerNameText != null && playerNameText.text == oldPersonalBest.playerName)
+                        {
+                            oldPersonalBestObject = scoreTransform.gameObject;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
         
         // Calculate where the new score should go
         int targetPosition = CalculateTargetPosition(newScore.score, highScores);
         
         // Create new score GameObject
         GameObject newScoreObject = Instantiate(scoreDisplayPrefab, content.transform);
-        newScore.scoreObject = newScoreObject;
         UpdateScoreDisplay(newScoreObject, newScore);
         
         // Add CanvasGroup for visual effects
@@ -145,7 +170,7 @@ public class NewHighScoreAnimation : MonoBehaviour
         newScoreCG.alpha = 1f;
         
         // Position new score right below old personal best
-        int startIndex = oldPersonalBest != null ? highScores.IndexOf(oldPersonalBest) + 1 : highScores.Count;
+        int startIndex = oldPersonalBestObject != null ? oldPersonalBestObject.transform.GetSiblingIndex() + 1 : highScores.Count;
         newScoreObject.transform.SetSiblingIndex(startIndex);
         
         // Force layout update
@@ -155,13 +180,17 @@ public class NewHighScoreAnimation : MonoBehaviour
         // Scroll to center on the new score
         yield return StartCoroutine(ScrollToChild(newScoreObject.GetComponent<RectTransform>(), 0.5f));
         
-        // Identify scores to smash through
+        // Identify scores to smash through (by sibling index, not by storing references)
         List<GameObject> scoresToSmash = new List<GameObject>();
         for (int i = startIndex - 1; i >= targetPosition; i--)
         {
-            if (i >= 0 && i < highScores.Count && highScores[i].scoreObject != null)
+            if (i >= 0 && i < content.transform.childCount)
             {
-                scoresToSmash.Add(highScores[i].scoreObject);
+                Transform scoreTransform = content.transform.GetChild(i);
+                if (scoreTransform != null && scoreTransform.gameObject != newScoreObject)
+                {
+                    scoresToSmash.Add(scoreTransform.gameObject);
+                }
             }
         }
         
@@ -193,55 +222,39 @@ public class NewHighScoreAnimation : MonoBehaviour
             accelFactor *= accelIncrease; // Slightly speed up subsequent smashes
         }
         
-        // Update the high scores list
-        // Remove old personal best if same character
-        if (oldPersonalBest != null && oldPersonalBest.characterUsed == newScore.characterUsed)
+        // Update all ranks for visible scores
+        for (int i = 0; i < content.transform.childCount; i++)
         {
-            if (oldPersonalBest.scoreObject != null)
+            Transform scoreTransform = content.transform.GetChild(i);
+            if (scoreTransform != null)
             {
-                Destroy(oldPersonalBest.scoreObject);
-            }
-            highScores.Remove(oldPersonalBest);
-        }
-        
-        // Insert new score into list
-        targetPosition = CalculateTargetPosition(newScore.score, highScores);
-        highScores.Insert(targetPosition, newScore);
-        
-        // Update all ranks (single source of truth: highScores list)
-        for (int i = 0; i < highScores.Count; i++)
-        {
-            if (highScores[i].scoreObject != null)
-            {
-                UpdateRank(highScores[i].scoreObject, i + 1);
+                UpdateRank(scoreTransform.gameObject, i + 1);
             }
         }
         
-        // Fade in smashed scores
-        yield return StartCoroutine(FadeInScores(smashedScores));
+        // Separate smashed scores into those to fade in and those to destroy
+        List<GameObject> scoresToFadeIn = new List<GameObject>();
+        foreach (GameObject smashedScore in smashedScores)
+        {
+            // If this is the old personal best, destroy it instead of fading it in
+            if (smashedScore == oldPersonalBestObject)
+            {
+                Destroy(smashedScore);
+            }
+            else
+            {
+                scoresToFadeIn.Add(smashedScore);
+            }
+        }
+        
+        // Fade in remaining smashed scores
+        yield return StartCoroutine(FadeInScores(scoresToFadeIn));
         
         AudioManager.instance.PlaySfx("Victory");
-        
-        // Upload score to Steam after animation completes
-        UploadScoreToSteam(newScore);
-        
-        playing = false;
-    }
 
-    private void UploadScoreToSteam(ScoreData score)
-    {
-        if (DownloadSteamLeaderBoard.Instance != null)
-        {
-            DownloadSteamLeaderBoard.Instance.UploadScore(
-                score.score, 
-                score.characterUsed, 
-                () => Debug.Log($"Successfully uploaded score {score.score} for {score.characterUsed} to Steam")
-            );
-        }
-        else
-        {
-            Debug.LogWarning("DownloadSteamLeaderBoard instance not found, cannot upload score");
-        }
+
+        SteamLeaderboardManager.Instance.UploadScore(newScore.score, newScore.characterUsed);
+        playing = false;
     }
 
     IEnumerator ScrollToChild(RectTransform target, float duration)

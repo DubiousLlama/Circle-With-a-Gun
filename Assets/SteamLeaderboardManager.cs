@@ -1,31 +1,15 @@
 using Steamworks;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using TMPro;
+using System.Security.Cryptography;
+using System.Text;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class DownloadSteamLeaderBoard : MonoBehaviour
+public class SteamLeaderboardManager : MonoBehaviour
 {
-    public static DownloadSteamLeaderBoard Instance { get; private set; }
-
-    [Header("UI References")]
-    public GameObject loadingMessage;
-    public GameObject content;
-    public Roster roster;
-    public GameObject scoreDisplayPrefab;
-
-    [Header("Navigation Buttons")]
-    public Button personalScoreButton;
-    public Button friendsScoreButton;
-    public Button globalScoreButton;
-
-    [Header("Status UI")]
-    public GameObject refreshButton;
-    public GameObject noNewData;
+    public static SteamLeaderboardManager Instance { get; private set; }
 
     private readonly Dictionary<string, string> LeaderboardNames = new Dictionary<string, string>()
     {
@@ -73,6 +57,9 @@ public class DownloadSteamLeaderBoard : MonoBehaviour
     private int totalLeaderboardsToFetch = 0;
 
     private Action onScoreUploadedCallback = null;
+    private int lastUploadedScore = 0;
+    private string lastUploadedCharacter = "";
+    private bool lastUploadSucceeded = false;
 
     #region Serializable Classes
 
@@ -101,7 +88,63 @@ public class DownloadSteamLeaderBoard : MonoBehaviour
         public ScoreData ToScoreData() => new ScoreData(score, playerName, characterUsed);
     }
 
+    /// <summary>
+    /// Represents a pending score awaiting upload with integrity validation.
+    /// </summary>
+    [System.Serializable]
+    private class PendingScoreEntry
+    {
+        public int score;
+        public string characterUsed;
+        public string timestamp;
+        public string validationHash;
+        public int uploadAttempts;
+        
+        public PendingScoreEntry(int score, string characterUsed)
+        {
+            this.score = score;
+            this.characterUsed = characterUsed;
+            this.timestamp = DateTime.UtcNow.ToString("o");
+            this.uploadAttempts = 0;
+            this.validationHash = GenerateValidationHash(score, characterUsed, this.timestamp);
+        }
+        
+        /// <summary>
+        /// Validates the integrity of this pending score entry.
+        /// Returns true if the score hasn't been tampered with.
+        /// </summary>
+        public bool ValidateIntegrity()
+        {
+            string recalculatedHash = GenerateValidationHash(score, characterUsed, timestamp);
+            return validationHash == recalculatedHash;
+        }
+        
+        private static string GenerateValidationHash(int score, string characterUsed, string timestamp)
+        {
+            // Combine the score data with a device identifier to create a hash
+            string deviceId = SystemInfo.deviceUniqueIdentifier;
+            string input = $"{score}:{characterUsed}:{timestamp}:{deviceId}";
+            
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(input));
+                return Convert.ToBase64String(hashBytes);
+            }
+        }
+    }
+
+    [System.Serializable]
+    private class PendingScoresCache
+    {
+        public List<PendingScoreEntry> pendingScores = new List<PendingScoreEntry>();
+        public string lastValidated;
+    }
+
     #endregion
+
+    private string pendingScoresFilePath;
+    private List<PendingScoreEntry> pendingScores = new List<PendingScoreEntry>();
+    private const string PENDING_SCORES_FILENAME_SUFFIX = "_pending_scores.json";
 
     #region Unity Lifecycle
 
@@ -132,8 +175,16 @@ public class DownloadSteamLeaderBoard : MonoBehaviour
 
     private void Start()
     {
-        InitializeUI();
         GetAllLeaderboards();
+        
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            UploadTestScore("Commando", 250);
+        }
     }
 
     private void OnDestroy()
@@ -155,10 +206,12 @@ public class DownloadSteamLeaderBoard : MonoBehaviour
         {
             string userId = SteamUser.GetSteamID().ToString();
             cacheFilePath = Path.Combine(Application.persistentDataPath, $"leaderboard_cache_{userId}.json");
+            pendingScoresFilePath = Path.Combine(Application.persistentDataPath, $"leaderboard_cache_{userId}{PENDING_SCORES_FILENAME_SUFFIX}");
         }
         else
         {
             cacheFilePath = Path.Combine(Application.persistentDataPath, "leaderboard_cache.json");
+            pendingScoresFilePath = Path.Combine(Application.persistentDataPath, $"leaderboard_cache{PENDING_SCORES_FILENAME_SUFFIX}");
         }
     }
 
@@ -180,30 +233,6 @@ public class DownloadSteamLeaderBoard : MonoBehaviour
             friendleaderboardEntries[leaderboardName] = new List<LeaderboardEntry_t>();
             globalleaderboardEntries[leaderboardName] = new List<LeaderboardEntry_t>();
         }
-    }
-
-    private void InitializeUI()
-    {
-        if (content != null && loadingMessage != null)
-        {
-            content.SetActive(true);
-            loadingMessage.SetActive(!isShowingCachedData);
-        }
-        
-        if (friendsScoreButton != null) 
-        {
-            friendsScoreButton.Select();
-            friendsScoreButton.onClick.AddListener(() => SwitchScoreList(ScoreLists.Friends));
-        }
-        
-        if (personalScoreButton != null) 
-            personalScoreButton.onClick.AddListener(() => SwitchScoreList(ScoreLists.Personal));
-            
-        if (globalScoreButton != null) 
-            globalScoreButton.onClick.AddListener(() => SwitchScoreList(ScoreLists.Global));
-            
-        if (refreshButton != null) 
-            refreshButton.GetComponent<Button>().onClick.AddListener(OnRefreshButtonPressed);
     }
 
     #endregion
@@ -247,12 +276,16 @@ public class DownloadSteamLeaderBoard : MonoBehaviour
 
     /// <summary>
     /// Uploads a score to the Steam leaderboard for the given character.
+    /// If Steam is unavailable, queues the score for later upload with tamper protection.
     /// </summary>
     public void UploadScore(int score, string characterUsed, Action onCompleted = null)
     {
         if (!SteamManager.Initialized)
         {
-            Debug.LogError("Cannot upload score: Steam is not initialized!");
+            Debug.LogWarning($"Steam not initialized. Queueing score {score} for {characterUsed} for later upload.");
+            QueuePendingScore(score, characterUsed);
+            onScoreUploadedCallback = onCompleted;
+            onScoreUploadedCallback?.Invoke();
             return;
         }
 
@@ -264,15 +297,19 @@ public class DownloadSteamLeaderBoard : MonoBehaviour
         }
 
         onScoreUploadedCallback = onCompleted;
+        lastUploadedScore = score;
+        lastUploadedCharacter = characterUsed;
+        lastUploadSucceeded = false;
+        
         SteamAPICall_t handle = SteamUserStats.UploadLeaderboardScore(
             leaderboardHandles[leaderboardName], 
-            ELeaderboardUploadScoreMethod.k_ELeaderboardUploadScoreMethodKeepBest, 
+            ELeaderboardUploadScoreMethod.k_ELeaderboardUploadScoreMethodForceUpdate, 
             score, 
             null, 
             0
         );
         uploadLeaderboardCallResult.Set(handle);
-        Debug.Log($"Uploading score {score} to {characterUsed} leaderboard");
+        Debug.Log($"LM: Uploading score {score} to {characterUsed} leaderboard");
     }
 
     public bool IsFriendsDataReady() => friendsDataReady && !isShowingCachedData;
@@ -302,18 +339,128 @@ public class DownloadSteamLeaderBoard : MonoBehaviour
         UploadScore(testScore, characterName);
     }
 
-    public void OnRefreshButtonPressed()
+    public void ManualRefresh()
     {
         Debug.Log("Manual refresh requested");
         steamFetchFailed = false;
         isShowingCachedData = false;
         
-        if (content != null) content.SetActive(false);
-        if (loadingMessage != null) loadingMessage.SetActive(true);
-
-        ReselectCurrentButton();
-        UpdateRefreshButtonState();
         GetAllLeaderboards();
+    }
+
+    #endregion
+
+    #region Pending Score Management
+
+    /// <summary>
+    /// Adds a score to the pending upload queue with integrity validation.
+    /// </summary>
+    private void QueuePendingScore(int score, string characterUsed)
+    {
+        if (score < 0)
+        {
+            Debug.LogError("Cannot queue negative score");
+            return;
+        }
+
+        if (!LeaderboardNames.ContainsValue(characterUsed))
+        {
+            Debug.LogError($"Invalid character: {characterUsed}");
+            return;
+        }
+
+        var pendingEntry = new PendingScoreEntry(score, characterUsed);
+        pendingScores.Add(pendingEntry);
+        SavePendingScores();
+        
+        Debug.Log($"Queued score {score} for {characterUsed}. Pending uploads: {pendingScores.Count}");
+    }
+
+    /// <summary>
+    /// Attempts to upload all pending scores. Called when Steam connection is restored.
+    /// </summary>
+    private void ProcessPendingScores()
+    {
+        if (pendingScores.Count == 0) return;
+        if (!SteamManager.Initialized) return;
+
+        Debug.Log($"Processing {pendingScores.Count} pending score(s)...");
+
+        // Validate integrity before uploading
+        var validScores = pendingScores.Where(p => p.ValidateIntegrity()).ToList();
+        var invalidScores = pendingScores.Except(validScores).ToList();
+
+        if (invalidScores.Count > 0)
+        {
+            Debug.LogError($"Detected {invalidScores.Count} tampered score entry(ies). Removing them.");
+            foreach (var invalid in invalidScores)
+            {
+                pendingScores.Remove(invalid);
+            }
+            SavePendingScores();
+        }
+
+        foreach (var pending in validScores)
+        {
+            pending.uploadAttempts++;
+            UploadScore(pending.score, pending.characterUsed, () => OnPendingScoreUploaded(pending));
+        }
+
+        SavePendingScores();
+    }
+
+    private void OnPendingScoreUploaded(PendingScoreEntry pending)
+    {
+        pendingScores.Remove(pending);
+        SavePendingScores();
+        Debug.Log($"Successfully uploaded pending score {pending.score} for {pending.characterUsed}");
+    }
+
+    private void LoadPendingScores()
+    {
+        if (!File.Exists(pendingScoresFilePath)) return;
+
+        try
+        {
+            string json = File.ReadAllText(pendingScoresFilePath);
+            PendingScoresCache cache = JsonUtility.FromJson<PendingScoresCache>(json);
+            if (cache?.pendingScores != null)
+            {
+                pendingScores = cache.pendingScores;
+                Debug.Log($"Loaded {pendingScores.Count} pending score(s)");
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogWarning($"Failed to load pending scores: {e.Message}");
+        }
+    }
+
+    private void SavePendingScores()
+    {
+        try
+        {
+            PendingScoresCache cache = new PendingScoresCache
+            {
+                pendingScores = pendingScores,
+                lastValidated = DateTime.UtcNow.ToString("o")
+            };
+
+            string json = JsonUtility.ToJson(cache, true);
+            File.WriteAllText(pendingScoresFilePath, json);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Failed to save pending scores: {e.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Returns the count of pending scores awaiting upload.
+    /// </summary>
+    public int GetPendingScoreCount()
+    {
+        return pendingScores.Count;
     }
 
     #endregion
@@ -329,6 +476,9 @@ public class DownloadSteamLeaderBoard : MonoBehaviour
             return;
         }
 
+        // Attempt to process any pending scores when connection is restored
+        ProcessPendingScores();
+
         if (!isShowingCachedData)
         {
             friendsDataReady = false;
@@ -342,8 +492,6 @@ public class DownloadSteamLeaderBoard : MonoBehaviour
         isFetchingFromSteam = true;
         failedLeaderboardCount = 0;
         totalLeaderboardsToFetch = LeaderboardNames.Count * 2;
-        
-        UpdateRefreshButtonState();
 
         foreach (var leaderboardName in LeaderboardNames.Keys)
         {
@@ -412,21 +560,40 @@ public class DownloadSteamLeaderBoard : MonoBehaviour
 
     private void OnLeaderboardScoreUploaded(LeaderboardScoreUploaded_t result, bool bIOFailure)
     {
+        // Check for IO failure first
         if (bIOFailure)
         {
-            Debug.LogError("Failed to upload leaderboard score");
+            Debug.LogWarning($"WARNING: Score upload IO failure for {lastUploadedCharacter}. Score {lastUploadedScore} may not have been uploaded due to network or server error.");
+            QueuePendingScore(lastUploadedScore, lastUploadedCharacter);
+            isShowingCachedData = false;
+            onScoreUploadedCallback?.Invoke();
             onScoreUploadedCallback = null;
             return;
         }
 
         if (result.m_bSuccess == 0)
         {
-            Debug.LogError("Leaderboard score upload was rejected");
+            Debug.LogWarning($"WARNING: Score upload failed for {lastUploadedCharacter}. Score {lastUploadedScore} was not accepted by the leaderboard.");
+            QueuePendingScore(lastUploadedScore, lastUploadedCharacter);
+            isShowingCachedData = false;
+            onScoreUploadedCallback?.Invoke();
             onScoreUploadedCallback = null;
             return;
         }
 
-        Debug.Log("Successfully uploaded score!");
+        // Check if the score was actually changed/accepted by the leaderboard
+        // result.m_bScoreChanged indicates if the score replaced a previous best
+        if (result.m_bScoreChanged == 0)
+        {
+            Debug.LogWarning($"WARNING: Score upload completed but score was NOT changed/accepted for {lastUploadedCharacter}. " +
+                $"Uploaded score {lastUploadedScore} may be lower than or equal to existing best score.");
+        }
+        else
+        {
+            Debug.Log($"Successfully uploaded score {lastUploadedScore} for {lastUploadedCharacter}. New rank: {result.m_nGlobalRankNew}");
+            lastUploadSucceeded = true;
+        }
+
         isShowingCachedData = false;
 
         onScoreUploadedCallback?.Invoke();
@@ -463,7 +630,7 @@ public class DownloadSteamLeaderBoard : MonoBehaviour
             steamFetchFailed = false;
             isFetchingFromSteam = false;
             
-            CheckAndDisplayScores();
+            SaveCacheData();
         }
     }
 
@@ -523,95 +690,6 @@ public class DownloadSteamLeaderBoard : MonoBehaviour
 
     #endregion
 
-    #region UI Management
-
-    public void SwitchScoreList(ScoreLists scoreList)
-    {
-        currentScoreList = scoreList;
-        List<ScoreData> scores = GetLeaderboard(scoreList);
-        
-        if (scores != null)
-        {
-            CreateScoreUI(scores);
-        }
-        else
-        {
-            Debug.LogWarning($"No scores available for {scoreList}");
-        }
-    }
-
-    private void CreateScoreUI(List<ScoreData> highScores)
-    {
-        foreach (Transform child in content.transform)
-        {
-            Destroy(child.gameObject);
-        }
-
-        for (int i = 0; i < highScores.Count; i++)
-        {
-            GameObject scoreObj = Instantiate(scoreDisplayPrefab, content.transform);
-            highScores[i].scoreObject = scoreObj;
-            UpdateScoreDisplay(scoreObj, highScores[i]);
-            UpdateRank(scoreObj, i + 1);
-        }
-
-        Canvas.ForceUpdateCanvases();
-    }
-
-    public void UpdateScoreDisplay(GameObject scoreObject, ScoreData score)
-    {
-        Transform hL = scoreObject.transform.Find("HorizLayout");
-        hL.GetChild(0).GetComponent<TextMeshProUGUI>().text = "";
-        scoreObject.transform.Find("Score").GetComponent<TextMeshProUGUI>().text = score.score.ToString("N0");
-        hL.GetChild(2).GetComponent<TextMeshProUGUI>().text = score.playerName;
-
-        Character ch = roster.allCharacters.Find(c => c.prefName == score.characterUsed);
-        if (ch != null) 
-            hL.GetChild(1).GetComponent<Image>().sprite = ch.sprite;
-    }
-
-    public void UpdateRank(GameObject scoreObject, int rank)
-    {
-        scoreObject.transform.Find("HorizLayout").GetChild(0).GetComponent<TextMeshProUGUI>().text = $"#{rank}";
-    }
-
-    private void UpdateRefreshButtonState()
-    {
-        if (refreshButton != null) refreshButton.SetActive(!isFetchingFromSteam);
-        if (noNewData != null) noNewData.SetActive(steamFetchFailed);
-    }
-
-    private void ReselectCurrentButton()
-    {
-        switch (currentScoreList)
-        {
-            case ScoreLists.Personal: 
-                if (personalScoreButton != null) personalScoreButton.Select(); 
-                break;
-            case ScoreLists.Friends: 
-                if (friendsScoreButton != null) friendsScoreButton.Select(); 
-                break;
-            case ScoreLists.Global: 
-                if (globalScoreButton != null) globalScoreButton.Select(); 
-                break;
-        }
-    }
-
-    private void CheckAndDisplayScores()
-    {
-        if (friendsDataReady && globalDataReady)
-        {
-            if (content != null) content.SetActive(true);
-            if (loadingMessage != null) loadingMessage.SetActive(false);
-            
-            UpdateRefreshButtonState();
-            SwitchScoreList(currentScoreList);
-            SaveCacheData();
-        }
-    }
-
-    #endregion
-
     #region Cache Management
 
     private void LoadCachedData()
@@ -642,9 +720,6 @@ public class DownloadSteamLeaderBoard : MonoBehaviour
                 globalDataReady = true;
                 isShowingCachedData = true;
                 
-                UpdateRefreshButtonState();
-                SwitchScoreList(currentScoreList);
-                
                 Debug.Log($"Loaded cached leaderboard data ({friendsScoreList.Count} friends, {globalScoreList.Count} global)");
             }
         }
@@ -652,6 +727,8 @@ public class DownloadSteamLeaderBoard : MonoBehaviour
         {
             Debug.LogWarning($"Failed to load cache: {e.Message}");
         }
+
+        LoadPendingScores();
     }
 
     private void SaveCacheData()
@@ -685,28 +762,15 @@ public class DownloadSteamLeaderBoard : MonoBehaviour
         steamFetchFailed = true;
         isFetchingFromSteam = false;
         
-        if (content != null) content.SetActive(true);
-        if (loadingMessage != null) loadingMessage.SetActive(false);
-        
         if (friendsScoreList.Count > 0 || globalScoreList.Count > 0)
         {
             isShowingCachedData = true;
             friendsDataReady = true;
             globalDataReady = true;
-            UpdateRefreshButtonState();
-            SwitchScoreList(currentScoreList);
         }
         else
         {
             Debug.LogError("No cached data available and Steam fetch failed!");
-
-            if (noNewData != null)
-            {
-                noNewData.SetActive(true);
-                TextMeshProUGUI textComponent = noNewData.GetComponent<TextMeshProUGUI>();
-                if (textComponent != null) 
-                    textComponent.text = "Unable to contact Steam. Check your internet connection.";
-            }
         }
     }
 

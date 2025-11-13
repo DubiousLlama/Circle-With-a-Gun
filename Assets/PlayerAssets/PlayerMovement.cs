@@ -58,33 +58,42 @@ public class PlayerMovement : MonoBehaviour
         if (!Platform.IsMobile() && inputActions != null)
         {
             moveInput = inputActions.Player.Move.ReadValue<Vector2>();
-            Vector2 lookValue = inputActions.Player.Look.ReadValue<Vector2>();
+            
+            // Read gamepad and mouse inputs separately instead of the combined Look action
+            Vector2 gamepadLookValue = Vector2.zero;
+            if (Gamepad.current != null)
+            {
+                gamepadLookValue = Gamepad.current.rightStick.ReadValue();
+            }
 
-            bool gamepadActive = Gamepad.current != null &&
+            bool gamepadLookActive = Gamepad.current != null &&
                                   (Mathf.Abs(Gamepad.current.rightStick.x.ReadValue()) > 0.1f ||
                                    Mathf.Abs(Gamepad.current.rightStick.y.ReadValue()) > 0.1f);
 
-            if (gamepadActive)
+            // If the player moved the mouse physically, switch to mouse mode
+            if (Mouse.current != null && Mouse.current.delta.ReadValue().sqrMagnitude > 0.1f)
+            {
+                isUsingGamepad = false;
+            }
+            // If the player moves the gamepad right stick, switch to gamepad mode
+            else if (gamepadLookActive)
             {
                 isUsingGamepad = true;
-                lookDir = lookValue;
-                if (lookDir.sqrMagnitude > 0.0001f)
-                    lastGamepadLookDir = lookDir.normalized;
+            }
+
+            if (isUsingGamepad)
+            {
+                // Only update the look direction if the gamepad stick is actively being used
+                if (gamepadLookActive)
+                    lastGamepadLookDir = gamepadLookValue.normalized;
             }
             else
             {
-                isUsingGamepad = false;
                 if (Mouse.current != null)
                 {
                     lookInput = Mouse.current.position.ReadValue();
                 }
                 // if no mouse, keep lastGamepadLookDir as fallback
-            }
-
-            // If the player moved the mouse physically, switch to mouse mode
-            if (Mouse.current != null && Mouse.current.delta.ReadValue().sqrMagnitude > 0f)
-            {
-                isUsingGamepad = false;
             }
         }
 
@@ -214,12 +223,18 @@ public class PlayerMovement : MonoBehaviour
             {
                 if (isUsingGamepad)
                 {
-                    // Using gamepad right stick for aiming - lookDir already set in Update
+                    // Using gamepad right stick for aiming
                     if (lastGamepadLookDir.sqrMagnitude > 0.0001f)
                         lookDir = lastGamepadLookDir;
                 }
                 else
                 {
+                    // Only process mouse input when NOT using gamepad
+                    if (Mouse.current != null)
+                    {
+                        lookInput = Mouse.current.position.ReadValue();
+                    }
+                    
                     Vector2 mousePos = cam.ScreenToWorldPoint(lookInput);
 
                     Transform firePoint = transform.Find("FirePoint");
@@ -237,20 +252,20 @@ public class PlayerMovement : MonoBehaviour
                     if (firePoint != null)
                     {
                         referencePos = Vector2.Lerp(playerCenter, firePoint.position, t);
-                    }
+                      }
 
-                    Vector2 newLook = mousePos - referencePos;
-                    if (newLook.sqrMagnitude > 0.0001f)
-                    {
-                        lookDir = newLook;
-                    }
-                }
-            }
-            
-            if (Platform.IsMobile())
-            {
-                weaponsManager.OnPrimaryUp();
-            }
-        }
-    }
-}
+                      Vector2 newLook = mousePos - referencePos;
+                      if (newLook.sqrMagnitude > 0.0001f)
+                      {
+                          lookDir = newLook;
+                      }
+                  }
+              }
+              
+              if (Platform.IsMobile())
+              {
+                  weaponsManager.OnPrimaryUp();
+              }
+          }
+      }
+  }
