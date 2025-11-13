@@ -22,6 +22,8 @@ public class PlayerMovement : MonoBehaviour
     private PlayerInputActions inputActions;
     private Vector2 moveInput;
     private Vector2 lookInput;
+    private bool isUsingGamepad = false;
+    private Vector2 lastGamepadLookDir = Vector2.right; // Store last gamepad aim direction
 
     void Awake()
     {
@@ -33,36 +35,63 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        if (!Platform.IsMobile() && inputActions != null)
+            inputActions.Enable();
+    }
+
+    private void OnDisable()
+    {
+        if (!Platform.IsMobile() && inputActions != null)
+            inputActions.Disable();
+    }
+
     private void Start()
     {
         stats = PlayerStats.instance;
     }
 
-    private void OnEnable()
-    {
-        if (!Platform.IsMobile())
-        {
-            inputActions.Enable();
-        }
-    }
-
-    private void OnDisable()
-    {
-        if (!Platform.IsMobile())
-        {
-            inputActions.Disable();
-        }
-    }
-
+    // Update is called once per frame
     void Update()
     {
-        if (!Platform.IsMobile())
+        if (!Platform.IsMobile() && inputActions != null)
         {
             moveInput = inputActions.Player.Move.ReadValue<Vector2>();
-            lookInput = inputActions.Player.Look.ReadValue<Vector2>();
+            Vector2 lookValue = inputActions.Player.Look.ReadValue<Vector2>();
+
+            bool gamepadActive = Gamepad.current != null &&
+                                  (Mathf.Abs(Gamepad.current.rightStick.x.ReadValue()) > 0.1f ||
+                                   Mathf.Abs(Gamepad.current.rightStick.y.ReadValue()) > 0.1f);
+
+            if (gamepadActive)
+            {
+                isUsingGamepad = true;
+                lookDir = lookValue;
+                if (lookDir.sqrMagnitude > 0.0001f)
+                    lastGamepadLookDir = lookDir.normalized;
+            }
+            else
+            {
+                isUsingGamepad = false;
+                if (Mouse.current != null)
+                {
+                    lookInput = Mouse.current.position.ReadValue();
+                }
+                // if no mouse, keep lastGamepadLookDir as fallback
+            }
+
+            // If the player moved the mouse physically, switch to mouse mode
+            if (Mouse.current != null && Mouse.current.delta.ReadValue().sqrMagnitude > 0f)
+            {
+                isUsingGamepad = false;
+            }
         }
-        
+
+        // Get input from the joysticks or keyboard/mouse and set the movement and look direction vectors accordingly
         HandlePlayerInput();
+
+        // If the player has a speed bonus, shrink them porportionally
         HandleSpeedBonusResize();
     }
 
@@ -86,6 +115,7 @@ public class PlayerMovement : MonoBehaviour
             }
             else
             {
+                // Slow the player down quickly if they can't move
                 rb.velocity = rb.velocity * 0.8f;
             }
 
@@ -95,6 +125,7 @@ public class PlayerMovement : MonoBehaviour
 
             if (movement == Vector2.zero)
             {
+                // Slow the player down quickly if they can't move
                 rb.velocity = rb.velocity * 0.8f;
             }
         }
@@ -104,10 +135,8 @@ public class PlayerMovement : MonoBehaviour
         Transform firePoint = transform.Find("FirePoint");
         if (lookDir != Vector2.zero)
         {
-            // Always rotate the player to face the aim direction
             rb.rotation = angle;
 
-            // Rotate the FirePoint as the source of bullets
             if (firePoint != null)
             {
                 firePoint.up = lookDir.normalized;
@@ -144,6 +173,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleSpeedBonusResize()
     {
+        // Shrink the player by the ratio of the bonus to their moveSpeed
         float bonusRatio = Mathf.Min(PlayerStats.instance.GetStatMod(StatTypes.MoveSpeed) - 1, 1);
         float scale = (1 - bonusRatio / 5) * 0.4f;
         scale = Mathf.Clamp(scale, 0.2f, initialScale);
@@ -182,21 +212,38 @@ public class PlayerMovement : MonoBehaviour
         {
             if (!Platform.IsMobile())
             {
-                var currentDevice = InputSystem.GetDevice<Gamepad>();
-                bool isGamepadActive = currentDevice != null && 
-                    (Mathf.Abs(currentDevice.rightStick.x.ReadValue()) > 0.1f || 
-                     Mathf.Abs(currentDevice.rightStick.y.ReadValue()) > 0.1f);
-
-                if (isGamepadActive)
+                if (isUsingGamepad)
                 {
-                    lookDir = lookInput;
+                    // Using gamepad right stick for aiming - lookDir already set in Update
+                    if (lastGamepadLookDir.sqrMagnitude > 0.0001f)
+                        lookDir = lastGamepadLookDir;
                 }
                 else
                 {
                     Vector2 mousePos = cam.ScreenToWorldPoint(lookInput);
+
                     Transform firePoint = transform.Find("FirePoint");
-                    Vector2 referencePos = firePoint != null ? (Vector2)firePoint.position : rb.position;
-                    lookDir = mousePos - referencePos;
+                    Vector2 playerCenter = rb.position;
+
+                    float cursorToPlayerDist = Vector2.Distance(mousePos, playerCenter);
+
+                    float inner = 1f; // distance at/inside which use player center fully
+                    float outer = 2f; // distance at/above which use firePoint fully
+                    float t = 0f;
+                    if (outer > inner)
+                        t = Mathf.Clamp01((cursorToPlayerDist - inner) / (outer - inner));
+
+                    Vector2 referencePos = playerCenter;
+                    if (firePoint != null)
+                    {
+                        referencePos = Vector2.Lerp(playerCenter, firePoint.position, t);
+                    }
+
+                    Vector2 newLook = mousePos - referencePos;
+                    if (newLook.sqrMagnitude > 0.0001f)
+                    {
+                        lookDir = newLook;
+                    }
                 }
             }
             

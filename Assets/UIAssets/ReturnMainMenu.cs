@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class ReturnMainMenu : MonoBehaviour
 {
     public static event Action OnReturnToMainMenu;
+    public Roster roster;
 
     public void invokeMenuReturn()
     {
@@ -38,7 +39,6 @@ public class ReturnMainMenu : MonoBehaviour
         int selectedCharacterIndex = PlayerPrefs.GetInt("SelectedCharacter", 0);
         
         // Get the character prefName from the roster
-        Roster roster = Resources.Load<Roster>("Roster");
         if (roster == null || selectedCharacterIndex >= roster.allCharacters.Count)
         {
             Debug.LogWarning("Could not find roster or character index out of range");
