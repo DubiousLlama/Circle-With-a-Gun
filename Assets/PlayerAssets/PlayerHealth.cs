@@ -15,10 +15,10 @@ public class PlayerHealth : MonoBehaviour
     public float regenDelay = 2f;
     public HealthBarController sliderController;
     public GameObject gameOverScreen;
+    public ScoreTracker scoreTracker;
 
     private float regenTimer = 0f;
 
-    private ScoreTracker scoreTracker;
     private bool gameOver = false;
 
     private float maxHealth = 1000f;
@@ -34,8 +34,6 @@ public class PlayerHealth : MonoBehaviour
     {
         health += startingMaxHealth;
         gameOverScreen.SetActive(false);
-
-        scoreTracker = GameObject.Find("Score").GetComponent<ScoreTracker>();
 
         audioManager = AudioManager.instance;
         gameMusic = GameMusic.instance;
@@ -104,9 +102,20 @@ public class PlayerHealth : MonoBehaviour
                     PlayerPrefs.SetInt("HighScore", scoreTracker.GetScore());
                 }
                 gameMusic.PlayEventTrack("death");
-                Time.timeScale = 0f;
+                GameManager.Instance.RequestPause(GameManager.PauseReason.GameOver);
                 gameOverScreen.SetActive(true);
                 gameOverScreen.transform.Find("Score").GetComponent<TextMeshProUGUI>().text = "Score: " + scoreTracker.GetScore().ToString();
+                
+                // Trigger high score check and scene preloading
+                ReturnMainMenu returnMainMenu = FindObjectOfType<ReturnMainMenu>();
+                if (returnMainMenu != null)
+                {
+                    returnMainMenu.OnGameOverScreenShown();
+                }
+                else
+                {
+                    Debug.LogWarning("ReturnMainMenu component not found in scene");
+                }
             }
         }
 

@@ -17,11 +17,17 @@ public class MenuNavigationHelper : MonoBehaviour
     [Tooltip("Check every frame if buttons become active (useful for parent objects)")]
     public bool watchForActivation = false;
 
+    [Header("Recover From Mouse Input")]
+    [Tooltip("Re-select button when gamepad input is detected after mouse use")]
+    public bool recoverFromMouseInput = true;
+
     private bool hasSelectedButton = false;
+    private bool wasMouseUsed = false;
 
     private void OnEnable()
     {
         hasSelectedButton = false;
+        wasMouseUsed = false;
         // Wait a frame for the menu to fully initialize
         StartCoroutine(SelectFirstButtonDelayed());
     }
@@ -32,6 +38,50 @@ public class MenuNavigationHelper : MonoBehaviour
         if (watchForActivation && !hasSelectedButton)
         {
             TrySelectButton();
+        }
+
+        // Check if we should recover from mouse input
+        if (recoverFromMouseInput)
+        {
+            HandleInputModeSwitch();
+        }
+    }
+
+    private void HandleInputModeSwitch()
+    {
+        // Check if any gamepad/joystick input is detected
+        bool gamepadInputDetected = false;
+        
+        // Check analog sticks
+        if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
+        {
+            gamepadInputDetected = true;
+        }
+        
+        // Check gamepad buttons
+        if (Input.GetButtonDown("Submit") || Input.GetButtonDown("Cancel"))
+        {
+            gamepadInputDetected = true;
+        }
+
+        // Check mouse input
+        bool mouseInputDetected = Input.GetMouseButton(0) || Input.GetMouseButton(1) || 
+                                   Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0;
+
+        // If mouse was used but gamepad input is now detected, reselect button
+        if (wasMouseUsed && gamepadInputDetected && EventSystem.current != null)
+        {
+            if (EventSystem.current.currentSelectedGameObject == null)
+            {
+                TrySelectButton();
+                wasMouseUsed = false;
+            }
+        }
+
+        // Track if mouse is being used
+        if (mouseInputDetected)
+        {
+            wasMouseUsed = true;
         }
     }
 

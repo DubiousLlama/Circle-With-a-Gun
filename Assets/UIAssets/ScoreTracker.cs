@@ -13,6 +13,7 @@ public class ScoreTracker : MonoBehaviour
     private bool gameOver = false;
 
     public int multiplier = 1;
+    public GameObject scoreUI;
 
     public static event Action<FinalScoreArgs> FinalScore;
     public class FinalScoreArgs : EventArgs
@@ -22,7 +23,7 @@ public class ScoreTracker : MonoBehaviour
 
     void Start()
     {
-        textObject = GetComponent<TextMeshProUGUI>();
+        textObject = scoreUI.GetComponent<TextMeshProUGUI>();
 
         // Subscribe to the FoeDied event from EnemyHealth
         EnemyHealth.FoeDied += OnFoeDied;

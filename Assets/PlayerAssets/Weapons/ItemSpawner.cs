@@ -117,10 +117,10 @@ public class ItemSpawner : MonoBehaviour
         // Select a location within the play area
         spawnLocation = new Vector3(Random.Range(playArea.rect.xMin + 1f, playArea.rect.xMax - 1f), Random.Range(playArea.rect.yMin + 1f, playArea.rect.yMax  - 1f), 5) + playArea.position;
 
-        Collider2D collider = Physics2D.OverlapCircle(spawnLocation, 1f,LayerMask.NameToLayer("Item"));
+        Collider2D collider;
         
         // Check if the spawn loaction overlaps with another item
-        collider = Physics2D.OverlapCircle(spawnLocation, 1f,LayerMask.NameToLayer("Item"));
+        collider = Physics2D.OverlapCircle(spawnLocation, 1f, LayerMask.GetMask("Item"));
         if (collider != null)
         {
             Debug.Log("Item overlaps with another item");
@@ -129,7 +129,7 @@ public class ItemSpawner : MonoBehaviour
         }
 
         // check if the spawn location overlaps with an Obstacle
-        collider = Physics2D.OverlapCircle(spawnLocation, 1f, LayerMask.NameToLayer("Obstacle"));
+        collider = Physics2D.OverlapCircle(spawnLocation, 1f, LayerMask.GetMask("Obstacle"));
         if (collider != null)
         {
             Debug.Log("Item overlaps with an obstacle");
@@ -180,7 +180,7 @@ public class ItemSpawner : MonoBehaviour
     public bool SpawnItem(GameObject itemPrefab, Vector3 v3, WeaponRarity rarity)
     {
         // Check if there is another object on the weapons layer within 1 units of the spawn location
-        Collider2D collider = Physics2D.OverlapCircle(v3, 1f, LayerMask.NameToLayer("Item"));
+        Collider2D collider = Physics2D.OverlapCircle(v3, 1f, LayerMask.GetMask("Item"));
         if (collider != null)
         {
             Debug.Log("Item overlaps with another item");

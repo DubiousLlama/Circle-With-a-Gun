@@ -63,8 +63,8 @@ public class OfferLevelUp : MonoBehaviour
             SetupOption(child.gameObject);
         }
 
-        Debug.Log("Time Scale set to 0");
-        Time.timeScale = 0f; // Pause the game while selecting an upgrade
+        Debug.Log("Level Up Menu: Requesting pause");
+        GameManager.Instance.RequestPause(GameManager.PauseReason.LevelUpMenu);
 
         string weaponName = GameObject.Find("PC").GetComponent<WeaponsManager>().GetEquippedWeapon(WeaponType.Primary).getDisplayName();
         isBoomerang = weaponName == "Boomerang";
@@ -73,8 +73,8 @@ public class OfferLevelUp : MonoBehaviour
 
     private void OnDisable()
     {
-        Debug.Log("Time Scale set to 1");
-        Time.timeScale = 1f; // Resume the game when done selecting an upgrade
+        Debug.Log("Level Up Menu: Removing pause");
+        GameManager.Instance.RemovePause(GameManager.PauseReason.LevelUpMenu);
     }
 
     public void SelectLevelUp(int index)

@@ -13,6 +13,8 @@ public class QuestTracker : MonoBehaviour
 
     private bool otherWeaponUsed = false;
 
+    public ScoreTracker scoreTracker;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -84,7 +86,7 @@ public class QuestTracker : MonoBehaviour
     {
         Weapon.OnWeaponUsed += (e) =>
         {
-            if (e.weaponName != "Lightning Strike")
+            if (e.weaponName != "Lightning Strike" && scoreTracker.GetScore() < wackySteve.questCompletionThreshold)
             {
                 otherWeaponUsed = true;
             }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PauseMenuReveal : MonoBehaviour
 {
@@ -14,53 +15,40 @@ public class PauseMenuReveal : MonoBehaviour
 
     private bool isPaused = false;
 
-    void Update()
-    {
-        // Check for Escape key or Menu button (joystick button 7)
-        bool pausePressed = Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.JoystickButton7);
-        
-        if (pausePressed)
-        {
-            // Don't allow pausing if upgrade menu or game over screen is active
-            if (IsOtherMenuActive())
-            {
-                return;
-            }
+    private PlayerInputActions inputActions = null;
 
-            // Toggle pause state
-            if (!isPaused)
-            {
-                Time.timeScale = 0f; // Pause the game
-            } 
-            else
-            {
-                Time.timeScale = 1f; // Unpause the game
-            }
-            
-            isPaused = !isPaused;
-            
-            // Show/hide pause menu children
-            foreach (Transform child in transform)
-            {
-                child.gameObject.SetActive(isPaused);
-            }
+    void Awake()
+    {
+        if (!Platform.IsMobile())
+        {
+            inputActions = new PlayerInputActions();
+            inputActions.Player.Pause.performed += ctx => OnPausePressed();
+            inputActions.Enable();
         }
     }
 
-    private bool IsOtherMenuActive()
+
+    void OnPausePressed()
     {
-        // Check if level up menu is showing
-        if (levelUpMenu != null && levelUpMenu.activeInHierarchy)
-        {
-            return true;
-        }
+        isPaused = !isPaused;
+    }
 
-        // Check if game over screen is showing
-        if (gameOverScreen != null && gameOverScreen.activeInHierarchy)
+    void Update()
+    {
+        // Toggle pause state
+        if (isPaused)
         {
-            return true;
+            GameManager.Instance.RequestPause(GameManager.PauseReason.PauseMenu);
+        } 
+        else
+        {
+            GameManager.Instance.RemovePause(GameManager.PauseReason.PauseMenu);
         }
-
-        return false;
+            
+        // Show/hide pause menu children
+        foreach (Transform child in transform)
+        {
+            child.gameObject.SetActive(isPaused);
+        }
     }
 }

@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class PauseMenuController : MonoBehaviour
 {
-    ScoreTracker scoreTracker;
-
+    public ScoreTracker scoreTracker;
     public GameObject musicSlider;
     public GameObject sfxSlider;
 
@@ -14,8 +13,6 @@ public class PauseMenuController : MonoBehaviour
 
     void Start()
     {
-        scoreTracker = GameObject.Find("Score").GetComponent<ScoreTracker>();
-        
         // Load and apply saved volume settings after other systems initialize
         StartCoroutine(LoadVolumesDelayed());
     }

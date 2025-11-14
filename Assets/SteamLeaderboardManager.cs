@@ -524,8 +524,8 @@ public class SteamLeaderboardManager : MonoBehaviour
 
         SteamAPICall_t globalHandle = SteamUserStats.DownloadLeaderboardEntries(
             result.m_hSteamLeaderboard,
-            ELeaderboardDataRequest.k_ELeaderboardDataRequestGlobalAroundUser,
-            -25, 25
+            ELeaderboardDataRequest.k_ELeaderboardDataRequestGlobal,
+            0, 50
         );
         downloadGlobalCallResults[leaderboardName].Set(globalHandle);
     }
@@ -623,7 +623,9 @@ public class SteamLeaderboardManager : MonoBehaviour
 
         if (globalNeedsUpdate)
         {
-            globalScoreList = SynthesizeScoreData(globalleaderboardEntries, true);
+            var allGlobalScores = SynthesizeScoreData(globalleaderboardEntries, true);
+            // Filter to keep only the best score per user
+            globalScoreList = FilterBestScoresPerUser(allGlobalScores);
             globalDataReady = true;
         }
 
@@ -635,6 +637,25 @@ public class SteamLeaderboardManager : MonoBehaviour
             
             SaveCacheData();
         }
+    }
+
+    private List<ScoreData> FilterBestScoresPerUser(List<ScoreData> allScores)
+    {
+        var bestScoresByUser = new Dictionary<string, ScoreData>();
+
+        foreach (var score in allScores)
+        {
+            if (!bestScoresByUser.ContainsKey(score.playerName))
+            {
+                bestScoresByUser[score.playerName] = score;
+            }
+            else if (score.score > bestScoresByUser[score.playerName].score)
+            {
+                bestScoresByUser[score.playerName] = score;
+            }
+        }
+
+        return bestScoresByUser.Values.OrderByDescending(s => s.score).ToList();
     }
 
     private List<ScoreData> SynthesizeScoreData(Dictionary<string, List<LeaderboardEntry_t>> leaderboardEntries, bool requestUserInfo)

@@ -1,17 +1,20 @@
 using Pathfinding;
+using Steamworks;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
-using Steamworks;
 
 
 public class CharacterSelect : MonoBehaviour
 {
     public Roster roster;
     public MenuController menuController;
+
+    Button selector;
 
     [Header("Menu GameObjects")]
     public List<GameObject> characterGameObjects;
@@ -78,6 +81,9 @@ public class CharacterSelect : MonoBehaviour
             ToggleMystery(characterGameObjects[i], hidden);
             if (hidden)
             {
+                Debug.Log($"Character {ch.name} is hidden.");
+                selector = characterGameObjects[i].transform.Find("Select").GetComponent<Button>();
+                selector.interactable = !hidden;
                 continue;
             }
 
@@ -94,10 +100,12 @@ public class CharacterSelect : MonoBehaviour
                 PlayerPrefs.SetInt(unlockedPrefName, 1);
             }
 
-            // Debug.Log($"Character {ch.name} unlocked: {unlocked}, quest progress: {questProgress}");
+            Debug.Log($"Character {ch.name} unlocked: {unlocked}, quest progress: {questProgress}");
 
-            Button selector = characterGameObjects[i].transform.GetChild(0).GetComponent<Button>();
+            selector = characterGameObjects[i].transform.Find("Select").GetComponent<Button>();
+            Debug.Log($"Found selector {selector.name} for character {ch.name} that is unlocked: {unlocked} with parent {selector.gameObject.transform.parent.name}");
             selector.interactable = unlocked;
+            Debug.Log($"Set selector for { ch.name} to {selector.interactable}");
 
             Transform unlockedTransform = characterGameObjects[i].transform.Find("Unlocked");
             if (unlockedTransform != null)
