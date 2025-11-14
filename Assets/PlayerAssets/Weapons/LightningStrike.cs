@@ -7,11 +7,13 @@ public class LightningStrike : Weapon
 {
     private string strike = "Lightning";
     private string explosion = "Explosion";
-    private int damage = 125;
-    private int aoeDamage = 75;
+    public int damage = 125;
+    public int aoeDamage = 75;
+    public bool MissMicro = false;
 
     private Vector3 destination;
     Collider2D foe;
+    GameObject strikePrefab;
 
     LayerMask enemyLayer;
 
@@ -20,26 +22,17 @@ public class LightningStrike : Weapon
         weaponType = getFinalType();
     }
 
-    private Dictionary<WeaponRarity, int> r_damage = new Dictionary<WeaponRarity, int> {
-        { WeaponRarity.Rare, 150 },
-        { WeaponRarity.Uncommon, 100 },
-        { WeaponRarity.Common, 50 }
-    };
-
-    private Dictionary<WeaponRarity, int> r_aoeDamage = new Dictionary<WeaponRarity, int> {
-        { WeaponRarity.Rare, 150 },
-        { WeaponRarity.Uncommon, 100 },
-        { WeaponRarity.Common, 80 }
-    };
+    public void Start()
+    {
+        string strikeToUse = MissMicro ? "GreyStrike" : "LightningStrikeEffect";
+        strikePrefab = Resources.Load<GameObject>(strikeToUse);
+    }
 
     public override void Equip()
     {
         base.Equip();
 
         enemyLayer = LayerMask.GetMask("Foes");
-
-        damage = r_damage[rarity];
-        aoeDamage = r_aoeDamage[rarity];
     }
 
     public override string getDisplayName()
@@ -73,16 +66,16 @@ public class LightningStrike : Weapon
         Vector3 strikeOffset = new Vector3(0.27f * 0.4f, 10.8f * 0.4f, 0);
 
         // Create the lightning strikeSFX 
-        GameObject lightningStrike = Instantiate(Resources.Load<GameObject>("LightningStrikeEffect"), destination + strikeOffset, Quaternion.identity);
+        GameObject lightningStrike = Instantiate(strikePrefab, destination + strikeOffset, Quaternion.identity);
         Destroy(lightningStrike, 2f);
-        AudioManager.instance.PlaySfx(strike);
-        Invoke("LightningExplosion", 0.5f);
+        AudioManager.instance.PlaySfx(MissMicro ? strike : "StrikeFast");
+        Invoke("LightningExplosion", MissMicro ? 0.4f : 0.5f);
 
     }
 
     private void LightningExplosion()
     {
-        AudioManager.instance.PlaySfx(explosion);
+        AudioManager.instance.PlaySfx(explosion, 0.8f);
         
 
         // Get all foes directly contacted
@@ -100,7 +93,7 @@ public class LightningStrike : Weapon
     private void LightningAoE()
     {
         // Get all foes in the AoE
-        Collider2D[] foes = Physics2D.OverlapCircleAll(destination, 2f, enemyLayer);
+        Collider2D[] foes = Physics2D.OverlapCircleAll(destination, MissMicro ? 2.4f : 2f, enemyLayer);
         foreach (Collider2D foe in foes)
         {
             if (foe.tag == "Foe")

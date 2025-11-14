@@ -12,11 +12,13 @@ public class SniperBulletScript : BulletScript
     {
         timer += Time.deltaTime;
 
-        if (timer >= 0.10f)
+        float effectScale = bonusDamagePerSecond > 400 ?  1f : 1.25f;
+
+        if (timer >= 0.10f * effectScale)
         {
             transform.GetChild(1).gameObject.SetActive(true);
         }
-        if (timer >= 0.14f)
+        if (timer >= 0.14f * effectScale)
         {
             hitEffect.transform.localScale = new Vector3(0.15f, 0.15f, 0.15f);
         }

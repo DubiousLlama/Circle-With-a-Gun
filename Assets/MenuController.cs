@@ -21,13 +21,6 @@ public class MenuController : MonoBehaviour
     int doTutorial;
     public void Awake()
     {
-        if (!PlayerPrefs.HasKey("HighScore"))
-        {
-            PlayerPrefs.SetInt("HighScore", 0);
-        }
-
-        HighScore.GetComponent<TextMeshProUGUI>().text = "High Score: " + PlayerPrefs.GetInt("HighScore");
-
         // Subscribe to Steam leaderboard updates
         SteamLeaderboardManager.OnFriendLeaderboardsDownloaded += UpdateHighScoreFromSteam;
     }
@@ -44,6 +37,13 @@ public class MenuController : MonoBehaviour
             menuCanvas.SetActive(false);
             characterSelectCanvas.SetActive(true);
         }
+
+        if (!PlayerPrefs.HasKey("HighScore"))
+        {
+            PlayerPrefs.SetInt("HighScore", 0);
+        }
+
+        HighScore.GetComponent<TextMeshProUGUI>().text = "High Score: " + PlayerPrefs.GetInt("HighScore");
     }
 
     public void QuitGame()
@@ -228,10 +228,15 @@ public class MenuController : MonoBehaviour
 
         // The list is already sorted descending, so the first entry is the highest score
         int highestScore = personalScores[0].score;
+        if (highestScore <= 0)
+        {
+            Debug.Log("No valid high score found in Steam leaderboards");
+            return;
+        }
 
         // Update PlayerPref with the highest score from Steam
-        SaveManager.instance.SetInt("HighScore", highestScore);
-        SaveManager.instance.Save();
+        PlayerPrefs.SetInt("HighScore", highestScore);
+        PlayerPrefs.Save();
         
         // Update the UI display with the new high score
         HighScore.GetComponent<TextMeshProUGUI>().text = "High Score: " + highestScore;

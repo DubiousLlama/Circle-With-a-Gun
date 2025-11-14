@@ -12,6 +12,7 @@ public class TooltipScript : MonoBehaviour
     private Vector3 originalPosition;
     private RectTransform tooltipRect;
     private RectTransform displayRect;
+    public bool flip = false;
 
     private Vector2 offset;
 
@@ -37,6 +38,11 @@ public class TooltipScript : MonoBehaviour
         }
 
         offset = new Vector2(displayRect.rect.width + 50f - displayRect.anchoredPosition.x, -displayRect.rect.height / 2 - 20f);
+
+        if (flip)
+        {
+            offset = new Vector2(-displayRect.rect.width - 50f - displayRect.anchoredPosition.x, -displayRect.rect.height / 2 - 20f);
+        }
 
         // Store the original position of the tooltip
         originalPosition = tooltipRect.localPosition;

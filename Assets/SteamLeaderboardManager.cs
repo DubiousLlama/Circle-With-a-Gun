@@ -21,7 +21,7 @@ public class SteamLeaderboardManager : MonoBehaviour
         { "High Score: Specialist", "Specialist" },
         { "High Score: Shock Trooper", "ShockTrooper" },
         { "High Score: Wacky Steve", "WackySteve" },
-        { "High Score: Miss Microtransaction", "MissMicrotransaction" },
+        { "High Score: Miss Microtransaction", "MissMicro" },
     };
 
     private Dictionary<string, SteamLeaderboard_t> leaderboardHandles = new Dictionary<string, SteamLeaderboard_t>();
