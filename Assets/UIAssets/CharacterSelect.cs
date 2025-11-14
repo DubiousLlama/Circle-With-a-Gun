@@ -23,19 +23,19 @@ public class CharacterSelect : MonoBehaviour
     void Start()
     {
         // Ensure the first character is always unlocked
-        PlayerPrefs.SetInt(roster.allCharacters[0].prefName + "Unlocked", 1);
+        SaveManager.instance.SetInt(roster.allCharacters[0].prefName + "Unlocked", 1);
 
         // Ensure MM, Commando, Bombs, and Kevin are revealed from the start
-        PlayerPrefs.SetInt(roster.allCharacters[0].prefName + "Hidden", 1);
-        PlayerPrefs.SetInt(roster.allCharacters[1].prefName + "Hidden", 1);
-        PlayerPrefs.SetInt(roster.allCharacters[2].prefName + "Hidden", 1);
-        PlayerPrefs.SetInt(roster.allCharacters[8].prefName + "Hidden", 1);
+        SaveManager.instance.SetInt(roster.allCharacters[0].prefName + "Hidden", 1);
+        SaveManager.instance.SetInt(roster.allCharacters[1].prefName + "Hidden", 1);
+        SaveManager.instance.SetInt(roster.allCharacters[2].prefName + "Hidden", 1);
+        SaveManager.instance.SetInt(roster.allCharacters[8].prefName + "Hidden", 1);
         updateChars();
     }
 
     public void ChangeSelection(int selected)
     {
-        PlayerPrefs.SetInt("SelectedCharacter", selected);
+        SaveManager.instance.SetInt("SelectedCharacter", selected);
         menuController.CharacterSelected();
     }
 
@@ -68,8 +68,8 @@ public class CharacterSelect : MonoBehaviour
         
         if (MMUnlocked)
         {
-            PlayerPrefs.SetInt(roster.allCharacters[8].prefName + "Unlocked", 1);
-            PlayerPrefs.SetInt(roster.allCharacters[8].prefName + "Hidden", 1);
+            SaveManager.instance.SetInt(roster.allCharacters[8].prefName + "Unlocked", 1);
+            SaveManager.instance.SetInt(roster.allCharacters[8].prefName + "Hidden", 1);
         }
 
         for (int i = 0; i < characterGameObjects.Count; i++)
@@ -77,7 +77,7 @@ public class CharacterSelect : MonoBehaviour
             Character ch = roster.allCharacters[i];
 
             revealCriteria();
-            bool hidden = PlayerPrefs.GetInt(ch.prefName + "Hidden", 0) == 0;
+            bool hidden = SaveManager.instance.GetInt(ch.prefName + "Hidden", 0) == 0;
             ToggleMystery(characterGameObjects[i], hidden);
             if (hidden)
             {
@@ -89,15 +89,15 @@ public class CharacterSelect : MonoBehaviour
 
             string unlockedPrefName = ch.prefName + "Unlocked";
             string questPrefName = ch.prefName + "Quest";
-            bool unlocked = PlayerPrefs.GetInt(unlockedPrefName, 0) == 1;
-            int questProgress = PlayerPrefs.GetInt(questPrefName, 0);
+            bool unlocked = SaveManager.instance.GetInt(unlockedPrefName, 0) == 1;
+            int questProgress = SaveManager.instance.GetInt(questPrefName, 0);
             int questMaximum = ch.unlockQuest != null ? ch.unlockQuest.questCompletionThreshold : 1;
 
 
             if (ch.unlockQuest != null && ch.unlockQuest.CheckCompletion() && !unlocked)
             {
                 unlocked = true;
-                PlayerPrefs.SetInt(unlockedPrefName, 1);
+                SaveManager.instance.SetInt(unlockedPrefName, 1);
             }
 
             Debug.Log($"Character {ch.name} unlocked: {unlocked}, quest progress: {questProgress}");
@@ -154,15 +154,15 @@ public class CharacterSelect : MonoBehaviour
 
     public void unhideIfUnlocked(int keyCharIndex, int charToUnhideIndex)
     {
-        bool unlocked = PlayerPrefs.GetInt(roster.allCharacters[keyCharIndex].prefName + "Unlocked", 0) == 1;
+        bool unlocked = SaveManager.instance.GetInt(roster.allCharacters[keyCharIndex].prefName + "Unlocked", 0) == 1;
         if (unlocked)
         {
-            PlayerPrefs.SetInt(roster.allCharacters[charToUnhideIndex].prefName + "Hidden", 1);
+            SaveManager.instance.SetInt(roster.allCharacters[charToUnhideIndex].prefName + "Hidden", 1);
         }
         else
         {
-            PlayerPrefs.SetInt(roster.allCharacters[charToUnhideIndex].prefName + "Quest", 0);
-            PlayerPrefs.SetInt(roster.allCharacters[charToUnhideIndex].prefName + "Hidden", 0);
+            SaveManager.instance.SetInt(roster.allCharacters[charToUnhideIndex].prefName + "Quest", 0);
+            SaveManager.instance.SetInt(roster.allCharacters[charToUnhideIndex].prefName + "Hidden", 0);
         }
     }
 

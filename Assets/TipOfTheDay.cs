@@ -31,10 +31,10 @@ public class TipOfTheDay : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        int tipIndex = PlayerPrefs.GetInt("TipIndex", 0);
+        int tipIndex = SaveManager.instance.GetInt("TipIndex", 0);
         tipTextObject = GetComponent<TextMeshProUGUI>();
         tipTextObject.text = "Tip: " + tips[tipIndex];
         tipIndex = (tipIndex + 1) % tips.Count;
-        PlayerPrefs.SetInt("TipIndex", tipIndex);
+        SaveManager.instance.SetInt("TipIndex", tipIndex);
     }
 }

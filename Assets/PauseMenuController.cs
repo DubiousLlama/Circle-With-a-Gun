@@ -33,7 +33,7 @@ public class PauseMenuController : MonoBehaviour
     private void LoadAndApplyVolumes()
     {
         // Load saved music volume
-        float musicVol = PlayerPrefs.GetFloat("musicVol", 1f);
+        float musicVol = SaveManager.instance.GetFloat("musicVol", 1f);
         musicSlider.GetComponent<UnityEngine.UI.Slider>().value = musicVol;
         
         if (GameMusic.instance != null)
@@ -42,7 +42,7 @@ public class PauseMenuController : MonoBehaviour
         }
         
         // Load saved SFX volume
-        float sfxVol = PlayerPrefs.GetFloat("sfxVol", 1f);
+        float sfxVol = SaveManager.instance.GetFloat("sfxVol", 1f);
         sfxSlider.GetComponent<UnityEngine.UI.Slider>().value = sfxVol;
         
         if (AudioManager.instance != null)
@@ -65,14 +65,14 @@ public class PauseMenuController : MonoBehaviour
     {
         float volume = musicSlider.GetComponent<UnityEngine.UI.Slider>().value;
         GameMusic.instance.musicVolume = volTransform(volume);
-        PlayerPrefs.SetFloat("musicVol", volume);
+        SaveManager.instance.SetFloat("musicVol", volume);
     }
 
     public void OnSFXVolumeChange()
     {
         float volume = sfxSlider.GetComponent<UnityEngine.UI.Slider>().value;
         AudioManager.instance.sfxVol = volTransform(volume);
-        PlayerPrefs.SetFloat("sfxVol", volume);
+        SaveManager.instance.SetFloat("sfxVol", volume);
     }
 
     float volTransform(float x)

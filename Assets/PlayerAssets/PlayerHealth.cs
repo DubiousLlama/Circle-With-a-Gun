@@ -97,9 +97,9 @@ public class PlayerHealth : MonoBehaviour
             {
                 gameOver = true;
                 scoreTracker.GameOver();
-                if (scoreTracker.GetScore() > PlayerPrefs.GetInt("HighScore"))
+                if (scoreTracker.GetScore() > SaveManager.instance.GetInt("HighScore"))
                 {
-                    PlayerPrefs.SetInt("HighScore", scoreTracker.GetScore());
+                    SaveManager.instance.SetInt("HighScore", scoreTracker.GetScore());
                 }
                 gameMusic.PlayEventTrack("death");
                 GameManager.Instance.RequestPause(GameManager.PauseReason.GameOver);

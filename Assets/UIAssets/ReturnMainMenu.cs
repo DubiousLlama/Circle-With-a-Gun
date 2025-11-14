@@ -29,7 +29,9 @@ public class ReturnMainMenu : MonoBehaviour
     /// </summary>
     public void OnGameOverScreenShown()
     {
-        if (!highScoreCheckStarted)
+        SaveManager.instance.Save();
+
+		if (!highScoreCheckStarted)
         {
             highScoreCheckStarted = true;
             Debug.Log("Game over screen shown, starting high score check and scene preload...");
@@ -156,7 +158,7 @@ public class ReturnMainMenu : MonoBehaviour
         int finalScore = scoreTracker.GetScore();
 
         // Get the selected character from PlayerPrefs
-        int selectedCharacterIndex = PlayerPrefs.GetInt("SelectedCharacter", 0);
+        int selectedCharacterIndex = SaveManager.instance.GetInt("SelectedCharacter", 0);
         
         // Get the character prefName from the roster
         if (roster == null || selectedCharacterIndex >= roster.allCharacters.Count)

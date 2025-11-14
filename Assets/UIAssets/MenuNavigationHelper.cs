@@ -82,12 +82,19 @@ public class MenuNavigationHelper : MonoBehaviour
         if (mouseInputDetected)
         {
             wasMouseUsed = true;
+
+            // Deselect any selected button when mouse is used
+            if (EventSystem.current != null && EventSystem.current.currentSelectedGameObject != null)
+            {
+                EventSystem.current.SetSelectedGameObject(null);
+            }
         }
     }
 
     private IEnumerator SelectFirstButtonDelayed()
     {
-        yield return null; // Wait one frame
+        yield return null;
+        yield return null;
         TrySelectButton();
     }
 

@@ -19,7 +19,7 @@ public class Quest : ScriptableObject
             progress = questCompletionThreshold;
 
         if (progress > GetProgress())
-            PlayerPrefs.SetInt(unlockCharacter.prefName + "Quest", progress);
+            SaveManager.instance.SetInt(unlockCharacter.prefName + "Quest", progress);
     }
 
     public virtual void IncrementProgress(int increment = 1)
@@ -39,6 +39,6 @@ public class Quest : ScriptableObject
 
     public int GetProgress()
     {
-        return PlayerPrefs.GetInt(unlockCharacter.prefName + "Quest", 0);
+        return SaveManager.instance.GetInt(unlockCharacter.prefName + "Quest", 0);
     }
 }

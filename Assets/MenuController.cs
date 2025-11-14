@@ -34,9 +34,9 @@ public class MenuController : MonoBehaviour
 
     void Start()
     {
-        doTutorial = PlayerPrefs.GetInt("doTutorial", 1);
+        doTutorial = SaveManager.instance.GetInt("doTutorial", 1);
         tutorialToggle.GetComponent<Toggle>().isOn = doTutorial == 1;
-        Debug.Log("Tutorial selected:" + PlayerPrefs.GetInt("doTutorial"));
+        Debug.Log("Tutorial selected:" + SaveManager.instance.GetInt("doTutorial"));
 
         if (GameManager.Instance.ShowCharacterSelectOnMenuLoad)
         {
@@ -56,7 +56,7 @@ public class MenuController : MonoBehaviour
         if (doTutorial == 1)
         {
             // Tutorial mode: set character to Kevin (index 0) and load directly
-            PlayerPrefs.SetInt("SelectedCharacter", 0);
+            SaveManager.instance.SetInt("SelectedCharacter", 0);
             menuCanvas.SetActive(false);
             loadingScreen.SetActive(true);
             StartCoroutine(LoadSceneAsync(1));
@@ -195,8 +195,8 @@ public class MenuController : MonoBehaviour
 
     public void toggleTutorial()
     {
-        int flag = (PlayerPrefs.GetInt("doTutorial") == 1) ? 0 : 1;
-        PlayerPrefs.SetInt("doTutorial", flag);
+        int flag = (SaveManager.instance.GetInt("doTutorial") == 1) ? 0 : 1;
+        SaveManager.instance.SetInt("doTutorial", flag);
     }
 
     private void OnDestroy()
@@ -230,8 +230,8 @@ public class MenuController : MonoBehaviour
         int highestScore = personalScores[0].score;
 
         // Update PlayerPref with the highest score from Steam
-        PlayerPrefs.SetInt("HighScore", highestScore);
-        PlayerPrefs.Save();
+        SaveManager.instance.SetInt("HighScore", highestScore);
+        SaveManager.instance.Save();
         
         // Update the UI display with the new high score
         HighScore.GetComponent<TextMeshProUGUI>().text = "High Score: " + highestScore;

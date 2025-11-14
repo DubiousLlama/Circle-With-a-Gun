@@ -55,7 +55,7 @@ public class QuestTracker : MonoBehaviour
         // Set score at end of level if character is Commando
         ScoreTracker.FinalScore += (e) =>
         {
-            if(PlayerPrefs.GetInt("SelectedCharacter", 0) == 2)
+            if(SaveManager.instance.GetInt("SelectedCharacter", 0) == 2)
             {
                 specialist.SetProgress(e.finalScore);
             }
@@ -65,7 +65,7 @@ public class QuestTracker : MonoBehaviour
         // Set score at end of level if character is Specialist
         ScoreTracker.FinalScore += (e) =>
         {
-            if (PlayerPrefs.GetInt("SelectedCharacter", 0) == 5)
+            if (SaveManager.instance.GetInt("SelectedCharacter", 0) == 5)
             {
                 shockTrooper.SetProgress(e.finalScore);
             }
