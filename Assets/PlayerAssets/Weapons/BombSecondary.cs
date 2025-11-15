@@ -38,13 +38,13 @@ public class BombSecondary : Weapon
     public override void Fire()
     {
         // get a random direction within 8 degrees of the player's aim direction
-        Vector3 aimDirection = firePoint.up;
+        Vector3 aimDirection = firePoint[0].up;
         //float angleOffset = Random.Range(-8f, 8f);
 
         //Vector3 rotatedDirection = Quaternion.AngleAxis(angleOffset, Vector3.forward) * aimDirection;
 
         // Create the bomb projectile
-        GameObject bomb = Instantiate(bombProjectilePrefab, firePoint.position + bombOffset, Quaternion.identity);
+        GameObject bomb = Instantiate(bombProjectilePrefab, firePoint[0].position + bombOffset, Quaternion.identity);
         BombLogic bl = bomb.GetComponent<BombLogic>();
         bl.InitalizeBomb(aimDirection, damage, blastRadius, moveSpeed * 75, Random.Range(250, 500), blastRadius);
     }

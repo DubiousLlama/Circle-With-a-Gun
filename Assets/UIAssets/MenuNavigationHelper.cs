@@ -22,13 +22,10 @@ public class MenuNavigationHelper : MonoBehaviour
     public bool recoverFromMouseInput = true;
 
     private bool hasSelectedButton = false;
-    private bool wasMouseUsed = false;
-    private bool gamepadInputDetected = false;
 
     private void OnEnable()
     {
         hasSelectedButton = false;
-        wasMouseUsed = false;
         // Wait a frame for the menu to fully initialize
         StartCoroutine(SelectFirstButtonDelayed());
     }
@@ -68,7 +65,6 @@ public class MenuNavigationHelper : MonoBehaviour
             if (EventSystem.current.currentSelectedGameObject == null || EventSystem.current.currentSelectedGameObject.activeInHierarchy == false)
             {
                 TrySelectButton();
-                wasMouseUsed = false;
             }
         }
     }
@@ -82,8 +78,6 @@ public class MenuNavigationHelper : MonoBehaviour
         // Track if mouse is being used
         if (mouseInputDetected)
         {
-            wasMouseUsed = true;
-
             // Deselect any selected button when mouse is used
             if (EventSystem.current != null && EventSystem.current.currentSelectedGameObject != null)
             {

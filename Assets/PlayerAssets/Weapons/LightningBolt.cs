@@ -50,14 +50,14 @@ public class LightningBolt : Weapon
 
     public override void Fire()
     {
-        Quaternion rot = firePoint.rotation * Quaternion.Euler(0, 0, 90);
+        Quaternion rot = firePoint[0].rotation * Quaternion.Euler(0, 0, 90);
 
         Vector3 offset = new Vector3(strikePrefab.GetComponent<BoxCollider2D>().size.x * 0.5f, 0, 1);
         // Rotate the offset by the firepoint's rotation
         offset = rot * offset;
 
 
-        GameObject strike = Instantiate(strikePrefab, firePoint.position + offset, rot);
+        GameObject strike = Instantiate(strikePrefab, firePoint[0].position + offset, rot);
 
         Collider2D collider = strike.GetComponent<Collider2D>();
 

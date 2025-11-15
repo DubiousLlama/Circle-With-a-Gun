@@ -73,13 +73,23 @@ public class Boomerang : Weapon
 
     public override void Fire()
     {
-        GameObject boomerang = Instantiate(boomerangPrefab, firePoint.position, firePoint.rotation);
-        BoomerScript bs = boomerang.GetComponent<BoomerScript>();
-        
-        bs.Launch(firePoint.up, speed);
-        audioManager.PlaySfx(sfx);
+        int i = 0;
+        foreach (Transform fp in firePoint)
+        {
+            GameObject boomerang = Instantiate(boomerangPrefab, fp.position, fp.rotation);
+            BoomerScript bs = boomerang.GetComponent<BoomerScript>();
 
-        bs.damage = damage;
-        bs.lifetime = range;
+            bs.Launch(fp.up, speed);
+            audioManager.PlaySfx(sfx);
+
+            bs.damage = (i > 0) ? damage/2 : damage;
+            if ( i > 0 )
+            {
+                // Shrink the boomerang for additional projectiles
+                boomerang.transform.localScale *= 0.66f;
+            }
+            bs.lifetime = range;
+            i++;
+        }
     }
 }

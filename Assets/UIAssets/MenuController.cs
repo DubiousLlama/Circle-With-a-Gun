@@ -56,7 +56,7 @@ public class MenuController : MonoBehaviour
         if (doTutorial == 1)
         {
             // Tutorial mode: set character to Kevin (index 0) and load directly
-            SaveManager.instance.SetInt("SelectedCharacter", 0);
+            PlayerPrefs.SetInt("SelectedCharacter", 0);
             menuCanvas.SetActive(false);
             loadingScreen.SetActive(true);
             StartCoroutine(LoadSceneAsync(1));

@@ -42,7 +42,7 @@ public class CharacterSelect : MonoBehaviour
 
     public void ChangeSelection(int selected)
     {
-        SaveManager.instance.SetInt("SelectedCharacter", selected);
+        PlayerPrefs.SetInt("SelectedCharacter", selected);
         menuController.CharacterSelected();
     }
 

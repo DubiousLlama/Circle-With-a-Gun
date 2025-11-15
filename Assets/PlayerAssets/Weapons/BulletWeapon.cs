@@ -55,10 +55,10 @@ public abstract class BulletWeapon : Weapon
     /// <param name="position">Position to spawn the bullet</param>
     /// <param name="rotation">Rotation of the bullet</param>
     /// <returns>The configured bullet GameObject</returns>
-    protected virtual GameObject CreateBullet(Vector3 position, Quaternion rotation)
+    protected virtual GameObject CreateBullet(Vector3 position, Quaternion rotation, int i)
     {
         GameObject bullet = Instantiate(bulletPrefab, position, rotation);
-        ConfigureBullet(bullet);
+        ConfigureBullet(bullet, i);
         return bullet;
     }
 
@@ -66,14 +66,14 @@ public abstract class BulletWeapon : Weapon
     /// Configures a bullet with standard properties (damage, pierce, physics)
     /// </summary>
     /// <param name="bullet">The bullet GameObject to configure</param>
-    protected virtual void ConfigureBullet(GameObject bullet)
+    protected virtual void ConfigureBullet(GameObject bullet, int i)
     {
         Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
         BulletScript bs = bullet.GetComponent<BulletScript>();
 
         if (bs != null)
         {
-            bs.damage = damage;
+            bs.damage = (i > 0) ? damage/2 : damage;
 
             if (pierceCount > 0)
             {
@@ -87,7 +87,11 @@ public abstract class BulletWeapon : Weapon
             Debug.LogWarning("BulletScript component not found on bullet prefab.");
         }
 
-
+        if (i > 0)
+        {
+            // Shink the bullet to half size for additional bullets
+            bullet.transform.localScale *= 0.75f;
+        }
 
         if (rb != null)
         {
@@ -105,12 +109,17 @@ public abstract class BulletWeapon : Weapon
 
     public override void Fire()
     {
-        FireBullets();
+        int i = 0;
+        foreach (Transform fp in firePoint)
+        {
+            FireBullets(fp, i);
+            i++;
+        }
         PlayFireSound();
     }
 
     /// <summary>
     /// Abstract method that must be implemented by child classes to define their specific firing pattern
     /// </summary>
-    protected abstract void FireBullets();
+    protected abstract void FireBullets(Transform fp, int i);
 }

@@ -26,8 +26,10 @@ public class OfferLevelUp : MonoBehaviour
 
     bool isShotgun = false;
     bool isBoomerang = false;
-    List<string> noBoomerang = new List<string> { "Multishot", "Wallbounce" };
-    List<string> noShotgun = new List<string> {"Wallbounce" };
+    bool isTeleport = false;
+    List<string> noBoomerang = new List<string> { "WallBounce", "PiercingShots"};
+    List<string> noShotgun = new List<string> { "WallBounce", "PiercingShots", "DiagonalShots" };
+    List<string> noTeleport = new List<string> { "SecondaryHeal" };
     List<Upgrade> allUpgrades = null;
     Dictionary<Upgrade, float> weightedUpgrades = new Dictionary<Upgrade, float>();
     List<string> currentUpgrades = new List<string>();
@@ -35,6 +37,10 @@ public class OfferLevelUp : MonoBehaviour
     Upgrade[] offeredUpgrades = new Upgrade[3];
 
     public static event Action LevelUpSelected;
+
+#if UNITY_EDITOR
+    private string forceUpgrade = "ZeusError";
+#endif
 
     // Start is called before the first frame update
     void Awake()
@@ -51,9 +57,21 @@ public class OfferLevelUp : MonoBehaviour
             allUpgrades = new List<Upgrade>(Resources.LoadAll<Upgrade>("Upgrades"));
         }
 
+        int chararcter = PlayerPrefs.GetInt("SelectedCharacter", 0);
+        isShotgun = (chararcter == 4 || chararcter == 6);
+        isBoomerang = (chararcter == 7);
+        isTeleport = (chararcter == 5 || chararcter == 6);
+
         SetupUpgradeList();
         for (int i = 0; i < 3; i++)
         {
+#if UNITY_EDITOR
+            if (i == 0 & forceUpgrade != "")
+            {
+                offeredUpgrades[i] = allUpgrades.Find(u => u.name == forceUpgrade);
+                continue;
+            }
+#endif
             offeredUpgrades[i] = GetRandomUpgrade();
         }
 
@@ -65,10 +83,6 @@ public class OfferLevelUp : MonoBehaviour
 
         Debug.Log("Level Up Menu: Requesting pause");
         GameManager.Instance.RequestPause(GameManager.PauseReason.LevelUpMenu);
-
-        string weaponName = GameObject.Find("PC").GetComponent<WeaponsManager>().GetEquippedWeapon(WeaponType.Primary).getDisplayName();
-        isBoomerang = weaponName == "Boomerang";
-        isShotgun = weaponName == "Shotgun";
     }
 
     private void OnDisable()
@@ -171,6 +185,10 @@ public class OfferLevelUp : MonoBehaviour
                 continue;
             }
             if (noShotgun.Contains(up.name) && isShotgun)
+            {
+                continue;
+            }
+            if (noTeleport.Contains(up.name) && isTeleport)
             {
                 continue;
             }

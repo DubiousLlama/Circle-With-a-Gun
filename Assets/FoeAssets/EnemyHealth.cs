@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UIElements;
 
 public class EnemyHealth : MonoBehaviour
 {
@@ -51,6 +52,13 @@ public class EnemyHealth : MonoBehaviour
         public GameObject enemy;
     }
 
+    public static event Action<OnDamageEventArgs> FoeDamaged;
+    public class OnDamageEventArgs : EventArgs
+    {
+        public Transform position;
+    }
+    OnDamageEventArgs recentFoeDamaged = new OnDamageEventArgs();
+
     void Start()
     {
         GameObject spawner = GameObject.Find("Spawner");
@@ -61,6 +69,9 @@ public class EnemyHealth : MonoBehaviour
     public void TakeDamage(int damage)
     {
         health -= damage;
+
+        recentFoeDamaged.position = transform;
+        FoeDamaged?.Invoke(recentFoeDamaged);
 
         if (health <= threshold1)
         {

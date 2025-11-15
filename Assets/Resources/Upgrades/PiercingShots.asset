@@ -15,9 +15,10 @@ MonoBehaviour:
   upgradeName: PiercingShots
   displayName: Piercing Shots
   description: Allows your bullets to hit multiple foes.
-  rarity: 1
+  rarity: 2
   requires: []
   prevents:
   - Multishot
+  - DiagonalShots
   - WallBounce
   weight: 1

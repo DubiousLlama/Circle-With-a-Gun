@@ -38,23 +38,23 @@ public class Shotgun : BulletWeapon
         bulletPrefab = Resources.Load<GameObject>("Bullet");
     }
 
-    protected override void FireBullets()
+    protected override void FireBullets(Transform firePoint, int i)
     {
         float spreadAngleChange = spread / (numBullets-1);
         float startAngle = -spread / 2;
 
-        for (int i = 0; i < numBullets; i++)
+        for (int n = 0; n < numBullets; n++)
         {
-            FireSingleBullet(startAngle + spreadAngleChange * i);
+            FireSingleBullet(startAngle + spreadAngleChange * n, firePoint, i);
         }
     }
 
-    private void FireSingleBullet(float rot)
+    private void FireSingleBullet(float rot, Transform firePoint, int i)
     {
         // The bullet angle is the rotation of the firepoint modified by the "rot" parameter
         Quaternion bulletRotation = firePoint.rotation * Quaternion.Euler(0, 0, rot);
 
-        GameObject bullet = CreateBullet(firePoint.position, bulletRotation);
+        GameObject bullet = CreateBullet(firePoint.position, bulletRotation, i);
         SpriteRenderer sr = bullet.GetComponent<SpriteRenderer>();
 
         if (sr != null)

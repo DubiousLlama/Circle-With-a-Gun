@@ -19,6 +19,6 @@ MonoBehaviour:
   rarity: 1
   requires: []
   prevents:
-  - Multishot
   - PiercingShots
+  - DiagonalShots
   weight: 0.9

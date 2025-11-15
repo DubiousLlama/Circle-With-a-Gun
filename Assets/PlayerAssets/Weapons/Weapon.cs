@@ -49,7 +49,7 @@ public class Weapon : MonoBehaviour
     protected AudioManager audioManager;
     protected PlayerStats playerStats;
     protected PlayerMovement playerMovement;
-    protected Transform firePoint;
+    public List<Transform> firePoint;
     protected RechargeBarController barController;
     
     private bool wasOnCooldown = false;
@@ -88,7 +88,7 @@ public class Weapon : MonoBehaviour
 
         audioManager = AudioManager.instance;
         playerStats = transform.parent.GetComponent<PlayerStats>();
-        firePoint = transform.parent.Find("FirePoint");
+        firePoint.Add(transform.parent.Find("FirePoint"));
         playerMovement = transform.parent.GetComponent<PlayerMovement>();
 
         GameObject rechargeBar = GameObject.Find("RechargeBar");
@@ -122,7 +122,7 @@ public class Weapon : MonoBehaviour
         } else if (burstMode && !isBursting)
         {
             isBursting = true;
-            cooldownRemaining = cooldown * 1.4f;
+            cooldownRemaining = cooldown * 1.2f;
         }
         OnWeaponUsed?.Invoke(new OnWeaponUsedArgs { weaponName = getDisplayName(), weaponType = getFinalType() });
     }

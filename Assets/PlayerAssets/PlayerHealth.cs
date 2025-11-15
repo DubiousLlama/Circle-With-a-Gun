@@ -55,10 +55,13 @@ public class PlayerHealth : MonoBehaviour
         }
     }
 
-    public void Heal(float heal)
+    public void Heal(float heal, bool triggerRegen = true)
     {
         health += heal;
-        regenTimer = regenDelay + 0.01f;
+        if (triggerRegen)
+        {
+            regenTimer = regenDelay + 0.01f;
+        }
     }
 
     void Update()

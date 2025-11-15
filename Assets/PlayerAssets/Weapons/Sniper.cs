@@ -31,16 +31,16 @@ public class Sniper : BulletWeapon
         Debug.Log("Weapon equipped: " + gameObject.name);
     }
 
-    protected override void ConfigureBullet(GameObject bullet)
+    protected override void ConfigureBullet(GameObject bullet, int i)
     {
-        base.ConfigureBullet(bullet);
+        base.ConfigureBullet(bullet, i);
 
         SniperBulletScript bs = bullet.GetComponent<SniperBulletScript>();
-        bs.bonusDamagePerSecond = bonusDamagePerSecond;
+        bs.bonusDamagePerSecond = (i > 0) ? bonusDamagePerSecond/2 : bonusDamagePerSecond;
     }
 
-    protected override void FireBullets()
+    protected override void FireBullets(Transform firePoint, int i)
     {
-        CreateBullet(firePoint.position, firePoint.rotation);
+        CreateBullet(firePoint.position, firePoint.rotation, i);
     }
 }

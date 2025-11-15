@@ -16,9 +16,9 @@ MonoBehaviour:
   displayName: Burst Mode
   description: Fire an additional projectile each time you attack with your primary
     weapon.
-  rarity: 1
+  rarity: 2
   requires: []
   prevents:
   - PiercingShots
-  - WallBounce
+  - DiagonalShots
   weight: 1.2

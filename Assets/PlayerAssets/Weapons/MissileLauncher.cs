@@ -30,10 +30,10 @@ public class MissileLauncher : Weapon
 
     public override void Fire()
     {
-        Vector3 aimDirection = firePoint.up;
+        Vector3 aimDirection = firePoint[0].up;
 
         // Create the bomb projectile
-        GameObject missile = Instantiate(missileProjectilePrefab, firePoint.position, firePoint.rotation);
+        GameObject missile = Instantiate(missileProjectilePrefab, firePoint[0].position, firePoint[0].rotation);
         MissileLogic ml = missile.GetComponent<MissileLogic>();
         ml.InitalizeMissile(dmg: damage, radius: blastRadius, move: moveSpeed, homing: true);
     }

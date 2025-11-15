@@ -159,7 +159,7 @@ public class ReturnMainMenu : MonoBehaviour
         int finalScore = scoreTracker.GetScore();
 
         // Get the selected character from PlayerPrefs
-        int selectedCharacterIndex = SaveManager.instance.GetInt("SelectedCharacter", 0);
+        int selectedCharacterIndex = PlayerPrefs.GetInt("SelectedCharacter", 0);
         
         // Get the character prefName from the roster
         if (roster == null || selectedCharacterIndex >= roster.allCharacters.Count)

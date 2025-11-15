@@ -47,10 +47,10 @@ public class PauseMenuReveal : MonoBehaviour
         // Toggle pause state
         if (isPaused)
         {
-            GameManager.Instance.RequestPause(GameManager.PauseReason.PauseMenu);
+            if (GameManager.Instance != null) { GameManager.Instance.RequestPause(GameManager.PauseReason.PauseMenu); }
             EventSystem.current.sendNavigationEvents = true;
         } 
-        else
+        else if (GameManager.Instance != null)
         {
             GameManager.Instance.RemovePause(GameManager.PauseReason.PauseMenu);
         }

@@ -41,8 +41,8 @@ public class RapidFire : BulletWeapon
         Debug.Log("Weapon equipped: " + gameObject.name);
     }
 
-    protected override void FireBullets()
+    protected override void FireBullets(Transform firePoint, int i)
     {
-        CreateBullet(firePoint.position, firePoint.rotation);
+        CreateBullet(firePoint.position, firePoint.rotation, i);
     }
 }
