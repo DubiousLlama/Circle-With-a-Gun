@@ -1,17 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PauseMenuReveal : MonoBehaviour
 {
     // When the escape key is pressed, reveal the pause menu (set all children active)
     // If the pause menu is already active, hide it (set all children inactive)
     // Don't constantly toggle it while the key is held down
-
-    [Header("References")]
-    public GameObject levelUpMenu;
-    public GameObject gameOverScreen;
 
     private bool isPaused = false;
 
@@ -27,8 +25,19 @@ public class PauseMenuReveal : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        isPaused = false;
+        Update();
+    }
 
-    void OnPausePressed()
+    private void OnDisable()
+    {
+        isPaused = false;
+        Update();
+    }
+
+    public void OnPausePressed()
     {
         isPaused = !isPaused;
     }
@@ -39,6 +48,7 @@ public class PauseMenuReveal : MonoBehaviour
         if (isPaused)
         {
             GameManager.Instance.RequestPause(GameManager.PauseReason.PauseMenu);
+            EventSystem.current.sendNavigationEvents = true;
         } 
         else
         {
@@ -50,5 +60,6 @@ public class PauseMenuReveal : MonoBehaviour
         {
             child.gameObject.SetActive(isPaused);
         }
+       
     }
 }

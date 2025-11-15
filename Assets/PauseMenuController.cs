@@ -1,39 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Steamworks;
+using UnityEngine.SceneManagement;
 
 public class PauseMenuController : MonoBehaviour
 {
     public ScoreTracker scoreTracker;
     public GameObject musicSlider;
     public GameObject sfxSlider;
-
-    [Range(1, 10)]
-    public float falloff = 5f;
+    public MenuMusic menuMusic;
 
     void Start()
     {
-        // Load and apply saved volume settings after other systems initialize
-        StartCoroutine(LoadVolumesDelayed());
-    }
-
-    private void OnEnable()
-    {
-        // When pause menu opens, sync the sliders with saved values
         LoadAndApplyVolumes();
-    }
-
-    private IEnumerator LoadVolumesDelayed()
-    {
-        // Wait for end of frame to ensure GameMusic and AudioManager are ready
-        yield return new WaitForEndOfFrame();
-        LoadAndApplyVolumes();
+        menuMusic = FindObjectOfType<MenuMusic>();
     }
 
     private void LoadAndApplyVolumes()
     {
         // Load saved music volume
-        float musicVol = SaveManager.instance.GetFloat("musicVol", 1f);
+        float musicVol = PlayerPrefs.GetFloat("musicVol", 1f);
         musicSlider.GetComponent<UnityEngine.UI.Slider>().value = musicVol;
         
         if (GameMusic.instance != null)
@@ -42,7 +29,7 @@ public class PauseMenuController : MonoBehaviour
         }
         
         // Load saved SFX volume
-        float sfxVol = SaveManager.instance.GetFloat("sfxVol", 1f);
+        float sfxVol = PlayerPrefs.GetFloat("sfxVol", 1f);
         sfxSlider.GetComponent<UnityEngine.UI.Slider>().value = sfxVol;
         
         if (AudioManager.instance != null)
@@ -53,6 +40,12 @@ public class PauseMenuController : MonoBehaviour
 
     public void AbandonRun()
     {
+        // If we are not in "GunTime", return
+        if (SceneManager.GetActiveScene().name != "GunTime")
+        {
+            return;
+        }
+
         scoreTracker.GameOver();
     }
 
@@ -64,20 +57,36 @@ public class PauseMenuController : MonoBehaviour
     public void OnMusicVolumeChange()
     {
         float volume = musicSlider.GetComponent<UnityEngine.UI.Slider>().value;
-        GameMusic.instance.musicVolume = volTransform(volume);
-        SaveManager.instance.SetFloat("musicVol", volume);
+        if (GameMusic.instance != null )
+        {
+            GameMusic.instance.musicVolume = volTransform(volume);
+        }
+        if (menuMusic != null)
+        {
+            menuMusic.volumeMod = volTransform(volume);
+        }
+
+        PlayerPrefs.SetFloat("musicVol", volume);
+        if (volume == 0f)
+        {
+            bool success = SteamUserStats.SetAchievement("SamQuest");
+            Debug.Log($"Achievement SamQuest set: {success}");
+        }
     }
 
     public void OnSFXVolumeChange()
     {
         float volume = sfxSlider.GetComponent<UnityEngine.UI.Slider>().value;
-        AudioManager.instance.sfxVol = volTransform(volume);
-        SaveManager.instance.SetFloat("sfxVol", volume);
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.sfxVol = volTransform(volume);
+        }
+        PlayerPrefs.SetFloat("sfxVol", volume);
     }
 
-    float volTransform(float x)
+    public static float volTransform(float x)
     {
-        float b = 1f / (1 - Mathf.Exp(-falloff));
-        return ((-1 * Mathf.Exp(-falloff * x)) + 1) * b; 
+        float b = 1f / (1 - Mathf.Exp(-5f));
+        return ((-1 * Mathf.Exp(-5f * x)) + 1) * b; 
     }
 }

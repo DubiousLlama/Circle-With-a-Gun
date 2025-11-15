@@ -62,9 +62,8 @@ public class GameMusic : MonoBehaviour
         inactiveSource = sourceB;
 
         // Load saved music volume from PlayerPrefs
-        float savedMusicVol = SaveManager.instance.GetFloat("musicVol", 1f);
-        float b = 1f / (1 - Mathf.Exp(-5f)); // Using falloff value from PauseMenuController
-        musicVolume = ((-1 * Mathf.Exp(-5f * savedMusicVol)) + 1) * b;
+        float savedMusicVol = PlayerPrefs.GetFloat("musicVol", 1f);
+        musicVolume = PauseMenuController.volTransform(savedMusicVol);
     }
 
     private void Update()

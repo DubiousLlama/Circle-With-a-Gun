@@ -68,6 +68,7 @@ public class ReturnMainMenu : MonoBehaviour
 
     public void returnMainMenu()
     {
+
         // Clear all pause reasons when leaving the game scene
         if (GameManager.Instance != null)
         {

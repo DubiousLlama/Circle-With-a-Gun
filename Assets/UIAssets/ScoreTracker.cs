@@ -1,3 +1,4 @@
+using Steamworks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -35,6 +36,11 @@ public class ScoreTracker : MonoBehaviour
 
     bool quitAttempt()
     {
+        if (score > 50000)
+        {
+            bool success = SteamUserStats.SetAchievement("PolygonPunisher");
+            Debug.Log($"Achievement PolygonPunisher set: {success}");
+        }
         ReportFinalScore();
         return true;
     }

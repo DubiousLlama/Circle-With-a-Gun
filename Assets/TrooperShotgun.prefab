@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4736901268370847978}
   - component: {fileID: 2585807186490092420}
   m_Layer: 0
-  m_Name: Shotgun
+  m_Name: TrooperShotgun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,9 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f47479afae4709e47ae97adf9877e7ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: ff939039ea8b5344299f5caa9cf9bd53, type: 3}
+  sprite: {fileID: 21300000, guid: 20f8451e0cdc04146b450aab42904056, type: 3}
   weaponType: 0
-  cooldown: 0.38
+  cooldown: 0.65
   lifetime: 10
   isAutomatic: 0
   lifetimeRemaining: 0
@@ -54,11 +54,11 @@ MonoBehaviour:
   weaponsManager: {fileID: 0}
   burstMode: 0
   pierceCount: 0
-  damage: 25
-  bulletForce: 20
-  bulletPrefab: {fileID: 6050237885574287430, guid: 3b2ac1651221aec4dacc9c090652e806, type: 3}
+  damage: 20
+  bulletForce: 28
+  bulletPrefab: {fileID: 6050237885574287430, guid: 6b9b77ccfa8a68f4d9c2bb4d7ded0b31, type: 3}
   wallBounce: 0
-  numBullets: 6
-  spread: 45
-  rangeLife: 0.21
-  bulletColor: {r: 1, g: 0.5569, b: 0, a: 1}
+  numBullets: 9
+  spread: 25
+  rangeLife: 0.23
+  bulletColor: {r: 0, g: 0.774856, b: 0.8867924, a: 1}

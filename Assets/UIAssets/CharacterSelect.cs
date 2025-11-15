@@ -14,14 +14,21 @@ public class CharacterSelect : MonoBehaviour
     public Roster roster;
     public MenuController menuController;
 
+    public GameObject pauseMenuToDisable;
+    public GameObject pauseMenuToEnable;
+    public GameObject menuCanvas;
+
     Button selector;
 
     [Header("Menu GameObjects")]
     public List<GameObject> characterGameObjects;
 
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
+        pauseMenuToDisable.SetActive(false);
+        pauseMenuToEnable.SetActive(true);
+
         // Ensure the first character is always unlocked
         SaveManager.instance.SetInt(roster.allCharacters[0].prefName + "Unlocked", 1);
 
@@ -37,6 +44,14 @@ public class CharacterSelect : MonoBehaviour
     {
         SaveManager.instance.SetInt("SelectedCharacter", selected);
         menuController.CharacterSelected();
+    }
+
+    public void BackToMenu()
+    {
+        pauseMenuToDisable.SetActive(true);
+        pauseMenuToEnable.SetActive(false);
+        menuCanvas.SetActive(true);
+        gameObject.SetActive(false);
     }
 
 
@@ -90,6 +105,10 @@ public class CharacterSelect : MonoBehaviour
             string unlockedPrefName = ch.prefName + "Unlocked";
             string questPrefName = ch.prefName + "Quest";
             bool unlocked = SaveManager.instance.GetInt(unlockedPrefName, 0) == 1;
+            if (unlocked) {
+                bool success = SteamUserStats.SetAchievement(questPrefName);
+                Debug.Log($"Setting achievement for {ch.name} ({questPrefName}): {success}");
+            }
             int questProgress = SaveManager.instance.GetInt(questPrefName, 0);
             int questMaximum = ch.unlockQuest != null ? ch.unlockQuest.questCompletionThreshold : 1;
 

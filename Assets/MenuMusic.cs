@@ -12,6 +12,8 @@ public class MenuMusic : MonoBehaviour
     [Range(1, 8)]
     public float fadeInTime;
 
+    public float volumeMod;
+
     public AudioSource musicSource;
 
     public static MenuMusic instance;
@@ -36,20 +38,22 @@ public class MenuMusic : MonoBehaviour
         musicSource.clip = music.clip;
         musicSource.volume = 0;
         musicSource.Play();
+
+        volumeMod = PlayerPrefs.GetFloat("musicVol", 1f);
     }
 
     void Update()
     {
         if (leavingLevel)
         {
-            musicSource.volume = Mathf.Max(0, musicSource.volume - Time.deltaTime / leavingLevelTime);
+            musicSource.volume = Mathf.Max(0, musicSource.volume - Time.unscaledDeltaTime / leavingLevelTime) * volumeMod;
             if (musicSource.volume == 0)
             {
                 Destroy(gameObject);
             }
         } else
         {
-            musicSource.volume = Mathf.Min(1, musicSource.volume + Time.deltaTime / fadeInTime);
+            musicSource.volume = Mathf.Min(1, musicSource.volume + Time.unscaledDeltaTime / fadeInTime) * volumeMod;
         }
 
         if (!musicSource.isPlaying && !leavingLevel)

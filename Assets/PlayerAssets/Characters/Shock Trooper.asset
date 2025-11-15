@@ -16,6 +16,6 @@ MonoBehaviour:
   prefName: ShockTrooper
   id: 6
   sprite: {fileID: 21300000, guid: 211b5e49eccf86f4880ea5ffb5990450, type: 3}
-  primaryWeapon: {fileID: 2920370379373296382, guid: 9651df96b60a4c14aa481c9fccd09943, type: 3}
+  primaryWeapon: {fileID: 2920370379373296382, guid: a3562ef9dffd56747b2d906e82325b73, type: 3}
   secondaryWeapon: {fileID: 2920370379373296382, guid: 3b706576849cef340bbf1330fb0f196a, type: 3}
   unlockQuest: {fileID: 11400000, guid: bc2f18c22c5dae040b5213bb77365119, type: 2}

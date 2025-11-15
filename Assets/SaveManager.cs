@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.IO;
+using System;
 
 /// <summary>
 /// A file-based replacement for PlayerPrefs that saves data to a single JSON file.
@@ -12,6 +13,8 @@ using System.IO;
 /// </summary>
 public class SaveManager : MonoBehaviour
 {
+
+    
     // --- Singleton Pattern ---
     private static SaveManager _instance;
     public static SaveManager instance
@@ -41,6 +44,9 @@ public class SaveManager : MonoBehaviour
     private SaveData _saveData;
     private string _savePath;
 
+    // --- Public Events ---
+    public static event Action OnSaveDataReady;
+
     // --- Unity Methods ---
 
     private void Awake()
@@ -61,6 +67,9 @@ public class SaveManager : MonoBehaviour
 
         // Load the game data
         LoadGame();
+        
+        // Invoke the event when save data is ready
+        OnSaveDataReady?.Invoke();
     }
 
     private void OnApplicationQuit()
@@ -106,6 +115,7 @@ public class SaveManager : MonoBehaviour
 
     public float GetFloat(string key, float defaultValue = 0.0f)
     {
+        Debug.Log($"Getting float for key: {key}");
         if (_saveData.floatData.TryGetValue(key, out float value))
         {
             return value;
@@ -196,6 +206,9 @@ public class SaveManager : MonoBehaviour
             File.WriteAllText(_savePath, base64String);
 
             Debug.Log($"Game saved to {_savePath}");
+
+            // Invoke the event when save data is ready
+            OnSaveDataReady?.Invoke();
         }
         catch (System.Exception e)
         {

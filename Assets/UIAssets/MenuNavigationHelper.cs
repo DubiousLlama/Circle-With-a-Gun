@@ -23,6 +23,7 @@ public class MenuNavigationHelper : MonoBehaviour
 
     private bool hasSelectedButton = false;
     private bool wasMouseUsed = false;
+    private bool gamepadInputDetected = false;
 
     private void OnEnable()
     {
@@ -45,38 +46,38 @@ public class MenuNavigationHelper : MonoBehaviour
         {
             HandleInputModeSwitch();
         }
-    }
 
-    private void HandleInputModeSwitch()
-    {
         // Check if any gamepad/joystick input is detected
         bool gamepadInputDetected = false;
-        
+
         // Check analog sticks
         if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
         {
             gamepadInputDetected = true;
         }
-        
+
         // Check gamepad buttons
         if (Input.GetButtonDown("Submit") || Input.GetButtonDown("Cancel"))
         {
             gamepadInputDetected = true;
         }
 
-        // Check mouse input
-        bool mouseInputDetected = Input.GetMouseButton(0) || Input.GetMouseButton(1) || 
-                                   Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0;
-
-        // If mouse was used but gamepad input is now detected, reselect button
-        if (wasMouseUsed && gamepadInputDetected && EventSystem.current != null)
+        // If gamepad input is detected and nothing is currently selected, reselect button
+        if (gamepadInputDetected && EventSystem.current != null)
         {
-            if (EventSystem.current.currentSelectedGameObject == null)
+            if (EventSystem.current.currentSelectedGameObject == null || EventSystem.current.currentSelectedGameObject.activeInHierarchy == false)
             {
                 TrySelectButton();
                 wasMouseUsed = false;
             }
         }
+    }
+
+    private void HandleInputModeSwitch()
+    {
+        // Check mouse input
+        bool mouseInputDetected = Input.GetMouseButton(0) || Input.GetMouseButton(1) || 
+                                   Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0;
 
         // Track if mouse is being used
         if (mouseInputDetected)
