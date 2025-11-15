@@ -18,7 +18,7 @@ public class OfferLevelUp : MonoBehaviour
 
     [Header("Settings")]
     [Tooltip("How much more likely prerequisite upgrades are to be offered")]
-    float prerequisiteWeight = 2f;
+    public float prerequisiteWeight = 1.5f;
 
     float commonWeight;
     float uncommonWeight;
@@ -39,7 +39,7 @@ public class OfferLevelUp : MonoBehaviour
     public static event Action LevelUpSelected;
 
 #if UNITY_EDITOR
-    private string forceUpgrade = "ZeusError";
+    private string forceUpgrade = "WarHorn";
 #endif
 
     // Start is called before the first frame update

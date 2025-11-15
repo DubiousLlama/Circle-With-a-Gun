@@ -9,16 +9,19 @@ public class SecondaryHealUpgrade : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        PlayerHealth playerHealth = GameObject.Find("PC").GetComponent<PlayerHealth>();
+        playerHealth = GameObject.Find("PC").GetComponent<PlayerHealth>();
         Weapon.OnWeaponUsed += (e) => { Heal(e.weaponType); };
     }
 
-    // Update is called once per frame
     void Heal(WeaponType wt)
     {
         if (wt == WeaponType.Secondary)
         {
+            Debug.Log("SecondaryHealUpgrade received secondary weapon type");
             playerHealth.Heal(150, false);
+        } else
+        {
+            Debug.Log("SecondaryHealUpgrade received non-secondary weapon type");
         }
     }
 }

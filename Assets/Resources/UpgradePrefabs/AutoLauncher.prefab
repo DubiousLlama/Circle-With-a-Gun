@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4230358768191987482
+--- !u!1 &3850229814208807522
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,40 +8,45 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2147459290044071414}
-  - component: {fileID: 2650450962780371703}
+  - component: {fileID: 5587367612901340715}
+  - component: {fileID: 7147395239916649257}
   m_Layer: 0
-  m_Name: SecondaryHeal
+  m_Name: AutoLauncher
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2147459290044071414
+--- !u!4 &5587367612901340715
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4230358768191987482}
+  m_GameObject: {fileID: 3850229814208807522}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -13.019, y: -6.1446133, z: -0.2321139}
+  m_LocalPosition: {x: -19.342094, y: -14.752473, z: -0.31474987}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2650450962780371703
+--- !u!114 &7147395239916649257
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4230358768191987482}
+  m_GameObject: {fileID: 3850229814208807522}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4cfbe54b4fd53884fa99e9aec6749421, type: 3}
+  m_Script: {fileID: 11500000, guid: 648a500c39a267043a3df7eeb7d04228, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healAmount: 300
+  launchInterval: 8
+  blastRadius: 3.2
+  damage: 200
+  moveSpeed: 10
+  missileProjectilePrefab: {fileID: 7883408809866168832, guid: 27ca142a8acc60b4a89287dee2ce7347, type: 3}
+  firing: 1

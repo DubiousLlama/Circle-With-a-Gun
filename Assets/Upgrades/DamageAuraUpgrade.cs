@@ -12,7 +12,7 @@ public class DamageAuraUpgrade : MonoBehaviour
     WaitForSeconds shortWait;
     WaitForSeconds longWait;
     GameObject auraCircle;
-    Color flash = new Color(0.5f, 0.5f, 0.5f, 0.08f);
+    Color flash = new Color(1f, 1f, 1f, 0.1f);
     Color transparent = new Color(0f, 0f, 0f, 0.1f);
     SpriteRenderer auraSpriteRenderer;
     int rotateDirection = -1;
@@ -41,6 +41,7 @@ public class DamageAuraUpgrade : MonoBehaviour
     {
         while (auraActive)
         {
+            bool dealtDamage = false;
             Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, auraRadius);
             foreach (var hitCollider in hitColliders)
             {
@@ -48,15 +49,15 @@ public class DamageAuraUpgrade : MonoBehaviour
                 if (enemyHealth != null)
                 {
                     enemyHealth.TakeDamage(damagePerTick);
+                    dealtDamage = true;
                 }
             }
             // Flash the aura circle red briefly
-            auraSpriteRenderer.color = flash;
+            if (dealtDamage) { auraSpriteRenderer.color = flash; }
             yield return shortWait;
             auraSpriteRenderer.color = transparent;
             // 5% chance of reversing rotation direction
-            if (Random.value <= 0.05f){ rotateDirection *= -1;}
-
+            if (Random.value <= 0.05f && dealtDamage){ rotateDirection *= -1;}
             yield return longWait;
         }
     }

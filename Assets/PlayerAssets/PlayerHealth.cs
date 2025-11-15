@@ -149,4 +149,9 @@ public class PlayerHealth : MonoBehaviour
             );
         }
     }
+
+    public float GetHealthPercentage()
+    {
+        return health / maxHealth;
+    }
 }

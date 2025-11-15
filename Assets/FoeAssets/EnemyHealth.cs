@@ -11,6 +11,7 @@ public class EnemyHealth : MonoBehaviour
 {
     public int health = 100;
     public int scoreValue = 10;
+    private int startingHealth;
 
     public int xpMax = 1;
     public int xpMin = 1;
@@ -46,6 +47,8 @@ public class EnemyHealth : MonoBehaviour
     private EnemyTracker enemyTracker;
 
     private bool dead = false;
+    Coroutine poison = null;
+    private WaitForSeconds halfSecond = new (0.5f);
 
     public static event Action<OnDeathEventArgs> FoeDied;
     public class OnDeathEventArgs : EventArgs {
@@ -64,6 +67,28 @@ public class EnemyHealth : MonoBehaviour
         GameObject spawner = GameObject.Find("Spawner");
         itemSpawner = spawner.GetComponent<ItemSpawner>();
         enemyTracker = spawner.GetComponent<EnemyTracker>();
+        startingHealth = health;
+    }
+
+    public void ApplyPoison(float duration)
+    {
+        if (poison != null)
+        {
+            StopCoroutine(poison);
+        }
+        poison = StartCoroutine(Poisioned(duration));
+    }
+
+    IEnumerator Poisioned(float duration)
+    {
+        float elapsed = 0;
+        while (elapsed < duration)
+        {
+            TakeDamage(startingHealth/10);
+            elapsed += 0.5f;
+            yield return halfSecond;
+        }
+        poison = null;
     }
 
     public void TakeDamage(int damage)

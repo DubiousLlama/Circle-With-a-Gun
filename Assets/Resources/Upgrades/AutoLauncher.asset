@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aae9e3fc5ea69b643905b890722f6b00, type: 3}
-  m_Name: SecondaryCooldown
+  m_Name: AutoLauncher
   m_EditorClassIdentifier: 
-  upgradeName: SecondaryCooldown
-  displayName: Tinkerer
-  description: Reduces secondary weapon cooldown by 30%.
+  upgradeName: AutoLauncher
+  displayName: AtG Missile Mk. 3.14
+  description: Fires a seeking missile every few second.
   rarity: 0
   requires: []
   prevents: []
-  weight: 1.3
+  weight: 1

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class XPAttractor : MonoBehaviour
 {
-    public float attractionRadius = 3f;
+    public float attractionStrength = 3f;
     [Header("Weight Settings")]
     [Tooltip("How much the orb's scale affects its weight (higher = more weight effect)")]
     public float weightFactor = 1f;
@@ -14,6 +14,8 @@ public class XPAttractor : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        float attractionRadius = PlayerStats.instance.GetStatMod(StatTypes.AttractorRadius) * attractionStrength;
+
         // Get all objects within the attraction radius on the 'XP' layer
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, attractionRadius, LayerMask.GetMask("XP"));
 

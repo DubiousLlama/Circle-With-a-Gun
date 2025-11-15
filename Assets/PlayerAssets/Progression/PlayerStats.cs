@@ -14,7 +14,8 @@ public enum StatTypes
     LegendaryDuration,
     RevivesInt,
     InvulnerablityBool,
-    SecoundaryCountInt
+    SecoundaryCountInt,
+    AttractorRadius,
 }
 
 struct StatModifier
