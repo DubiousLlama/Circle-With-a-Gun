@@ -2912,7 +2912,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nextLevelXP: 60
-  bonusXPCostFirstLevels: 20
+  bonusXPCostFirstLevels: 30
   xpCostMultiplier: 1.5
   levelUpMenu: {fileID: 2011257147}
   indicatorFill: {fileID: 1161053524}

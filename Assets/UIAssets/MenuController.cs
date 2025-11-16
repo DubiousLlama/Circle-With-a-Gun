@@ -66,28 +66,6 @@ public class MenuController : MonoBehaviour
         {
             menuCanvas.SetActive(false);
             characterSelectCanvas.SetActive(true);
-            
-            // Defer preload to next frame to avoid frame hitch
-            StartCoroutine(DeferredPreloadScene());
-        }
-    }
-
-    /// <summary>
-    /// Defers the scene preload to the next frame to avoid frame hitch on button press
-    /// </summary>
-    private IEnumerator DeferredPreloadScene()
-    {
-        yield return null; // Wait one frame
-        
-        int gunTimeSceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
-        if (ScenePreloader.Instance != null)
-        {
-            Debug.Log($"Starting preload of GunTime scene (index {gunTimeSceneIndex}) while character is being selected");
-            ScenePreloader.Instance.PreloadScene(gunTimeSceneIndex);
-        }
-        else
-        {
-            Debug.LogWarning("ScenePreloader.Instance is null. Scene will load normally after character selection.");
         }
     }
 
@@ -98,63 +76,8 @@ public class MenuController : MonoBehaviour
 
     public void CharacterSelected()
     {
-      
-        int gunTimeSceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
-        
-        // Check if scene was preloaded, if so use it
-        if (ScenePreloader.Instance != null && ScenePreloader.Instance.GetOperation(gunTimeSceneIndex) != null)
-        {
-            Debug.Log("Using preloaded GunTime scene");
-            StartCoroutine(ActivatePreloadedScene(gunTimeSceneIndex));
-        }
-        else
-        {
-            // Fall back to normal loading if preload wasn't available
-            Debug.Log("Scene not preloaded, loading normally");
-            loadingScreen.SetActive(true);
-            StartCoroutine(LoadSceneAsync(1));
-        }
-    }
-
-    /// <summary>
-    /// Activates a preloaded scene with loading bar animation.
-    /// Waits for both the preload to be ready (progress >= 0.9) AND completes the visual animation.
-    /// </summary>
-    private IEnumerator ActivatePreloadedScene(int sceneIndex)
-    {
-        var asyncLoad = ScenePreloader.Instance.GetOperation(sceneIndex);
-        
-        if (asyncLoad == null)
-        {
-            Debug.LogWarning("Preloaded operation was null, falling back to normal load");
-            yield return StartCoroutine(LoadSceneAsync(1));
-            yield break;
-        }
-
-        // Wait for the actual async operation to reach ready state (progress >= 0.9)
-        Debug.Log($"Waiting for preloaded scene to reach ready state (progress >= 0.9)...");
-        while (asyncLoad.progress < 0.9f)
-        {
-            yield return null;
-        }
-
-        Debug.Log("Activating preloaded scene");
-        ScenePreloader.Instance.ActivatePreloaded(sceneIndex);
-
-
-        // Wait for activation to complete
-        float activationTimeout = Time.realtimeSinceStartup + 5f;
-        while (!asyncLoad.isDone && Time.realtimeSinceStartup < activationTimeout)
-        {
-            yield return null;
-        }
-
-        if (!asyncLoad.isDone)
-        {
-            Debug.LogError("Scene activation timed out!");
-        }
-
-        MenuMusic.instance.LeaveLevel();
+        loadingScreen.SetActive(true);
+        StartCoroutine(LoadSceneAsync(1));
     }
 
     private IEnumerator LoadSceneAsync(int indexAdd)

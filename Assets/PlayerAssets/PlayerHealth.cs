@@ -108,17 +108,6 @@ public class PlayerHealth : MonoBehaviour
                 GameManager.Instance.RequestPause(GameManager.PauseReason.GameOver);
                 gameOverScreen.SetActive(true);
                 gameOverScreen.transform.Find("Score").GetComponent<TextMeshProUGUI>().text = "Score: " + scoreTracker.GetScore().ToString();
-                
-                // Trigger high score check and scene preloading
-                ReturnMainMenu returnMainMenu = FindObjectOfType<ReturnMainMenu>();
-                if (returnMainMenu != null)
-                {
-                    returnMainMenu.OnGameOverScreenShown();
-                }
-                else
-                {
-                    Debug.LogWarning("ReturnMainMenu component not found in scene");
-                }
             }
         }
 
