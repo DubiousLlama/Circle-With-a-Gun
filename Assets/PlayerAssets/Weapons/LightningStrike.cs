@@ -31,7 +31,7 @@ public class LightningStrike : Weapon
     public override void Equip()
     {
         base.Equip();
-
+        PlayerStats.instance.secondaryWeaponType = SecondaryWeaponType.LightningStrike;
         enemyLayer = LayerMask.GetMask("Foes");
     }
 

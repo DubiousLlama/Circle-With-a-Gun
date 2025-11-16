@@ -13,6 +13,7 @@ public class Boomerang : Weapon
 
     public void Awake()
     {
+        PlayerStats.instance.primaryWeaponType = PrimaryWeaponType.Boomerang;
         isAutomatic = true;
         weaponType = WeaponType.Primary;
         SetRarity(WeaponRarity.Common);
@@ -78,6 +79,9 @@ public class Boomerang : Weapon
         {
             GameObject boomerang = Instantiate(boomerangPrefab, fp.position, fp.rotation);
             BoomerScript bs = boomerang.GetComponent<BoomerScript>();
+
+            boomerang.transform.GetChild(1).GetComponent<SpriteRenderer>().enabled = PlayerStats.instance.freezingStrikes;
+            boomerang.transform.GetChild(0).GetComponent<SpriteRenderer>().enabled = PlayerStats.instance.poisonedStrikes;
 
             bs.Launch(fp.up, speed);
             audioManager.PlaySfx(sfx);

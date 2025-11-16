@@ -24,12 +24,8 @@ public class OfferLevelUp : MonoBehaviour
     float uncommonWeight;
     float rareWeight;
 
-    bool isShotgun = false;
-    bool isBoomerang = false;
-    bool isTeleport = false;
-    List<string> noBoomerang = new List<string> { "WallBounce", "PiercingShots"};
-    List<string> noShotgun = new List<string> { "WallBounce", "PiercingShots", "DiagonalShots" };
-    List<string> noTeleport = new List<string> { "SecondaryHeal" };
+    int currentLevel = 1;
+
     List<Upgrade> allUpgrades = null;
     Dictionary<Upgrade, float> weightedUpgrades = new Dictionary<Upgrade, float>();
     List<string> currentUpgrades = new List<string>();
@@ -39,15 +35,33 @@ public class OfferLevelUp : MonoBehaviour
     public static event Action LevelUpSelected;
 
 #if UNITY_EDITOR
-    private string forceUpgrade = "WarHorn";
+    private string forceUpgrade = "";
 #endif
 
     // Start is called before the first frame update
     void Awake()
     {
-        commonWeight = commonRate / (float)(commonRate + uncommonRate + rareRate);
-        uncommonWeight = uncommonRate / (float)(commonRate + uncommonRate + rareRate);
-        rareWeight = rareRate / (float)(commonRate + uncommonRate + rareRate);
+        SetRarityLevels();
+    }
+
+    private void Start()
+    {
+        LevelUpManager.LevelUp += (e) =>
+        {
+            currentLevel = e.newLevel;
+            SetRarityLevels();
+        };
+    }
+
+    private void SetRarityLevels()
+    {
+
+        float ur = uncommonRate * 1.5f * Mathf.Log10(1.7f * currentLevel + 3);
+        float rr = rareRate * 2f * Mathf.Log10(currentLevel + 1);
+
+        commonWeight = commonRate / (float)(commonRate + ur + rr);
+        uncommonWeight = ur / (float)(commonRate + ur + rr);
+        rareWeight = rr / (float)(commonRate + ur + rr);
     }
 
     private void OnEnable()
@@ -58,11 +72,10 @@ public class OfferLevelUp : MonoBehaviour
         }
 
         int chararcter = PlayerPrefs.GetInt("SelectedCharacter", 0);
-        isShotgun = (chararcter == 4 || chararcter == 6);
-        isBoomerang = (chararcter == 7);
-        isTeleport = (chararcter == 5 || chararcter == 6);
 
         SetupUpgradeList();
+        Debug.Log($"Level Up Menu: {weightedUpgrades.Count} upgrades availible");
+        Debug.Log($"{weightedUpgrades.Keys}");
         for (int i = 0; i < 3; i++)
         {
 #if UNITY_EDITOR
@@ -180,15 +193,11 @@ public class OfferLevelUp : MonoBehaviour
             {
                 continue;
             }
-            if (noBoomerang.Contains(up.name) && isBoomerang)
+            if (up.bannedWeaponTypes == null || up.bannedWeaponTypes.Contains(PlayerStats.instance.primaryWeaponType))
             {
                 continue;
             }
-            if (noShotgun.Contains(up.name) && isShotgun)
-            {
-                continue;
-            }
-            if (noTeleport.Contains(up.name) && isTeleport)
+            if (up.bannedSecondaryTypes == null || up.bannedSecondaryTypes.Contains(PlayerStats.instance.secondaryWeaponType))
             {
                 continue;
             }

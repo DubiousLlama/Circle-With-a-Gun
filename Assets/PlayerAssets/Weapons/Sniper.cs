@@ -12,6 +12,7 @@ public class Sniper : BulletWeapon
         if (bulletForce == 20f) bulletForce = 40f; // Only set if still at default
         
         isAutomatic = true;
+        PlayerStats.instance.primaryWeaponType = PrimaryWeaponType.Sniper;
         base.Awake();
     }
 

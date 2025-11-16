@@ -11,6 +11,8 @@ public class LevelUpManager : MonoBehaviour
     int level = 1;
     int currentXP = 0;
     public int nextLevelXP = 5;
+    public int bonusXPCostFirstLevels = 20;
+    public float xpCostMultiplier = 1.6f;
 
     public GameObject levelUpMenu;
 
@@ -42,7 +44,8 @@ public class LevelUpManager : MonoBehaviour
             levelUpAllowed = false;
             level++;
             currentXP -= nextLevelXP;
-            nextLevelXP = Mathf.RoundToInt(nextLevelXP * 2.5f);
+            if (level > 1 & level < 5) { nextLevelXP += bonusXPCostFirstLevels; }
+            nextLevelXP = Mathf.RoundToInt(nextLevelXP * xpCostMultiplier);
             AudioManager.instance.PlaySfx("LevelUp", 1f);
             Invoke("TriggerLevelUpEvent", 0.01f);
         }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,13 @@ public class PowerUpTrigger : MonoBehaviour
 
     private PlayerStats stats;
 
+    public static event Action<OnPowerUpPickedUpArgs> PowerUpPickedUp;
+    public class OnPowerUpPickedUpArgs : EventArgs
+    {
+        public string powerUpName;
+        public Vector3 position;
+    }
+
     private void Start()
     {
         stats = PlayerStats.instance;
@@ -20,6 +28,11 @@ public class PowerUpTrigger : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
+            PowerUpPickedUp?.Invoke(new OnPowerUpPickedUpArgs
+            {
+                powerUpName = powerUpName,
+                position = transform.position
+            });
 
             switch (powerUpName)
             {

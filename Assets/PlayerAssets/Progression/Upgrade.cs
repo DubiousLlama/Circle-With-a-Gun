@@ -26,6 +26,10 @@ public class Upgrade : ScriptableObject
     public string[] prevents;
     public float weight = 1f;
 
+    [Header("Banned Weapons")]
+    public PrimaryWeaponType[] bannedWeaponTypes;
+    public SecondaryWeaponType[] bannedSecondaryTypes;
+
     public Sprite Icon => Resources.Load<Sprite>($"UpgradeIcons/{name}");
     public GameObject UpgradeObject => Resources.Load<GameObject>($"UpgradePrefabs/{name}");
 }

@@ -14,8 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeName: AutoLauncher
   displayName: AtG Missile Mk. 3.14
-  description: Fires a seeking missile every few second.
+  description: Fires a seeking missile every few seconds.
   rarity: 0
   requires: []
   prevents: []
   weight: 1
+  bannedWeaponTypes: 
+  bannedSecondaryTypes: 

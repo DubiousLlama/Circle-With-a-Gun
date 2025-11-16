@@ -22,6 +22,7 @@ public class BombSecondary : Weapon
 
     public override void Equip()
     {
+        PlayerStats.instance.secondaryWeaponType = SecondaryWeaponType.Landmine;
         base.Equip();
     }
 

@@ -13,6 +13,7 @@ public class Shotgun : BulletWeapon
 
     protected override void Awake()
     {
+        PlayerStats.instance.primaryWeaponType = PrimaryWeaponType.Shotgun;
         base.Awake();
     }
 

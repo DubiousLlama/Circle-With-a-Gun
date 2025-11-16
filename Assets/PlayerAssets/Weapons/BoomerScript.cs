@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static BulletScript;
 
 public class BoomerScript : MonoBehaviour
 {
@@ -26,6 +28,15 @@ public class BoomerScript : MonoBehaviour
     private static readonly Vector3 ROTATION_VECTOR = new Vector3(0, 0, 540);
     private Vector3 playerDirection;
 
+    public static event Action<OnBoomerHitEventArgs> BoomerHit;
+    public class OnBoomerHitEventArgs : EventArgs
+    {
+        public Vector3 position = Vector3.zero;
+        public EnemyHealth eh = null;
+    }
+
+    OnBoomerHitEventArgs recentHit = new OnBoomerHitEventArgs();
+
     // On collision with player, deal damage
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -35,12 +46,20 @@ public class BoomerScript : MonoBehaviour
             if (state == BoomerState.Returning && !hitReturning.Contains(collision.gameObject))
             {
                 hitReturning.Add(collision.gameObject);
-                collision.gameObject.GetComponent<EnemyHealth>().TakeDamage(damage);
+                EnemyHealth eh = collision.gameObject.GetComponent<EnemyHealth>();
+                eh.TakeDamage(damage);
+                recentHit.eh = eh;
+                recentHit.position = transform.position;
+                BoomerHit?.Invoke(recentHit);
             }
             if (state == BoomerState.Going && !hitGoing.Contains(collision.gameObject))
             {
                 hitGoing.Add(collision.gameObject);
-                collision.gameObject.GetComponent<EnemyHealth>().TakeDamage(damage);
+                EnemyHealth eh = collision.gameObject.GetComponent<EnemyHealth>();
+                eh.TakeDamage(damage);
+                recentHit.eh = eh;
+                recentHit.position = transform.position;
+                BoomerHit?.Invoke(recentHit);
             }
         }
         else if (collision.gameObject.tag == "Wall")
@@ -76,6 +95,10 @@ public class BoomerScript : MonoBehaviour
     {
         playerTransform = GameObject.Find("PC").transform;
         col = GetComponent<Collider2D>();
+        if (PlayerStats.instance.poisonedStrikes)
+        {
+            transform.GetChild(0).gameObject.SetActive(true);
+        }
     }
 
     void FixedUpdate()

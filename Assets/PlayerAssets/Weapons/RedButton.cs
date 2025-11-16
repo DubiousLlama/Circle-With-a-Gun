@@ -25,6 +25,8 @@ public class RedButton : Weapon
 
         playArea = GameObject.Find("PlayArea").GetComponent<RectTransform>();
         playerHealth = transform.parent.GetComponent<PlayerHealth>();
+
+        PlayerStats.instance.secondaryWeaponType = SecondaryWeaponType.Teleport;
     }
 
     public override string getDisplayName()

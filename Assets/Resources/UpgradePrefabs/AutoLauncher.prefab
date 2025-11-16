@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 3850229814208807522}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -19.342094, y: -14.752473, z: -0.31474987}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 648a500c39a267043a3df7eeb7d04228, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  launchInterval: 8
+  launchInterval: 6
   blastRadius: 3.2
   damage: 200
   moveSpeed: 10

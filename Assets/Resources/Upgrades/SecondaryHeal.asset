@@ -19,3 +19,5 @@ MonoBehaviour:
   requires: []
   prevents: []
   weight: 0.8
+  bannedWeaponTypes: 
+  bannedSecondaryTypes: 02000000

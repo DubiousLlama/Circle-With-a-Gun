@@ -64,7 +64,7 @@ public class SpawnScript : MonoBehaviour
 
         difficulty += Time.deltaTime * difficultyIncrease;
 
-        if (difficulty > 2.5f && !isHardMode)
+        if (difficulty > 2.9f && !isHardMode)
         {
             difficultyIncrease *= 0.25f;
             isHardMode = true;
@@ -92,19 +92,19 @@ public class SpawnScript : MonoBehaviour
             spawnGroupTimer = spawnGroupRate + randomDelay;
         }
 
-        if (spawnTriangleTimer <= 0 && difficulty > 1.1f)
+        if (spawnTriangleTimer <= 0 && difficulty > 1.4f)
         {
             SpawnEnemy(trianglePrefab);
             float randomDelay = UnityEngine.Random.Range(-1 * spawnRateVariation * spawnTriangleRate, spawnRateVariation * spawnTriangleRate);
             spawnTriangleTimer = spawnTriangleRate + randomDelay;
         }
-        if (spawnOctoTimer <= 0 && difficulty > 1.3f)
+        if (spawnOctoTimer <= 0 && difficulty > 1.8f)
         {
             SpawnEnemy(octoPrefab);
             float randomDelay = UnityEngine.Random.Range(-1 * spawnRateVariation * spawnOctoRate, spawnRateVariation * spawnOctoRate);
             spawnOctoTimer = spawnOctoRate + (randomDelay * 2);
         }
-        if (spawnTrapzTimer <= 0 && difficulty > 1.6f)
+        if (spawnTrapzTimer <= 0 && difficulty > 2.6f)
         {
             SpawnEnemy(trapzPrefab);
             float randomDelay = UnityEngine.Random.Range(-1 * spawnRateVariation * spawnOctoRate, spawnRateVariation * spawnOctoRate);

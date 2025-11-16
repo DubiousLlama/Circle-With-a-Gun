@@ -22,3 +22,5 @@ MonoBehaviour:
   - PiercingShots
   - DiagonalShots
   weight: 0.9
+  bannedWeaponTypes: 0200000001000000
+  bannedSecondaryTypes: 

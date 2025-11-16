@@ -21,4 +21,7 @@ MonoBehaviour:
   - Multishot
   - PiercingShots
   - WallBounce
+  - PoisonedStrikes
   weight: 1
+  bannedWeaponTypes: 01000000
+  bannedSecondaryTypes: 

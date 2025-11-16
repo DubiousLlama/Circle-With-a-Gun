@@ -22,3 +22,5 @@ MonoBehaviour:
   - DiagonalShots
   - WallBounce
   weight: 1
+  bannedWeaponTypes: 0100000002000000
+  bannedSecondaryTypes: 

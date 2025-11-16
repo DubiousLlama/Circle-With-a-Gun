@@ -4,22 +4,16 @@ using UnityEngine.UIElements;
 
 public class TriangleController : MonoBehaviour
 {
-    [Range (50, 900)]
     public int damage = 400;
 
-    [Range(2, 12)]
     public float range = 7f;
 
-    [Range(0.1f, 4)]
     public float attackWindup = 1f;
 
-    [Range(0.1f, 6)]
     public float attackCooldown = 1;
 
-    [Range (5, 12)]
     public float chargePace = 8;
 
-    [Range(0.5f, 4)]
     public float chargeDuration = 3f;
 
     private string state;

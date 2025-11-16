@@ -18,6 +18,25 @@ public enum StatTypes
     AttractorRadius,
 }
 
+public enum PrimaryWeaponType
+{
+    RapidFire,
+    Shotgun,
+    Boomerang,
+    Sniper,
+    None
+}
+
+public enum SecondaryWeaponType
+{
+    Missile,
+    Landmine,
+    Teleport,
+    LightningStrike,
+    Storm,
+    None
+}
+
 struct StatModifier
 {
     public StatTypes stat;
@@ -45,9 +64,14 @@ struct StatModifier
 public class PlayerStats : MonoBehaviour
 {
 
+    public PrimaryWeaponType primaryWeaponType = PrimaryWeaponType.None;
+    public SecondaryWeaponType secondaryWeaponType = SecondaryWeaponType.None;
+
     public static PlayerStats instance;
 
     private List<StatModifier> multStatModifiers = new List<StatModifier>();
+    public bool poisonedStrikes = false;
+    public bool freezingStrikes = false;
 
     // Start is called before the first frame update
     void Awake()

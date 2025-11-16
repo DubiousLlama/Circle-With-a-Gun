@@ -1,6 +1,5 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class BulletScript : MonoBehaviour
@@ -15,13 +14,48 @@ public class BulletScript : MonoBehaviour
     [HideInInspector] public bool doesPierce = false;
     [HideInInspector] public bool wallBounce = false;
 
+    public static event Action<OnBulletHitEventArgs> BulletHit;
+    public class OnBulletHitEventArgs : EventArgs
+    {
+        public Vector3 position = Vector3.zero;
+        public EnemyHealth eh = null;
+    }
+
+    OnBulletHitEventArgs recentHit = new OnBulletHitEventArgs();
+
+    private Color poisonStartColor = new Color(0.323594f, 0.001901004f, 0.335849f, 0.48f);
+    private Color poisonEndColor = new Color(0.7302355f, 0.1072054f, 0.9018868f, 0f);
+    private Color freezeStartColor = new Color(0.38f, 0.82f, 1f, 0.38f);
+    private Color freezeEndColor = new Color(0.12f, 0.56f, 1f, 0f);
+
     // When the bullet is created, destroy it after 5 seconds
     protected virtual void Start()
     {
         Destroy(gameObject, 5f);
         audioManager = AudioManager.instance;
 
-        hitEffect.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+        if (PlayerStats.instance.poisonedStrikes || PlayerStats.instance.freezingStrikes)
+        {
+            TrailRenderer tr = GetComponent<TrailRenderer>();
+            tr.enabled = true;
+
+            if (PlayerStats.instance.poisonedStrikes)
+            {
+                tr.startColor = poisonStartColor;
+                tr.endColor = poisonEndColor;
+            }
+            else if (PlayerStats.instance.freezingStrikes)
+            {
+                tr.startColor = freezeStartColor;
+                tr.endColor = freezeEndColor;
+            }
+
+        } else
+        {
+            GetComponent<TrailRenderer>().enabled = false;
+        }
+
+            hitEffect.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
 
         if (pierceCount > 0)
         {
@@ -72,7 +106,9 @@ public class BulletScript : MonoBehaviour
             }
         }
 
-        Debug.Log("Hit enemy: " + enemyObject.name);
+        recentHit.position = transform.position;
+        recentHit.eh = enemy;
+        BulletHit?.Invoke(recentHit);
         int finalDamage = CalculateDamage();
         enemy.TakeDamage(finalDamage);
         

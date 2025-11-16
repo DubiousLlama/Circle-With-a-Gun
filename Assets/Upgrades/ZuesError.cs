@@ -23,7 +23,8 @@ public class ZuesError : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        EnemyHealth.FoeDamaged += (e) => OnFoeDamaged(e.position);
+        BulletScript.BulletHit += (e) => OnFoeDamaged(e.position);
+        BoomerScript.BoomerHit += (e) => OnFoeDamaged(e.position);
         enemyLayer = LayerMask.GetMask("Foes");
     }
 
@@ -35,14 +36,13 @@ public class ZuesError : MonoBehaviour
         }
     }
 
-    private void OnFoeDamaged(Transform pos)
+    private void OnFoeDamaged(Vector3 pos)
     {
 
         // rounding error chance to summon lightning on damage
         if (UnityEngine.Random.value < roundingError & timeout <= 0f)
         {
-            Vector3 loc = pos.position;
-            StartCoroutine(Fire(loc));
+            StartCoroutine(Fire(pos));
         }
     }
 

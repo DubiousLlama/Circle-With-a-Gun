@@ -10,12 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: aae9e3fc5ea69b643905b890722f6b00, type: 3}
-  m_Name: RiskyTooth
+  m_Name: FreezingStrikes
   m_EditorClassIdentifier: 
-  upgradeName: RiskyTooth
-  displayName: Acquired Vitality
-  description: Picking up XP heals you.
-  rarity: 0
+  upgradeName: FreezingStrikes
+  displayName: Freezing Bullets
+  description: Bullets have a chance of frezing foes on contact. Frozen foes move
+    slowly.
+  rarity: 2
   requires: []
-  prevents: []
+  prevents:
+  - PoisonedStrikes
   weight: 1
+  bannedWeaponTypes: 
+  bannedSecondaryTypes: 

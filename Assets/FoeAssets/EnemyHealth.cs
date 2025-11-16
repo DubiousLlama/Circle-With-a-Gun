@@ -1,3 +1,4 @@
+using Pathfinding;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -43,12 +44,20 @@ public class EnemyHealth : MonoBehaviour
     [OptionalField]
     public int threshold5 = 0;
 
-    private ItemSpawner itemSpawner;
     private EnemyTracker enemyTracker;
+    private SpriteRenderer spriteRenderer;
+    private AIPath aiPath;
 
     private bool dead = false;
-    Coroutine poison = null;
-    private WaitForSeconds halfSecond = new (0.5f);
+    Coroutine statusEffect = null;
+    private WaitForSeconds flashTime = new (0.1f);
+    private WaitForSeconds poisonDamageTime = new (0.4f);
+    private WaitForSeconds freezeDamageTime = new (0.9f);
+    private Color poisonedColor = new Color(0.3618068f, 0f, 04264151f, 0.4f);
+    private Color poisonedFlashColor = new Color(0.3618068f, 0f, 04264151f, 0.6705883f);
+    private Color frozenColor = new Color(0.6169811f, 1f, 0.9899716f, 0.64f);
+    private Color frozenFlashColor = new Color(0f, 0.6622642f, 1f, 0.64f);
+
 
     public static event Action<OnDeathEventArgs> FoeDied;
     public class OnDeathEventArgs : EventArgs {
@@ -65,30 +74,109 @@ public class EnemyHealth : MonoBehaviour
     void Start()
     {
         GameObject spawner = GameObject.Find("Spawner");
-        itemSpawner = spawner.GetComponent<ItemSpawner>();
         enemyTracker = spawner.GetComponent<EnemyTracker>();
+        spriteRenderer = transform.Find("EffectDisplay").GetComponent<SpriteRenderer>();
+        aiPath = GetComponent<AIPath>();
         startingHealth = health;
     }
 
     public void ApplyPoison(float duration)
     {
-        if (poison != null)
+        if (statusEffect != null)
         {
-            StopCoroutine(poison);
+            StopCoroutine(statusEffect);
         }
-        poison = StartCoroutine(Poisioned(duration));
+        statusEffect = StartCoroutine(Poisioned(duration));
+    }
+
+    public void ApplyFreeze(float duration)
+    {
+        if (statusEffect != null)
+        {
+            StopCoroutine(statusEffect);
+        }
+        statusEffect = StartCoroutine(Frozen(duration));
     }
 
     IEnumerator Poisioned(float duration)
     {
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.enabled = true;
+            spriteRenderer.color = poisonedColor;
+        }
+
+        yield return flashTime;
         float elapsed = 0;
         while (elapsed < duration)
         {
+            if (spriteRenderer != null) { spriteRenderer.color = poisonedFlashColor; }
             TakeDamage(startingHealth/10);
-            elapsed += 0.5f;
-            yield return halfSecond;
+            elapsed += 0.1f;
+            yield return flashTime;
+            if (spriteRenderer != null) { spriteRenderer.color = poisonedColor; }
+            elapsed += 0.4f;
+            yield return poisonDamageTime;
         }
-        poison = null;
+        statusEffect = null;
+        spriteRenderer.enabled = false;
+    }
+
+    IEnumerator Frozen(float duration)
+    {
+        float origionalSpeed = 0;
+        float origionalDuration = 0;
+        int origionalDamage = 0;
+        TriangleController triangleController = GetComponent<TriangleController>();
+        if (triangleController != null)
+        {
+            origionalDuration = triangleController.chargeDuration;
+            origionalSpeed = triangleController.chargePace;
+            origionalDamage = triangleController.damage;
+            triangleController.chargeDuration *= 1.25f;
+            triangleController.chargePace = 3.5f;
+            triangleController.damage = triangleController.damage / 2;
+        }
+
+
+        float originalSpeed = 0;
+        if (aiPath != null)
+        {
+            originalSpeed = aiPath.maxSpeed;
+            aiPath.maxSpeed *= 0.25f;
+        }
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.enabled = true;
+            spriteRenderer.color = frozenColor;
+        }
+
+        yield return flashTime;
+        float elapsed = 0;
+        while (elapsed < duration)
+        {
+            if (spriteRenderer != null) { spriteRenderer.color = frozenFlashColor; }
+            TakeDamage(startingHealth / 20);
+            elapsed += 0.1f;
+            yield return flashTime;
+            if (spriteRenderer != null) { spriteRenderer.color = frozenColor; }
+            elapsed += 0.9f;
+            yield return freezeDamageTime;
+        }
+
+        if (aiPath != null)
+        {
+            aiPath.maxSpeed = originalSpeed;
+        }
+        if (triangleController != null)
+        {
+            triangleController.chargeDuration = origionalDuration;
+            triangleController.chargePace = origionalSpeed;
+            triangleController.damage = origionalDamage;
+        }
+
+        statusEffect = null;
+        spriteRenderer.enabled = false;
     }
 
     public void TakeDamage(int damage)

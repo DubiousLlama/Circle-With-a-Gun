@@ -178,5 +178,13 @@ public class WeaponsManager : MonoBehaviour
         {
             OnPrimaryDown();
         }
+
+        if (weaponComponent.getFinalType() == WeaponType.Secondary)
+        {
+            isFiring[WeaponType.Primary] = false;
+
+            // Ensure secondary weapon doesn't start firing automatically
+            isFiring[WeaponType.Secondary] = false;
+        }
     }
 }

@@ -85,6 +85,7 @@ public class Weapon : MonoBehaviour
         weaponsManager.weapons[weaponSlot] = this;
 
         isEquipped = true;
+        isFiring = false; // Ensure firing is reset when weapon is equipped
 
         audioManager = AudioManager.instance;
         playerStats = transform.parent.GetComponent<PlayerStats>();

@@ -15,7 +15,8 @@ MonoBehaviour:
   upgradeName: WarHorn
   displayName: War Horn
   description: Fire much faster for a short time after using your secondary weapon.
-  rarity: 0
-  requires: []
+  rarity: 1
+  requires:
+  - SecondaryHeal
   prevents: []
   weight: 1

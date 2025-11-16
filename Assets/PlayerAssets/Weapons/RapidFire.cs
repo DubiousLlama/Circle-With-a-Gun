@@ -8,6 +8,7 @@ public class RapidFire : BulletWeapon
 {
     protected override void Awake()
     {
+        PlayerStats.instance.primaryWeaponType = PrimaryWeaponType.RapidFire;
         isAutomatic = true;
         base.Awake();
     }
