@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,12 +14,16 @@ public class PoisonStrikes : MonoBehaviour
     public float poisonChanceSniper = 1f;
 
     private float poisonChance = 0.1f;
+    private Action<BoomerScript.OnBoomerHitEventArgs> boomerHandler;
+    private Action<BulletScript.OnBulletHitEventArgs> bulletHandler;
 
-    // Start is called before the first frame update
     void Start()
     {
-        BoomerScript.BoomerHit += (e) => ApplyPoision(e.eh);
-        BulletScript.BulletHit += (e) => ApplyPoision(e.eh);
+        boomerHandler = (e) => ApplyPoision(e.eh);
+        bulletHandler = (e) => ApplyPoision(e.eh);
+        
+        BoomerScript.BoomerHit += boomerHandler;
+        BulletScript.BulletHit += bulletHandler;
         PlayerStats.instance.poisonedStrikes = true;
 
         switch (PlayerStats.instance.primaryWeaponType)
@@ -42,9 +47,22 @@ public class PoisonStrikes : MonoBehaviour
 
     void ApplyPoision(EnemyHealth eh)
     {
-        if (eh != null && (Random.value < poisonChance))
+        if (eh != null && (UnityEngine.Random.value < poisonChance) && PlayerStats.instance.poisonedStrikes)
         {
             eh.ApplyPoison(poisonDuration);
         }
+    }
+
+    void OnDestroy()
+    {
+        if (boomerHandler != null)
+        {
+            BoomerScript.BoomerHit -= boomerHandler;
+        }
+        if (bulletHandler != null)
+        {
+            BulletScript.BulletHit -= bulletHandler;
+        }
+        PlayerStats.instance.poisonedStrikes = false;
     }
 }

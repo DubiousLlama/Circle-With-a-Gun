@@ -6,7 +6,7 @@ public class DiagonalShotsUpgrade : MonoBehaviour
 {
     public float angleOffset = 15f;
 
-    // Vector3 offset = new Vector3(1.057f, -1.418f, 0f);
+    private List<Transform> addedFirePoints = new List<Transform>();
 
     // Start is called before the first frame update
     void Start()
@@ -19,6 +19,24 @@ public class DiagonalShotsUpgrade : MonoBehaviour
             newFP.transform.localPosition = Vector3.zero;
             newFP.transform.Rotate(0, 0, angleOffset * i);
             wep.firePoint.Add(newFP.transform);
+            addedFirePoints.Add(newFP.transform);
         }
+    }
+
+    void OnDestroy()
+    {
+        Weapon wep = transform.parent.GetComponent<WeaponsManager>().GetEquippedWeapon(WeaponType.Primary);
+        if (wep != null)
+        {
+            foreach (Transform fp in addedFirePoints)
+            {
+                if (fp != null)
+                {
+                    wep.firePoint.Remove(fp);
+                    Destroy(fp.gameObject);
+                }
+            }
+        }
+        addedFirePoints.Clear();
     }
 }

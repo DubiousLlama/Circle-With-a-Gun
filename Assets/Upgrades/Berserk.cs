@@ -7,13 +7,12 @@ public class Berserk : MonoBehaviour
     public float percentageThreshold = 0.3f;
 
     PlayerHealth playerHealth;
-    // Start is called before the first frame update
+
     void Start()
     {
         playerHealth = transform.parent.GetComponent<PlayerHealth>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (playerHealth.GetHealthPercentage() <= percentageThreshold)
@@ -28,5 +27,10 @@ public class Berserk : MonoBehaviour
         {
             PlayerStats.instance.RemoveAllModifiersWithTag("Berserk");
         }
+    }
+
+    void OnDestroy()
+    {
+        PlayerStats.instance.RemoveAllModifiersWithTag("Berserk");
     }
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public enum StatTypes
 {
@@ -85,6 +86,15 @@ public class PlayerStats : MonoBehaviour
             Destroy(gameObject);
             Debug.LogError("Multiple PlayerStats in scene!");
         }
+
+        SceneManager.sceneLoaded += (e, m) => ClearStats();
+    }
+
+    void ClearStats()
+    {
+        multStatModifiers.Clear();
+        poisonedStrikes = false;
+        freezingStrikes = false;
     }
 
     void Update()

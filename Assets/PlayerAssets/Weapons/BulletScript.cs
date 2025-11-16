@@ -49,7 +49,6 @@ public class BulletScript : MonoBehaviour
                 tr.startColor = freezeStartColor;
                 tr.endColor = freezeEndColor;
             }
-
         } else
         {
             GetComponent<TrailRenderer>().enabled = false;

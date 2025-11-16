@@ -4,16 +4,27 @@ using UnityEngine;
 
 public class WallBounceUpgrade : MonoBehaviour
 {
-    // Start is called before the first frame update
+    private BulletWeapon bulletWeapon;
+
     void Start()
     {
         Weapon weapon = gameObject.GetComponentInParent<WeaponsManager>().GetEquippedWeapon(WeaponType.Primary);
-        if (weapon is BulletWeapon bulletWeapon)
+        if (weapon is BulletWeapon bw)
         {
+            bulletWeapon = bw;
             bulletWeapon.wallBounce = true;
-        } else
+        }
+        else
         {
             Debug.LogError("WallBounceUpgrade can only be applied to BulletWeapon types.");
+        }
+    }
+
+    void OnDestroy()
+    {
+        if (bulletWeapon != null)
+        {
+            bulletWeapon.wallBounce = false;
         }
     }
 }

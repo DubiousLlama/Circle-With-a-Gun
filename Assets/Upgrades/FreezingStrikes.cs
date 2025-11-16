@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,12 +14,17 @@ public class FreezingStrikes : MonoBehaviour
     public float freezeChanceSniper = 1f;
 
     private float freezeChance = 0.1f;
+    private Action<BoomerScript.OnBoomerHitEventArgs> boomerHandler;
+    private Action<BulletScript.OnBulletHitEventArgs> bulletHandler;
 
     // Start is called before the first frame update
     void Start()
     {
-        BoomerScript.BoomerHit += (e) => ApplyFreeze(e.eh);
-        BulletScript.BulletHit += (e) => ApplyFreeze(e.eh);
+        boomerHandler = (e) => ApplyFreeze(e.eh);
+        bulletHandler = (e) => ApplyFreeze(e.eh);
+        
+        BoomerScript.BoomerHit += boomerHandler;
+        BulletScript.BulletHit += bulletHandler;
         PlayerStats.instance.freezingStrikes = true;
 
         switch (PlayerStats.instance.primaryWeaponType)
@@ -42,9 +48,22 @@ public class FreezingStrikes : MonoBehaviour
 
     void ApplyFreeze(EnemyHealth eh)
     {
-        if (eh != null && (Random.value < freezeChance))
+        if (eh != null && (UnityEngine.Random.value < freezeChance) && PlayerStats.instance.freezingStrikes)
         {
             eh.ApplyFreeze(freezeDuration);
         }
+    }
+
+    void OnDestroy()
+    {
+        if (boomerHandler != null)
+        {
+            BoomerScript.BoomerHit -= boomerHandler;
+        }
+        if (bulletHandler != null)
+        {
+            BulletScript.BulletHit -= bulletHandler;
+        }
+        PlayerStats.instance.freezingStrikes = false;
     }
 }

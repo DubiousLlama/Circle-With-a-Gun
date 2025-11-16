@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,9 +14,12 @@ public class BattleStandard : MonoBehaviour
     public float healRate = 300f;
     public float attackBoost = 1.2f;
 
+    private Action<PowerUpTrigger.OnPowerUpPickedUpArgs> powerUpHandler;
+
     private void Start()
     {
-        PowerUpTrigger.PowerUpPickedUp += (e) => OnPowerUpPickedUp(e.position);
+        powerUpHandler = (e) => OnPowerUpPickedUp(e.position);
+        PowerUpTrigger.PowerUpPickedUp += powerUpHandler;
     }
 
     void OnPowerUpPickedUp(Vector3 pos)
@@ -24,5 +28,13 @@ public class BattleStandard : MonoBehaviour
         BannerEffect be = battleStandard.GetComponentInChildren<BannerEffect>();
         be.ActivateBannerEffect(duration, healRate, attackBoost);
         battleStandard.transform.position = pos;
+    }
+
+    void OnDestroy()
+    {
+        if (powerUpHandler != null)
+        {
+            PowerUpTrigger.PowerUpPickedUp -= powerUpHandler;
+        }
     }
 }

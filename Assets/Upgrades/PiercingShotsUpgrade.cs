@@ -2,9 +2,22 @@ using UnityEngine;
 
 public class PiercingShotsUpgrade : MonoBehaviour
 {
-    // Start is called before the first frame update
+    private Weapon primaryWeapon;
+
     void Start()
     {
-        gameObject.GetComponentInParent<WeaponsManager>().GetEquippedWeapon(WeaponType.Primary).pierceCount += 2;
+        primaryWeapon = gameObject.GetComponentInParent<WeaponsManager>().GetEquippedWeapon(WeaponType.Primary);
+        if (primaryWeapon != null)
+        {
+            primaryWeapon.pierceCount += 2;
+        }
+    }
+
+    void OnDestroy()
+    {
+        if (primaryWeapon != null)
+        {
+            primaryWeapon.pierceCount -= 2;
+        }
     }
 }

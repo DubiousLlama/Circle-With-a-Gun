@@ -45,4 +45,10 @@ public class AutoLauncherUpgrade : MonoBehaviour
         MissileLogic ml = missile.GetComponent<MissileLogic>();
         ml.InitalizeMissile(dmg: damage, radius: blastRadius, move: moveSpeed, homing: true);
     }
+
+    void OnDestroy()
+    {
+        firing = false;
+        StopAllCoroutines();
+    }
 }

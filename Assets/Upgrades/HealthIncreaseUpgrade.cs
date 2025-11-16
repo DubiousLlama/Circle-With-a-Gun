@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,9 +6,15 @@ using UnityEngine;
 public class HealthIncreaseUpgrade : MonoBehaviour
 {
     float healthIncrease = 0.5f;
-    // Start is called before the first frame update
+    private Guid modifierGuid;
+
     void Start()
     {
-       PlayerStats.instance.ModifyMultStat(StatTypes.MaxHealth, healthIncrease, true);
+       modifierGuid = PlayerStats.instance.ModifyMultStat(StatTypes.MaxHealth, healthIncrease, true);
+    }
+
+    void OnDestroy()
+    {
+        PlayerStats.instance.RemoveMultStatModifier(modifierGuid);
     }
 }

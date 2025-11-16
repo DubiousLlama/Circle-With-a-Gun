@@ -75,7 +75,7 @@ public class OfferLevelUp : MonoBehaviour
 
         SetupUpgradeList();
         Debug.Log($"Level Up Menu: {weightedUpgrades.Count} upgrades availible");
-        Debug.Log($"{weightedUpgrades.Keys}");
+        Debug.Log(weightedUpgrades.Keys);
         for (int i = 0; i < 3; i++)
         {
 #if UNITY_EDITOR
@@ -183,23 +183,35 @@ public class OfferLevelUp : MonoBehaviour
 
             if (currentUpgrades.Contains(up.name))
             {
+                Debug.Log("Upgrade " + up.name + " already acquired, skipping.");
                 continue;
             }
             if (currentUpgrades.Any(x => up.prevents.Contains(x)))
             {
+                Debug.Log("Upgrade " + up.name + " prevented");
                 continue;
             }
             if (up.requires.Any() && !currentUpgrades.Any(x => up.requires.Contains(x)))
             {
+                Debug.Log("Upgrade " + up.name + " missing prereqs");
                 continue;
             }
-            if (up.bannedWeaponTypes == null || up.bannedWeaponTypes.Contains(PlayerStats.instance.primaryWeaponType))
+            if (up.bannedWeaponTypes != null)
             {
-                continue;
+                if (up.bannedWeaponTypes.Contains(PlayerStats.instance.primaryWeaponType))
+                {
+                    Debug.Log("Upgrade " + up.name + " banned for primary");    
+                    continue;
+                }
             }
-            if (up.bannedSecondaryTypes == null || up.bannedSecondaryTypes.Contains(PlayerStats.instance.secondaryWeaponType))
+
+            if (up.bannedSecondaryTypes != null)
             {
-                continue;
+                if (up.bannedSecondaryTypes.Contains(PlayerStats.instance.secondaryWeaponType))
+                {
+                    Debug.Log("Upgrade " + up.name + " banned for secondary");
+                    continue;
+                }
             }
 
             float rarityWeight = up.rarity switch

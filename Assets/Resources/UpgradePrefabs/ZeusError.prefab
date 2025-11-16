@@ -46,6 +46,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 100
   aoeDamage: 60
-  roundingError: 0.035
-  timeoutBetweenStrikes: 2
+  roundingError: 0.02
+  timeoutBetweenStrikes: 1
   strikePrefab: {fileID: 4045261561802969863, guid: 8bcd7b86afda4a544990aa03078f7e65, type: 3}

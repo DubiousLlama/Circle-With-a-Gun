@@ -20,11 +20,17 @@ public class ZuesError : MonoBehaviour
     WaitForSeconds lightningDelay = new(0.5f);
     WaitForSeconds aoeDelay = new(0.1f);
 
+    private Action<BulletScript.OnBulletHitEventArgs> bulletHandler;
+    private Action<BoomerScript.OnBoomerHitEventArgs> boomerHandler;
+
     // Start is called before the first frame update
     void Start()
     {
-        BulletScript.BulletHit += (e) => OnFoeDamaged(e.position);
-        BoomerScript.BoomerHit += (e) => OnFoeDamaged(e.position);
+        bulletHandler = (e) => OnFoeDamaged(e.position);
+        boomerHandler = (e) => OnFoeDamaged(e.position);
+        
+        BulletScript.BulletHit += bulletHandler;
+        BoomerScript.BoomerHit += boomerHandler;
         enemyLayer = LayerMask.GetMask("Foes");
     }
 
@@ -91,5 +97,18 @@ public class ZuesError : MonoBehaviour
                 foe.GetComponentInParent<EnemyHealth>().TakeDamage(aoeDamage);
             }
         }
+    }
+
+    void OnDestroy()
+    {
+        if (bulletHandler != null)
+        {
+            BulletScript.BulletHit -= bulletHandler;
+        }
+        if (boomerHandler != null)
+        {
+            BoomerScript.BoomerHit -= boomerHandler;
+        }
+        StopAllCoroutines();
     }
 }

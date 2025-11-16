@@ -4,12 +4,26 @@ using UnityEngine;
 
 public class MultiShotUpgrade : MonoBehaviour
 {
-    // Start is called before the first frame update
+    private Weapon primaryWeapon;
+
     void Start()
     {
-        transform.parent.GetComponent<WeaponsManager>().GetEquippedWeapon(WeaponType.Primary).burstMode = true;
-        if (transform.parent.GetComponent<WeaponsManager>().GetEquippedWeapon(WeaponType.Primary) == null) {
+        primaryWeapon = transform.parent.GetComponent<WeaponsManager>().GetEquippedWeapon(WeaponType.Primary);
+        if (primaryWeapon == null)
+        {
             Debug.LogError("No primary weapon equipped for MultiShotUpgrade");
+        }
+        else
+        {
+            primaryWeapon.burstMode = true;
+        }
+    }
+
+    void OnDestroy()
+    {
+        if (primaryWeapon != null)
+        {
+            primaryWeapon.burstMode = false;
         }
     }
 }

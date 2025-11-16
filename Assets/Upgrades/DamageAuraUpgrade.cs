@@ -61,4 +61,14 @@ public class DamageAuraUpgrade : MonoBehaviour
             yield return longWait;
         }
     }
+
+    void OnDestroy()
+    {
+        auraActive = false;
+        StopAllCoroutines();
+        if (auraCircle != null)
+        {
+            Destroy(auraCircle);
+        }
+    }
 }
