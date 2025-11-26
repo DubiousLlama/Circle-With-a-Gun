@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -10,6 +11,8 @@ public class OfferLevelUp : MonoBehaviour
 {
     [Header("References")]
     public Transform UIOptionsGrid;
+    public GameObject UpgradeDisplay;
+    public GameObject DisplayPrefab;
 
     [Header("Rarity Rates (expressed as count per total)")]
     public int commonRate;
@@ -111,6 +114,7 @@ public class OfferLevelUp : MonoBehaviour
         if (selectedUpgrade != null)
         {
             currentUpgrades.Add(selectedUpgrade.name);
+            InstantiateUpgradeDisplay(selectedUpgrade);
             GameObject upObj = Instantiate(selectedUpgrade.UpgradeObject);
             upObj.transform.SetParent(GameObject.FindGameObjectWithTag("Player").transform);
         }
@@ -146,12 +150,7 @@ public class OfferLevelUp : MonoBehaviour
         TextMeshProUGUI title = button.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
         TextMeshProUGUI description = button.transform.GetChild(1).GetComponent<TextMeshProUGUI>();
         Image icon = button.transform.GetChild(2).GetComponent<Image>();
-
-        title.text = up.displayName;
-        description.text = up.description;
-        icon.sprite = up.Icon;
-
-        button.GetComponent<Image>().color = up.rarity switch
+        Color rarityColor = up.rarity switch
         {
             UpgradeRarity.Common => RarityColors.Common,
             UpgradeRarity.Uncommon => RarityColors.Uncommon,
@@ -159,6 +158,12 @@ public class OfferLevelUp : MonoBehaviour
             _ => Color.gray
         };
 
+        title.text = up.displayName;
+        description.text = up.description;
+        icon.sprite = up.Icon;
+        icon.color = rarityColor;
+
+        button.GetComponent<Image>().color = rarityColor;
     }
 
     private Upgrade GetRandomUpgrade()
@@ -241,5 +246,24 @@ public class OfferLevelUp : MonoBehaviour
         
         Debug.LogError("WeightedRandomUpgrade: Should never reach here if weights are positive");
         return null; // Should never reach here if weights are positive
+    }
+
+    private void InstantiateUpgradeDisplay(Upgrade up)
+    {
+        Debug.Log("Instantiating upgrade display for " + up.name);
+        GameObject go = Instantiate(DisplayPrefab, UpgradeDisplay.transform);
+        Image img = go.transform.GetChild(1).GetComponent<Image>();
+        Color rarityColor = up.rarity switch
+        {
+            UpgradeRarity.Common => RarityColors.Common,
+            UpgradeRarity.Uncommon => RarityColors.Uncommon,
+            UpgradeRarity.Rare => RarityColors.Rare,
+            _ => Color.gray
+        };
+
+        img.sprite = Resources.Load<Sprite>(Path.Combine("UpgradeIcons/", up.name));
+        img.color = rarityColor;
+
+        go.transform.GetChild(0).GetComponent<Image>().color = rarityColor;
     }
 }

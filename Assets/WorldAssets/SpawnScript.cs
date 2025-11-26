@@ -10,6 +10,7 @@ public class SpawnScript : MonoBehaviour
     public GameObject trianglePrefab;
     public GameObject octoPrefab;
     public GameObject trapzPrefab;
+    public GameObject bigTrianglePrefab;
     public RectTransform playArea;
 
     [Header("Settings")]
@@ -33,6 +34,9 @@ public class SpawnScript : MonoBehaviour
     [Range(5, 20)]
     public float spawnTrapzRate = 10f;
 
+    [Range(20, 100)]
+    public float spawnBigTriangleRate = 42f;
+
     [Range(8, 20)]
     public float spawnRange = 10f;
 
@@ -44,11 +48,13 @@ public class SpawnScript : MonoBehaviour
     private float spawnTriangleTimer = 0f;
     private float spawnOctoTimer = 0f;
     private float spawnTrapzTimer = 0f;
+    private float spawnBigTriangleTimer = 0f;
 
     private GameObject player;
     private EnemyTracker enemyTracker;
 
     private bool isHardMode = false;
+    private float timer = 0f;
 
     private void Start()
     {
@@ -63,6 +69,7 @@ public class SpawnScript : MonoBehaviour
         if (enemyTracker.enableSpawning == false) { return; }
 
         difficulty += Time.deltaTime * difficultyIncrease;
+        timer += Time.deltaTime;    
 
         if (difficulty > 2.9f && !isHardMode)
         {
@@ -75,6 +82,7 @@ public class SpawnScript : MonoBehaviour
         spawnTriangleTimer -= (Time.deltaTime * difficulty * (isHardMode ? 2f : 1f));
         spawnOctoTimer -= (Time.deltaTime * difficulty * (isHardMode ? 1.2f : 1f));
         spawnTrapzTimer -= (Time.deltaTime * difficulty * (isHardMode ? 1.4f : 1f));
+        spawnBigTriangleTimer -= (Time.deltaTime * difficulty/3);
 
         if (spawnTimer <= 0)
         {
@@ -110,7 +118,12 @@ public class SpawnScript : MonoBehaviour
             float randomDelay = UnityEngine.Random.Range(-1 * spawnRateVariation * spawnOctoRate, spawnRateVariation * spawnOctoRate);
             spawnTrapzTimer = spawnTrapzRate + (randomDelay * 2);
         }
-
+        if (spawnBigTriangleTimer <= 0 && timer > 420f)
+        {
+            SpawnEnemy(bigTrianglePrefab);
+            float randomDelay = UnityEngine.Random.Range(-1 * spawnRateVariation * spawnBigTriangleRate, spawnRateVariation * spawnBigTriangleRate);
+            spawnBigTriangleTimer = spawnBigTriangleRate + (randomDelay);
+        }
     }
 
     public GameObject SpawnEnemy(GameObject enemy, int i = 0, bool close = false)

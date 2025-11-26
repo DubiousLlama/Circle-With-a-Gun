@@ -11,6 +11,7 @@ using UnityEngine.UIElements;
 public class EnemyHealth : MonoBehaviour
 {
     public int health = 100;
+    public bool immneToStatusEffects = false;
     public int scoreValue = 10;
     private int startingHealth;
 
@@ -82,6 +83,11 @@ public class EnemyHealth : MonoBehaviour
 
     public void ApplyPoison(float duration)
     {
+        if (immneToStatusEffects)
+        {
+            return;
+        }
+
         if (statusEffect != null)
         {
             StopCoroutine(statusEffect);
@@ -91,6 +97,10 @@ public class EnemyHealth : MonoBehaviour
 
     public void ApplyFreeze(float duration)
     {
+        if (immneToStatusEffects)
+        {
+            return;
+        }
         if (statusEffect != null)
         {
             StopCoroutine(statusEffect);
@@ -181,6 +191,11 @@ public class EnemyHealth : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        if (immneToStatusEffects)
+        {
+            damage = Mathf.Min(damage, 90);
+        }
+
         health -= damage;
 
         recentFoeDamaged.position = transform;

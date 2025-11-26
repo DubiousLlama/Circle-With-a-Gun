@@ -18,7 +18,6 @@ MonoBehaviour:
   rarity: 2
   requires: []
   prevents:
-  - Multishot
   - DiagonalShots
   - WallBounce
   weight: 1

@@ -46,19 +46,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: 20f8451e0cdc04146b450aab42904056, type: 3}
   weaponType: 0
-  cooldown: 0.65
+  cooldown: 0.52
   lifetime: 10
   isAutomatic: 0
   lifetimeRemaining: 0
   cooldownRemaining: 0
+  firePoint: []
   weaponsManager: {fileID: 0}
   burstMode: 0
   pierceCount: 0
-  damage: 20
+  damage: 15
   bulletForce: 28
   bulletPrefab: {fileID: 6050237885574287430, guid: 6b9b77ccfa8a68f4d9c2bb4d7ded0b31, type: 3}
   wallBounce: 0
-  numBullets: 9
-  spread: 25
+  numBullets: 10
+  spread: 28
   rangeLife: 0.23
   bulletColor: {r: 0, g: 0.774856, b: 0.8867924, a: 1}

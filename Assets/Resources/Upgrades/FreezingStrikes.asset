@@ -14,12 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeName: FreezingStrikes
   displayName: Freezing Bullets
-  description: Bullets have a chance of frezing foes on contact. Frozen foes move
+  description: Bullets have a chance of freezing foes on contact. Frozen foes move
     slowly.
   rarity: 2
   requires: []
   prevents:
   - PoisonedStrikes
+  - DiagonalShots
   weight: 1
   bannedWeaponTypes: 
   bannedSecondaryTypes: 

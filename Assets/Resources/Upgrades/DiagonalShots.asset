@@ -18,10 +18,10 @@ MonoBehaviour:
   rarity: 2
   requires: []
   prevents:
-  - Multishot
   - PiercingShots
   - WallBounce
   - PoisonedStrikes
+  - FreezingStrikes
   weight: 1
   bannedWeaponTypes: 01000000
   bannedSecondaryTypes: 

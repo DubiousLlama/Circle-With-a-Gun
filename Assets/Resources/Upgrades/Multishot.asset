@@ -20,5 +20,6 @@ MonoBehaviour:
   requires: []
   prevents:
   - PiercingShots
-  - DiagonalShots
   weight: 1.2
+  bannedWeaponTypes: 
+  bannedSecondaryTypes: 

@@ -15,7 +15,9 @@ MonoBehaviour:
   upgradeName: ZeusError
   displayName: Zeus' Rounding Error
   description: Small chance that lightning strikes each time you hit an enemy.
-  rarity: 1
+  rarity: 0
   requires: []
   prevents: []
   weight: 1
+  bannedWeaponTypes: 03000000
+  bannedSecondaryTypes: 
