@@ -140,7 +140,7 @@ public class BulletScript : MonoBehaviour
             rb.rotation = angle - 90f;
 
 
-            damage += damage / 2;
+            damage += damage;
             transform.GetChild(1).gameObject.SetActive(true);
             hitEffect.transform.localScale = new Vector3(0.15f, 0.15f, 0.15f);
             wallBounce = false;
