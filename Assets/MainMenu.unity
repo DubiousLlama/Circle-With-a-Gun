@@ -5038,6 +5038,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4309516323571175917, guid: 977ac249aa2505f41bc6b2a6430cec44, type: 3}
+      propertyPath: menuMusic
+      value: 
+      objectReference: {fileID: 124571765}
     - target: {fileID: 5579802840482071144, guid: 977ac249aa2505f41bc6b2a6430cec44, type: 3}
       propertyPath: m_Pivot.x
       value: 0

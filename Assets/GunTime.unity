@@ -3516,16 +3516,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponItem: {fileID: 3295067330042803226, guid: 36531ad160ddb4705a46c680e401ef73, type: 3}
-  startingItems: 4
+  startingItems: 0
   weightedItems:
   - item: {fileID: 4293107596892571966, guid: 20183e52023187c42b9fd1d11b1aab96, type: 3}
     weight: 1.6
   - item: {fileID: 8153874603629096597, guid: 0892c2dd894162c438497773895727f5, type: 3}
     weight: 1.5
   - item: {fileID: 3000582385287026008, guid: b408ef8ef8e5a4a95a2738ef2bdc6206, type: 3}
-    weight: 1.1
+    weight: 1.12
   - item: {fileID: 3677065510083006430, guid: 660f5836b5303ef4eb4f69c304765984, type: 3}
-    weight: 1.25
+    weight: 1.2
   spawnRate: 14
 --- !u!114 &894957488
 MonoBehaviour:

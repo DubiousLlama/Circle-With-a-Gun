@@ -15,9 +15,9 @@ public class RedButton : Weapon
         weaponType = WeaponType.Secondary;
     }
 
-    float teleportDelay = 0.1f;
+    public float teleportDelay = 0.1f;
 
-    float healAmount = 400;
+    public float healAmount = 400;
 
     public override void Equip()
     {
