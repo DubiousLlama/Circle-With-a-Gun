@@ -11,8 +11,6 @@ public class AudioManager : MonoBehaviour
 
     private AudioSource SfxSource;
 
-    public float sfxVol = 1.0f;
-
     void Awake()
     {
         if (instance == null)
@@ -27,12 +25,9 @@ public class AudioManager : MonoBehaviour
 
     private void Start()
     {
-        SfxSource = gameObject.AddComponent<AudioSource>();
-        
-        // Load saved SFX volume from PlayerPrefs
-        float savedSfxVol = SaveManager.instance.GetFloat("sfxVol", 1f);
-        float b = 1f / (1 - Mathf.Exp(-5f)); // Using falloff value from PauseMenuController
-        sfxVol = ((-1 * Mathf.Exp(-5f * savedSfxVol)) + 1) * b;
+        VolumeFixer.instance.SetFromPrefs();
+
+        SfxSource = GetComponent<AudioSource>();
     }
 
     public void PlaySfx(string name, float vol=-1f)
@@ -48,6 +43,6 @@ public class AudioManager : MonoBehaviour
         vol = (vol < 0f) ? s.volume : vol;
 
         // Set the source's clip and volume
-        SfxSource.PlayOneShot(s.clip, vol * sfxVol);
+        SfxSource.PlayOneShot(s.clip, Mathf.Max(0.05f, vol));    
     }
 }

@@ -22,6 +22,7 @@ public class MenuNavigationHelper : MonoBehaviour
     public bool recoverFromMouseInput = true;
 
     private bool hasSelectedButton = false;
+    private bool mouseInUse = false;
 
     private void OnEnable()
     {
@@ -62,6 +63,7 @@ public class MenuNavigationHelper : MonoBehaviour
         // If gamepad input is detected and nothing is currently selected, reselect button
         if (gamepadInputDetected && EventSystem.current != null)
         {
+            mouseInUse = false;
             if (EventSystem.current.currentSelectedGameObject == null || EventSystem.current.currentSelectedGameObject.activeInHierarchy == false)
             {
                 TrySelectButton();
@@ -76,8 +78,9 @@ public class MenuNavigationHelper : MonoBehaviour
                                    Input.GetAxis("Mouse X") != 0 || Input.GetAxis("Mouse Y") != 0;
 
         // Track if mouse is being used
-        if (mouseInputDetected)
+        if (mouseInputDetected && mouseInUse == false)
         {
+            mouseInUse = true;
             // Deselect any selected button when mouse is used
             if (EventSystem.current != null && EventSystem.current.currentSelectedGameObject != null)
             {

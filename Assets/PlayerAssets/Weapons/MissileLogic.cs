@@ -172,7 +172,8 @@ public class MissileLogic : MonoBehaviour
                 float distance = Vector3.Distance(foe.transform.position, transform.position);
                 int aoeDamage = 60;
                 if (distance > blastRadius) continue;
-                if (distance < 1.4f) { aoeDamage = damage; }
+                if (distance < blastRadius * 0.75f) aoeDamage = 80;
+                if (distance < blastRadius * 0.65f) { aoeDamage = damage; }
                 foe.GetComponentInParent<EnemyHealth>().TakeDamage(aoeDamage);
             }
         }

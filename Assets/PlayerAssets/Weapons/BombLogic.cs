@@ -71,7 +71,7 @@ public class BombLogic : MonoBehaviour
     private void SummonExplosion()
     {
         GameObject b = Instantiate(explosion, transform.position, Quaternion.identity);
-        b.transform.localScale = new Vector3(blastRadius * 0.4f, blastRadius * 0.4f, 1);
+        b.transform.localScale = new Vector3(blastRadius * 0.3f, blastRadius * 0.3f, 1);
         Destroy(b, 0.5f);
         AudioManager.instance.PlaySfx("WooshLightning", 0.45f);
     }
@@ -87,10 +87,9 @@ public class BombLogic : MonoBehaviour
             {
                 float distance = Vector3.Distance(foe.transform.position, transform.position);
                 if (distance > blastRadius) continue;
-                int aoeDamage = 40;
-                if (distance < blastRadius * 0.75f) { aoeDamage = 60; }
-                if (distance < blastRadius * 0.6f) { aoeDamage = 80; }
-                if (distance < blastRadius * 0.5f) { aoeDamage = damage; }
+                int aoeDamage = 60;
+                if (distance < blastRadius * 0.8f) { aoeDamage = 80; }
+                if (distance < blastRadius * 0.65f) { aoeDamage = damage; }
 
                 EnemyHealth eh = foe.GetComponentInParent<EnemyHealth>();
                 if (eh != null)

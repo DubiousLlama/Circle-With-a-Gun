@@ -59,7 +59,7 @@ MonoBehaviour:
   bulletForce: 28
   bulletPrefab: {fileID: 6050237885574287430, guid: 6b9b77ccfa8a68f4d9c2bb4d7ded0b31, type: 3}
   wallBounce: 0
-  numBullets: 10
+  numBullets: 9
   spread: 28
   rangeLife: 0.23
   bulletColor: {r: 0, g: 0.774856, b: 0.8867924, a: 1}

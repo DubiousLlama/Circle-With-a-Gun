@@ -79,7 +79,7 @@ public class LightningStrike : Weapon
         
 
         // Get all foes directly contacted
-        Collider2D[] foes = Physics2D.OverlapCircleAll(destination, 0.5f, enemyLayer);
+        Collider2D[] foes = Physics2D.OverlapCircleAll(destination, MissMicro ? 1.2f : 0.75f, enemyLayer);
         foreach (Collider2D foe in foes)
         {
             if (foe.tag == "Foe") {
@@ -93,7 +93,7 @@ public class LightningStrike : Weapon
     private void LightningAoE()
     {
         // Get all foes in the AoE
-        Collider2D[] foes = Physics2D.OverlapCircleAll(destination, MissMicro ? 2.4f : 2f, enemyLayer);
+        Collider2D[] foes = Physics2D.OverlapCircleAll(destination, MissMicro ? 3f : 2.4f, enemyLayer);
         foreach (Collider2D foe in foes)
         {
             if (foe.tag == "Foe")

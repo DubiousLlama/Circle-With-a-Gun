@@ -19,8 +19,10 @@ public class MenuMusic : MonoBehaviour
     public static MenuMusic instance;
 
     private bool leavingLevel = false;
+
     void Awake()
     {
+        volumeMod = 0f;
         if (instance == null)
         {
             instance = this;
@@ -29,31 +31,34 @@ public class MenuMusic : MonoBehaviour
         else
         {
             Destroy(gameObject);
+            return;
         }
+
+        // Ensure audio source is silent before any playback
+        musicSource.volume = 0f;
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        musicSource.clip = music.clip;
-        musicSource.volume = 0;
-        musicSource.Play();
+        VolumeFixer.instance.SetFromPrefs();
 
-        volumeMod = PlayerPrefs.GetFloat("musicVol", 1f);
+        musicSource.clip = music.clip;
+        musicSource.Play();
     }
 
     void Update()
     {
         if (leavingLevel)
         {
-            musicSource.volume = Mathf.Max(0, musicSource.volume - Time.unscaledDeltaTime / leavingLevelTime) * volumeMod;
+            musicSource.volume = Mathf.Max(0, musicSource.volume - Time.unscaledDeltaTime / leavingLevelTime);
             if (musicSource.volume == 0)
             {
                 Destroy(gameObject);
             }
         } else
         {
-            musicSource.volume = Mathf.Min(1, musicSource.volume + Time.unscaledDeltaTime / fadeInTime) * volumeMod;
+            musicSource.volume = Mathf.Min(1, musicSource.volume + Time.unscaledDeltaTime / fadeInTime);
         }
 
         if (!musicSource.isPlaying && !leavingLevel)

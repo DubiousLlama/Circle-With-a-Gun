@@ -53,7 +53,7 @@ public class EnemyHealth : MonoBehaviour
     Coroutine statusEffect = null;
     private WaitForSeconds flashTime = new (0.1f);
     private WaitForSeconds poisonDamageTime = new (0.4f);
-    private WaitForSeconds freezeDamageTime = new (0.9f);
+    private WaitForSeconds freezeDamageTime = new (0.6f);
     private Color poisonedColor = new Color(0.3618068f, 0f, 04264151f, 0.4f);
     private Color poisonedFlashColor = new Color(0.3618068f, 0f, 04264151f, 0.6705883f);
     private Color frozenColor = new Color(0.6169811f, 1f, 0.9899716f, 0.64f);

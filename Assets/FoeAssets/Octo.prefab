@@ -313,6 +313,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 450
+  immneToStatusEffects: 0
   scoreValue: 500
   xpMax: 20
   xpMin: 14

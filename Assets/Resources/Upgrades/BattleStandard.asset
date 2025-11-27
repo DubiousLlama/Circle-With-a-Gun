@@ -15,7 +15,7 @@ MonoBehaviour:
   upgradeName: BattleStandard
   displayName: Victory Banner
   description: Drop a banner when you pick up a powerup. Being near the banner heals
-    you and increase your rate of fire.
+    you and increases your rate of fire.
   rarity: 1
   requires: []
   prevents: []

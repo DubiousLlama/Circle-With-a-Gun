@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &2920370379373296382
+--- !u!1 &464547903108189898
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,54 +8,40 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4736901268370847978}
-  - component: {fileID: 7035015807607164117}
+  - component: {fileID: 8679547830106057072}
+  - component: {fileID: 9016777220263467691}
   m_Layer: 0
-  m_Name: MissileLauncher
+  m_Name: VolFixer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4736901268370847978
+--- !u!4 &8679547830106057072
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2920370379373296382}
+  m_GameObject: {fileID: 464547903108189898}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 113.74328, y: 137.32687, z: 3.7688124}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7035015807607164117
+--- !u!114 &9016777220263467691
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2920370379373296382}
+  m_GameObject: {fileID: 464547903108189898}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c267ba90fc83fb488c5164c495d2ad4, type: 3}
+  m_Script: {fileID: 11500000, guid: fcef6b620ab96b34188d7edb320248b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sprite: {fileID: 21300000, guid: eab465eb326ac174f95979cb2af29b82, type: 3}
-  weaponType: 1
-  cooldown: 4.4
-  lifetime: 10
-  isAutomatic: 0
-  lifetimeRemaining: 0
-  cooldownRemaining: 0
-  firePoint: []
-  weaponsManager: {fileID: 0}
-  burstMode: 0
-  pierceCount: 0
-  damage: 300
-  blastRadius: 4
-  moveSpeed: 12
-  missileProjectilePrefab: {fileID: 7883408809866168832, guid: 27ca142a8acc60b4a89287dee2ce7347, type: 3}
+  audioMixer: {fileID: 24100000, guid: b66ae3ace48e4d44d819b7019fdef26b, type: 2}

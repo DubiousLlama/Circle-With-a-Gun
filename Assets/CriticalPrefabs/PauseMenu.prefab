@@ -117,6 +117,7 @@ MonoBehaviour:
   musicSlider: {fileID: 3684368984754657254}
   sfxSlider: {fileID: 1199560243363082107}
   menuMusic: {fileID: 0}
+  audioMixer: {fileID: 24100000, guid: b66ae3ace48e4d44d819b7019fdef26b, type: 2}
 --- !u!114 &8954677453551810170
 MonoBehaviour:
   m_ObjectHideFlags: 0

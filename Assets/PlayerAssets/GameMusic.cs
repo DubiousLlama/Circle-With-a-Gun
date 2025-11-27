@@ -15,8 +15,8 @@ public class GameMusic : MonoBehaviour
 
     public static GameMusic instance;
 
-    private static AudioSource sourceA;
-    private static AudioSource sourceB;
+    public AudioSource sourceA;
+    public AudioSource sourceB;
 
     private AudioSource activeSource;
     private AudioSource inactiveSource;
@@ -29,6 +29,9 @@ public class GameMusic : MonoBehaviour
     private bool death = false;
 
     public float musicVolume = 1.0f;
+
+    private float inactiveTargetVol = 0.0f;
+    private float activeTargetVol = 1.0f;
 
     void Awake()
     {
@@ -50,8 +53,7 @@ public class GameMusic : MonoBehaviour
 
     private void Start()
     {
-        sourceA = gameObject.AddComponent<AudioSource>();
-        sourceB = gameObject.AddComponent<AudioSource>();
+        VolumeFixer.instance.SetFromPrefs();
 
         sourceA.loop = false;
         sourceB.loop = false;
@@ -60,10 +62,6 @@ public class GameMusic : MonoBehaviour
 
         activeSource = sourceA;
         inactiveSource = sourceB;
-
-        // Load saved music volume from PlayerPrefs
-        float savedMusicVol = PlayerPrefs.GetFloat("musicVol", 1f);
-        musicVolume = PauseMenuController.volTransform(savedMusicVol);
     }
 
     private void Update()
@@ -91,8 +89,10 @@ public class GameMusic : MonoBehaviour
         }
 
         // Lower the volume of the inactive source and increase the volume of the active source
-        activeSource.volume = Mathf.Min(1, activeSource.volume + Time.unscaledDeltaTime / transitionTime) * musicVolume;
-        inactiveSource.volume = Mathf.Max(0, inactiveSource.volume - Time.unscaledDeltaTime / transitionTime) * musicVolume;
+        activeTargetVol = Mathf.Min(1, activeTargetVol + Time.unscaledDeltaTime / transitionTime);
+        activeSource.volume = activeTargetVol * musicVolume;
+        inactiveTargetVol = Mathf.Max(0, inactiveTargetVol - Time.unscaledDeltaTime / transitionTime);
+        inactiveSource.volume = inactiveTargetVol * musicVolume;
     }
 
     public void PlayEventTrack(string track)
