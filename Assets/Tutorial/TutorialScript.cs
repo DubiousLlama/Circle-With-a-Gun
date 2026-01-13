@@ -48,10 +48,9 @@ public class TutorialScript : MonoBehaviour
         yield return StartCoroutine(ShootSection());
         yield return StartCoroutine(SecondarySection());
 
-        SaveManager.instance.SetInt("doTutorial", 0);
+        PlayerPrefs.SetInt("doTutorial", 0);
         spawner.GetComponent<EnemyTracker>().enableSpawning = true;
     }
-
 
     private IEnumerator MoveSection()
     {

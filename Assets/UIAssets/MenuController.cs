@@ -18,7 +18,6 @@ public class MenuController : MonoBehaviour
 
     public List<Image> charSprites;
 
-    int doTutorial;
     public void Awake()
     {
         // Subscribe to Steam leaderboard updates
@@ -27,9 +26,9 @@ public class MenuController : MonoBehaviour
 
     void Start()
     {
-        doTutorial = SaveManager.instance.GetInt("doTutorial", 1);
+        int doTutorial;
+        doTutorial = PlayerPrefs.GetInt("doTutorial", 1);
         tutorialToggle.GetComponent<Toggle>().isOn = doTutorial == 1;
-        Debug.Log("Tutorial selected:" + SaveManager.instance.GetInt("doTutorial"));
 
         if (GameManager.Instance.ShowCharacterSelectOnMenuLoad)
         {
@@ -53,7 +52,7 @@ public class MenuController : MonoBehaviour
 
     public void PlayGame()
     {
-        if (doTutorial == 1)
+        if (PlayerPrefs.GetInt("doTutorial") == 1)
         {
             // Tutorial mode: set character to Kevin (index 0) and load directly
             PlayerPrefs.SetInt("SelectedCharacter", 0);
@@ -116,10 +115,10 @@ public class MenuController : MonoBehaviour
         loadingScreen.SetActive(false);
     }
 
-    public void toggleTutorial()
+    public void toggleTutorial(bool state)
     {
-        int flag = (SaveManager.instance.GetInt("doTutorial") == 1) ? 0 : 1;
-        SaveManager.instance.SetInt("doTutorial", flag);
+        int flag = state ? 1 : 0;
+        PlayerPrefs.SetInt("doTutorial", flag);
     }
 
     private void OnDestroy()

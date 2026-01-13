@@ -58,7 +58,6 @@ public class CharacterSelect : MonoBehaviour
     private void ToggleMystery(GameObject chGo, bool state)
     {
         chGo.transform.Find("Mystery")?.gameObject.SetActive(state);
-        chGo.transform.Find("ComingSoon")?.gameObject.SetActive(state);
 
         chGo.transform.Find("Image")?.gameObject.SetActive(!state);
         chGo.transform.Find("Name")?.gameObject.SetActive(!state);
@@ -80,11 +79,15 @@ public class CharacterSelect : MonoBehaviour
         {
             Debug.LogWarning($"Steamworks not available: {e.Message}");
         }
-        
+
         if (MMUnlocked)
         {
             SaveManager.instance.SetInt(roster.allCharacters[8].prefName + "Unlocked", 1);
             SaveManager.instance.SetInt(roster.allCharacters[8].prefName + "Hidden", 1);
+        }
+        else
+        {
+            SaveManager.instance.SetInt(roster.allCharacters[8].prefName + "Unlocked", 0);
         }
 
         for (int i = 0; i < characterGameObjects.Count; i++)
@@ -105,7 +108,8 @@ public class CharacterSelect : MonoBehaviour
             string unlockedPrefName = ch.prefName + "Unlocked";
             string questPrefName = ch.prefName + "Quest";
             bool unlocked = SaveManager.instance.GetInt(unlockedPrefName, 0) == 1;
-            if (unlocked) {
+            if (unlocked)
+            {
                 bool success = SteamUserStats.SetAchievement(questPrefName);
                 Debug.Log($"Setting achievement for {ch.name} ({questPrefName}): {success}");
             }
@@ -124,7 +128,7 @@ public class CharacterSelect : MonoBehaviour
             selector = characterGameObjects[i].transform.Find("Select").GetComponent<Button>();
             Debug.Log($"Found selector {selector.name} for character {ch.name} that is unlocked: {unlocked} with parent {selector.gameObject.transform.parent.name}");
             selector.interactable = unlocked;
-            Debug.Log($"Set selector for { ch.name} to {selector.interactable}");
+            Debug.Log($"Set selector for {ch.name} to {selector.interactable}");
 
             Transform unlockedTransform = characterGameObjects[i].transform.Find("Unlocked");
             if (unlockedTransform != null)
@@ -143,7 +147,7 @@ public class CharacterSelect : MonoBehaviour
                 {
                     quest.gameObject.SetActive(true);
                     Slider questSlider = quest.transform.GetChild(0).GetComponent<Slider>();
-                    float realProgress =  (float)questProgress / (float)questMaximum;
+                    float realProgress = (float)questProgress / (float)questMaximum;
                     float minProgress = 0f;
                     float maxProgress = 0.95f;
                     if (realProgress > 0)
@@ -206,5 +210,20 @@ public class CharacterSelect : MonoBehaviour
         // Wacky Steve
         // Reveal when Electric Jeff is completed
         unhideIfUnlocked(3, 7);
+    }
+
+    public void PurchaseMissMicrotransactionDLC()
+    {
+        try
+        {
+            if (SteamManager.Initialized)
+            {
+                SteamFriends.ActivateGameOverlayToStore((AppId_t)4137050, EOverlayToStoreFlag.k_EOverlayToStoreFlag_AddToCartAndShow);
+            }
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogWarning($"Steamworks not available: {e.Message}");
+        }
     }
 }
