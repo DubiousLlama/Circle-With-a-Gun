@@ -1,5 +1,8 @@
-using UnityEngine;
+using Steamworks;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,14 +14,20 @@ public class GameManager : MonoBehaviour
     public int NewHighScoreValue { get; set; } = 0;
     public string NewHighScoreCharacter { get; set; } = "";
 
+    private float lookThreshold = 0.1f;
+
     // Pause management
     private HashSet<PauseReason> pauseReasons = new HashSet<PauseReason>();
+
+    protected Callback<GameOverlayActivated_t> m_gameOverlayActivated;
 
     public enum PauseReason
     {
         PauseMenu,
         LevelUpMenu,
-        GameOver
+        GameOver,
+        SteamOverlay,
+        WindowFocusLost
     }
 
     private void Awake()
@@ -37,7 +46,71 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         ClearAllPauses();
+        m_gameOverlayActivated = Callback<GameOverlayActivated_t>.Create(OnGameOverlayActivated);
     }
+
+    private void OnEnable()
+    {
+        Application.focusChanged += OnApplicationFocus;
+    }
+    private void OnDisable()
+    {
+        Application.focusChanged -= OnApplicationFocus;
+    }
+
+    void Update()
+    {
+        // 1. Detect Gamepad Intent
+        if (Gamepad.current != null)
+        {
+            // Check for any button press or significant stick movement
+            if (Gamepad.current.allControls.Any(c => c is InputControl<float> f && f.ReadValue() > lookThreshold && c.shortDisplayName != "Mouse"))
+            {
+                SetCursorState(false);
+            }
+        }
+
+        // 2. Detect Mouse Intent
+        // We check if the mouse has moved beyond a tiny jitter threshold
+        if (Mouse.current != null && Mouse.current.delta.ReadValue().sqrMagnitude > 0.1f)
+        {
+            SetCursorState(true);
+        }
+    }
+
+    void SetCursorState(bool isVisible)
+    {
+        Cursor.visible = isVisible;
+    }
+
+    private void OnGameOverlayActivated(GameOverlayActivated_t pCallback)
+    {
+        if (pCallback.m_bActive != 0)
+        {
+            Debug.Log("Steam Overlay is now active.");
+            RequestPause(PauseReason.SteamOverlay);
+        }
+        else
+        {
+            Debug.Log("Steam Overlay has been closed.");
+            RemovePause(PauseReason.SteamOverlay);
+        }
+    }
+
+    private void OnApplicationFocus(bool hasFocus)
+    {
+        if (!hasFocus)
+        {
+            Debug.Log("Application lost focus.");
+            RequestPause(PauseReason.WindowFocusLost);
+        }
+        else
+        {
+            Debug.Log("Application gained focus.");
+            RemovePause(PauseReason.WindowFocusLost);
+        }
+    }
+
 
     /// <summary>
     /// Request the game to be paused for a specific reason

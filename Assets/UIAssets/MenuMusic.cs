@@ -33,18 +33,15 @@ public class MenuMusic : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-
-        // Ensure audio source is silent before any playback
-        musicSource.volume = 0f;
     }
 
     // Start is called before the first frame update
     void Start()
     {
         VolumeFixer.instance.SetFromPrefs();
-
         musicSource.clip = music.clip;
-        musicSource.Play();
+        // Ensure audio source is silent before any playback
+        musicSource.volume = 0f;
     }
 
     void Update()
@@ -58,10 +55,10 @@ public class MenuMusic : MonoBehaviour
             }
         } else
         {
-            musicSource.volume = Mathf.Min(1, musicSource.volume + Time.unscaledDeltaTime / fadeInTime);
+            musicSource.volume = Mathf.Clamp01(musicSource.volume + Time.unscaledDeltaTime / fadeInTime);
         }
 
-        if (!musicSource.isPlaying && !leavingLevel)
+        if (!musicSource.isPlaying && !leavingLevel && PlayerPrefs.GetFloat("musicVol", 1f) > 0)
         {
             musicSource.Play();
         }

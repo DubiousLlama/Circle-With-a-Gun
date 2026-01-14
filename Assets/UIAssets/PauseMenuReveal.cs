@@ -27,12 +27,14 @@ public class PauseMenuReveal : MonoBehaviour
 
     private void OnEnable()
     {
+        InputSystem.onDeviceChange += OnDeviceChanged;
         isPaused = false;
         Update();
     }
 
     private void OnDisable()
     {
+        InputSystem.onDeviceChange -= OnDeviceChanged;
         isPaused = false;
         Update();
     }
@@ -40,6 +42,15 @@ public class PauseMenuReveal : MonoBehaviour
     public void OnPausePressed()
     {
         isPaused = !isPaused;
+    }
+
+    private void OnDeviceChanged(InputDevice device, InputDeviceChange change)
+    {
+        if (change == InputDeviceChange.Disconnected || change == InputDeviceChange.Removed)
+        {
+            Debug.LogWarning("Device disconnected, pausing game");
+            isPaused = true;
+        }
     }
 
     void Update()
