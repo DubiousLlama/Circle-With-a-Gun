@@ -26,15 +26,15 @@ public class TriangleController : MonoBehaviour
     private Pathfinding.AIPath pathfinding;
     private Vector3 target;
     private bool dealtDamage = false;
-
-    //private int messageTrack = 0;
-    
-    // Update is called once per frame
+    private SpriteRenderer spriteRenderer;
+    private Rigidbody2D rb;
 
     void Start()
     {
         player = GameObject.Find("PC");
         pathfinding = GetComponent<Pathfinding.AIPath>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        rb = GetComponent<Rigidbody2D>();
         attackRecharge = attackCooldown;
         state = "pathfinding";
     }
@@ -50,8 +50,7 @@ public class TriangleController : MonoBehaviour
             pathfinding.enabled = false;
             state = "aiming";
 
-            // Change the color of the triangle to indicate that it is charging
-            gameObject.GetComponent<SpriteRenderer>().color = new Color(0.8f, 0.8f, 0.8f);
+            spriteRenderer.color = new Color(0.8f, 0.8f, 0.8f);
             Invoke("ResetColor", chargeDuration + attackWindup);
 
 
@@ -63,8 +62,7 @@ public class TriangleController : MonoBehaviour
             wait = 0;
             state = "charging";
 
-            // Lock the rotation of the foe
-            gameObject.GetComponent<Rigidbody2D>().freezeRotation = true;
+            rb.freezeRotation = true;
 
             Charge();
 
@@ -83,7 +81,7 @@ public class TriangleController : MonoBehaviour
         }
         else if (state == "charging" && wait >= chargeDuration)
         {
-            gameObject.GetComponent<Rigidbody2D>().freezeRotation = false;
+            rb.freezeRotation = false;
 
             state = "pathfinding";
             pathfinding.enabled = true;
@@ -92,8 +90,7 @@ public class TriangleController : MonoBehaviour
             wait = 0;
             dealtDamage = false;
 
-            // Set the triangle's velocity to zero
-            GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
 
             if (legendaryFoe)
             {
@@ -162,19 +159,17 @@ public class TriangleController : MonoBehaviour
             dealtDamage = true;
             collision.gameObject.GetComponent<PlayerHealth>().Damage(damage);
             if (!legendaryFoe) { gameObject.GetComponent<EnemyHealth>().TakeDamage(1000); }
-            Rigidbody2D rb = gameObject.GetComponent<Rigidbody2D>();
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
         }
-        if (collision.gameObject.tag == "Wall" && state == "charging")
+        if (collision.gameObject.CompareTag("Wall") && state == "charging")
         {
-            Rigidbody2D rb = gameObject.GetComponent<Rigidbody2D>();
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
         }
     }
 
     void ResetColor()
     {
-        gameObject.GetComponent<SpriteRenderer>().color = Color.white;
+        spriteRenderer.color = Color.white;
     }
 
     void Charge()
@@ -187,6 +182,6 @@ public class TriangleController : MonoBehaviour
 
         // Charge at the player by applying a force in the direction of the target
         Vector3 directionToTarget = (target - transform.position).normalized;
-        GetComponent<Rigidbody2D>().AddForce(directionToTarget * chargePace, ForceMode2D.Impulse);
+        rb.AddForce(directionToTarget * chargePace, ForceMode2D.Impulse);
     }
 }

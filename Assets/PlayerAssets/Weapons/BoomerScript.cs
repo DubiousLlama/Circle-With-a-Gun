@@ -40,7 +40,7 @@ public class BoomerScript : MonoBehaviour
     // On collision with player, deal damage
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Foe")
+        if (collision.gameObject.CompareTag("Foe"))
         {
             // Ensure that enemies are hit a maximim of once going and once returning
             if (state == BoomerState.Returning && !hitReturning.Contains(collision.gameObject))
@@ -62,7 +62,7 @@ public class BoomerScript : MonoBehaviour
                 BoomerHit?.Invoke(recentHit);
             }
         }
-        else if (collision.gameObject.tag == "Wall")
+        else if (collision.gameObject.CompareTag("Wall"))
         {
             state = BoomerState.Returning;
         }
@@ -71,7 +71,7 @@ public class BoomerScript : MonoBehaviour
     // Seperated to prevent boomerang from getting stuck in player
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (state == BoomerState.Returning && collision.gameObject.tag == "Player")
+        if (state == BoomerState.Returning && collision.gameObject.CompareTag("Player"))
         {
             Destroy(gameObject);
         }

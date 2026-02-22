@@ -124,7 +124,7 @@ public class WeaponsManager : MonoBehaviour
 
     public bool isPlayerMoving()
     {
-        return player.GetComponent<PlayerMovement>().isMoving();
+        return playerMovement.isMoving();
     }
 
     public void OnPrimaryDown()

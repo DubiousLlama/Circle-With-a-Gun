@@ -14,7 +14,7 @@ public class PauseMenuController : MonoBehaviour
 
     void Start()
     {
-        menuMusic = FindObjectOfType<MenuMusic>();
+        menuMusic = FindAnyObjectByType<MenuMusic>();
         LoadAndApplyVolumes();
     }
 

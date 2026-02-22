@@ -93,7 +93,7 @@ public class MissileLogic : MonoBehaviour
         }
 
         // Move the missile forward
-        rb.velocity = transform.up * moveSpeed * (0.5f + timeAlive * 2f);
+        rb.linearVelocity = transform.up * moveSpeed * (0.5f + timeAlive * 2f);
     }
 
     private Transform getHomingTarget()
@@ -110,7 +110,7 @@ public class MissileLogic : MonoBehaviour
         // Cast rays across the cone
         for (int i = 0; i < numberOfRays; i++)
         {
-            // Calculate angle for this ray (-15° to +15° from forward direction)
+            // Calculate angle for this ray (-15ï¿½ to +15ï¿½ from forward direction)
             float angle = Mathf.Lerp(-coneAngle / 2f, coneAngle / 2f, (float)i / (numberOfRays - 1));
             Vector2 rayDirection = Quaternion.AngleAxis(angle, Vector3.forward) * forward;
 
@@ -121,7 +121,7 @@ public class MissileLogic : MonoBehaviour
             if (hit.collider != null)
             {
                 // Debug.Log("Ray " + i + " hit: " + hit.transform.name + " on layer " + hit.transform.gameObject.layer + " and the foe layer is " + LayerMask.NameToLayer("Foes"));
-                if (hit.transform.tag != "Foe" && hit.transform.parent.tag != "Foe") continue;
+                if (!hit.transform.CompareTag("Foe") && !hit.transform.parent.CompareTag("Foe")) continue;
 
                 Debug.DrawLine(transform.position, hit.transform.position, Color.red, 1f);
 
@@ -167,7 +167,7 @@ public class MissileLogic : MonoBehaviour
         Collider2D[] foes = Physics2D.OverlapCircleAll(transform.position, blastRadius, enemyLayer);
         foreach (Collider2D foe in foes)
         {
-            if (foe.tag == "Foe")
+            if (foe.CompareTag("Foe"))
             {
                 float distance = Vector3.Distance(foe.transform.position, transform.position);
                 int aoeDamage = 60;

@@ -11,47 +11,54 @@ public class XPAttractor : MonoBehaviour
     [Tooltip("Minimum effective radius multiplier for heavy orbs")]
     public float minRadiusMultiplier = 0.4f;
 
-    // Update is called once per frame
+    private ContactFilter2D xpContactFilter;
+    private Collider2D[] colliderBuffer = new Collider2D[128];
+    private Dictionary<int, XPPickup> xpPickupCache = new Dictionary<int, XPPickup>();
+
+    void Start()
+    {
+        xpContactFilter.SetLayerMask(LayerMask.GetMask("XP"));
+    }
+
     void FixedUpdate()
     {
         float attractionRadius = PlayerStats.instance.GetStatMod(StatTypes.AttractorRadius) * attractionStrength;
 
-        // Get all objects within the attraction radius on the 'XP' layer
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, attractionRadius, LayerMask.GetMask("XP"));
+        int count = Physics2D.OverlapCircle(transform.position, attractionRadius, xpContactFilter, colliderBuffer);
 
-        foreach (Collider2D col in colliders)
+        for (int i = 0; i < count; i++)
         {
-            // Calculate direction towards the player
+            Collider2D col = colliderBuffer[i];
+
             Vector2 direction = (transform.position - col.transform.position).normalized;
-            
-            // Calculate distance to determine attraction strength
             float distance = Vector2.Distance(transform.position, col.transform.position);
             
-            // Get the "weight" of the orb based on its scale
-            float orbScale = col.transform.localScale.x / col.gameObject.GetComponent<XPPickup>().baseSize;
+            int instanceId = col.GetInstanceID();
+            if (!xpPickupCache.TryGetValue(instanceId, out XPPickup xpPickup))
+            {
+                xpPickup = col.gameObject.GetComponent<XPPickup>();
+                if (xpPickup != null)
+                    xpPickupCache[instanceId] = xpPickup;
+            }
+
+            float orbScale = (xpPickup != null) ? col.transform.localScale.x / xpPickup.baseSize : 1f;
             float weight = Mathf.Max(1f, orbScale * weightFactor);
             
-            // Calculate effective attraction radius (smaller for heavier orbs)
             float weightRadius = attractionRadius / weight;
             float effectiveRadius = Mathf.Clamp(weightRadius, attractionRadius * minRadiusMultiplier, attractionRadius);
 
-            // Calculate attraction speed with exponential increase for closeness
-            float baseAttractionSpeed = 1f / weight; // Heavier orbs move slower
-            float maxSpeed = 16f / weight; // Max speed also reduced by weight
+            float baseAttractionSpeed = 1f / weight;
+            float maxSpeed = 16f / weight;
 
-            // If outside the effective radius, decrease attraction speed significantly
             if (distance > effectiveRadius)
                 maxSpeed *= 0.25f;
                 baseAttractionSpeed *= 0.5f;
 
-            // Normalize distance (0 = at player, 1 = at edge of effective radius)
             float normalizedDistance = distance / effectiveRadius;
             
-            // Use exponential curve: closer objects get exponentially faster
             float exponentialFactor = 1f - Mathf.Pow(normalizedDistance, 1.1f);
             float attractionSpeed = Mathf.Lerp(baseAttractionSpeed, maxSpeed, exponentialFactor);
             
-            // Move the XP object towards the player
             col.transform.position += (Vector3)(direction * attractionSpeed * Time.fixedDeltaTime);
         }
     }

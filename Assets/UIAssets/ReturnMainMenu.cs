@@ -81,7 +81,7 @@ public class ReturnMainMenu : MonoBehaviour
     private IEnumerator CheckAndSaveNewHighScoreCoroutine()
     {
         // Get the final score from ScoreTracker
-        ScoreTracker scoreTracker = FindObjectOfType<ScoreTracker>();
+        ScoreTracker scoreTracker = FindAnyObjectByType<ScoreTracker>();
         if (scoreTracker == null)
         {
             Debug.LogWarning("ScoreTracker not found, cannot check for new high score");

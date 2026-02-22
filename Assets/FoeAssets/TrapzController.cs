@@ -129,7 +129,7 @@ public class TrapzController : MonoBehaviour
         Vector3 playerPosition = player.transform.position;
 
         // Get the player's velocity
-        Vector3 playerVelocity = player.GetComponent<Rigidbody2D>().velocity;
+        Vector3 playerVelocity = player.GetComponent<Rigidbody2D>().linearVelocity;
 
         // Calculate where the player will be when the bullet reaches them (intentionally crude approximation, the real solution involves solving a quadratic I think)
         Vector3 futurePosition = playerPosition + playerVelocity/2;
@@ -150,6 +150,6 @@ public class TrapzController : MonoBehaviour
         // Get the direction to the future position
         Vector3 direction = futurePosition - firePoint.transform.position;
 
-        rb.velocity = direction.normalized * bulletSpeed;
+        rb.linearVelocity = direction.normalized * bulletSpeed;
     }
 }

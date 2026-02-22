@@ -20,7 +20,7 @@ public class BulletPhysics : MonoBehaviour
 
             Rigidbody2D rb = GetComponent<Rigidbody2D>();
 
-            float angle = Mathf.Atan2(rb.velocity.y, rb.velocity.x) * Mathf.Rad2Deg;
+            float angle = Mathf.Atan2(rb.linearVelocity.y, rb.linearVelocity.x) * Mathf.Rad2Deg;
             rb.rotation = angle - 90f;
 
 

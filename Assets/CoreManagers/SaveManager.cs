@@ -24,7 +24,7 @@ public class SaveManager : MonoBehaviour
             if (_instance == null)
             {
                 // Check if an instance exists in the scene
-                _instance = FindObjectOfType<SaveManager>();
+                _instance = FindAnyObjectByType<SaveManager>();
 
                 // If not, create a new GameObject and add the component
                 if (_instance == null)

@@ -32,14 +32,17 @@ public class XPPickup : MonoBehaviour
             // Debug.Log($"Picked up {xpAmount} XP");
             Destroy(gameObject);
 
-            string useSfx;
-            if (xpAmount <= 5)
-                useSfx = sfx1;
-            else if (xpAmount <= 10)
-                useSfx = sfx2;
-            else
-                useSfx = sfx3;
-            AudioManager.instance.PlaySfx(useSfx, 0.35f);
+            if (xpAmount > 15)
+            {
+                string useSfx;
+                if (xpAmount <= 21)
+                    useSfx = sfx1;
+                else if (xpAmount <= 45)
+                    useSfx = sfx2;
+                else
+                    useSfx = sfx3;
+                AudioManager.instance.PlaySfx(useSfx, 0.3f);
+            }
         }
     }
 }

@@ -19,7 +19,7 @@ public class WeaponItem : MonoBehaviour
 
     void OnTriggerEnter2D (Collider2D collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.CompareTag("Player"))
         { 
             WeaponsManager weaponsManager = collision.gameObject.GetComponent<WeaponsManager>();
             weaponsManager.EquipWeapon(weapon);

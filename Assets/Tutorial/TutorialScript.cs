@@ -58,7 +58,7 @@ public class TutorialScript : MonoBehaviour
         yield return StartCoroutine(ShowBox());
 
         // Wait for player to move
-        yield return new WaitUntil(() => player.GetComponent<Rigidbody2D>().velocity.magnitude > 0.1f);
+        yield return new WaitUntil(() => player.GetComponent<Rigidbody2D>().linearVelocity.magnitude > 0.1f);
         yield return StartCoroutine(HideBox());
     }
 

@@ -36,6 +36,7 @@ public class LeaderboardView : MonoBehaviour
     private bool isScrolling = false;
     private const float ScrollThreshold = 0.1f;
     private bool previousFrameHadInput = false;
+    private RectTransform scrollRectTransform;
 
     #region Unity Lifecycle
 
@@ -47,6 +48,11 @@ public class LeaderboardView : MonoBehaviour
         {
             Debug.LogError("SteamLeaderboardManager instance not found!");
             return;
+        }
+
+        if (scrollRect != null)
+        {
+            scrollRectTransform = scrollRect.GetComponent<RectTransform>();
         }
 
         InitializeUI();
@@ -179,7 +185,7 @@ public class LeaderboardView : MonoBehaviour
         float scrollDelta = scrollSpeed * curvedIntensity * Time.deltaTime;
         
         // Use ScrollRect's normalized vertical position (0 = top, 1 = bottom)
-        scrollRect.verticalNormalizedPosition -= scrollDelta / (scrollRect.content.rect.height - scrollRect.GetComponent<RectTransform>().rect.height);
+        scrollRect.verticalNormalizedPosition -= scrollDelta / (scrollRect.content.rect.height - scrollRectTransform.rect.height);
         scrollRect.verticalNormalizedPosition = Mathf.Clamp01(scrollRect.verticalNormalizedPosition);
     }
 
@@ -191,7 +197,7 @@ public class LeaderboardView : MonoBehaviour
         float scrollDelta = scrollSpeed * curvedIntensity * Time.deltaTime;
         
         // Use ScrollRect's normalized vertical position (0 = top, 1 = bottom)
-        scrollRect.verticalNormalizedPosition += scrollDelta / (scrollRect.content.rect.height - scrollRect.GetComponent<RectTransform>().rect.height);
+        scrollRect.verticalNormalizedPosition += scrollDelta / (scrollRect.content.rect.height - scrollRectTransform.rect.height);
         scrollRect.verticalNormalizedPosition = Mathf.Clamp01(scrollRect.verticalNormalizedPosition);
     }
 
@@ -200,7 +206,7 @@ public class LeaderboardView : MonoBehaviour
         if (scrollRect == null) return false;
         
         float contentHeight = scrollRect.content.rect.height;
-        float viewportHeight = scrollRect.GetComponent<RectTransform>().rect.height;
+        float viewportHeight = scrollRectTransform.rect.height;
         
         return contentHeight > viewportHeight;
     }

@@ -65,7 +65,7 @@ public class LightningBolt : Weapon
         ContactFilter2D filter = new ContactFilter2D();
         filter.useTriggers = true;
         List<Collider2D> results = new List<Collider2D>();
-        int count = collider.OverlapCollider(filter, results);
+        int count = collider.Overlap(filter, results);
         Debug.Log(count);
 
         foreach (Collider2D hit in results)

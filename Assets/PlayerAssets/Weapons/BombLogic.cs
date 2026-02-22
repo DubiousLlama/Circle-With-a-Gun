@@ -83,7 +83,7 @@ public class BombLogic : MonoBehaviour
         Collider2D[] foes = Physics2D.OverlapCircleAll(transform.position, blastRadius, enemyLayer);
         foreach (Collider2D foe in foes)
         {
-            if (foe.tag == "Foe")
+            if (foe.CompareTag("Foe"))
             {
                 float distance = Vector3.Distance(foe.transform.position, transform.position);
                 if (distance > blastRadius) continue;

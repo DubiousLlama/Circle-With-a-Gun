@@ -26,6 +26,7 @@ public class PlayerHealth : MonoBehaviour
     AudioManager audioManager;
     GameMusic gameMusic;
     PostProcessVolume post;
+    Vignette vignette;
 
     PlayerStats stats;
 
@@ -40,6 +41,7 @@ public class PlayerHealth : MonoBehaviour
         stats = PlayerStats.instance;
 
         post = GameObject.Find("PostEffects").GetComponent<PostProcessVolume>();
+        vignette = post.profile.GetSetting<Vignette>();
     }
 
     public void Damage(float damage)
@@ -117,7 +119,6 @@ public class PlayerHealth : MonoBehaviour
 
     private void Pulse()
     {
-        Vignette vignette = post.profile.GetSetting<Vignette>();
         float pulseSpeed = 5f;
 
         if (health < maxHealth * 0.35f && !gameOver)

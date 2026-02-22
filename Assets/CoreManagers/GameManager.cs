@@ -1,6 +1,5 @@
 using Steamworks;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -13,8 +12,6 @@ public class GameManager : MonoBehaviour
 
     public int NewHighScoreValue { get; set; } = 0;
     public string NewHighScoreCharacter { get; set; } = "";
-
-    private float lookThreshold = 0.1f;
 
     // Pause management
     private HashSet<PauseReason> pauseReasons = new HashSet<PauseReason>();
@@ -60,22 +57,11 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        // 1. Detect Gamepad Intent
-        if (Gamepad.current != null)
-        {
-            // Check for any button press or significant stick movement
-            if (Gamepad.current.allControls.Any(c => c is InputControl<float> f && f.ReadValue() > lookThreshold && c.shortDisplayName != "Mouse"))
-            {
-                SetCursorState(false);
-            }
-        }
-
-        // 2. Detect Mouse Intent
-        // We check if the mouse has moved beyond a tiny jitter threshold
-        if (Mouse.current != null && Mouse.current.delta.ReadValue().sqrMagnitude > 0.1f)
-        {
+        MenuInputMode.Tick();
+        if (MenuInputMode.MouseActiveThisFrame)
             SetCursorState(true);
-        }
+        else if (MenuInputMode.GamepadActiveThisFrame)
+            SetCursorState(false);
     }
 
     void SetCursorState(bool isVisible)

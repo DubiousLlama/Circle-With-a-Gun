@@ -32,11 +32,16 @@ public class EnemyDamage : MonoBehaviour
     private Color attackColor = new Color(0.7f, 0.03f, 0.15f);
 
     Transform[] corners;
+    private SpriteRenderer spriteRenderer;
+    private PlayerHealth playerHealth;
+    private SortedList<float, Transform> cornerDistances = new SortedList<float, Transform>();
 
     void Start()
     {
         player = GameObject.Find("PC");
         pathfinding = GetComponent<Pathfinding.AIPath>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        playerHealth = player.GetComponent<PlayerHealth>();
         corners = gameObject.transform.GetChild(1).GetComponentsInChildren<Transform>();
     }
 
@@ -45,7 +50,7 @@ public class EnemyDamage : MonoBehaviour
     {
         pathfinding.destination = player.transform.position;
 
-        float distance = Vector3.Distance(player.GetComponent<Transform>().position, transform.position);
+        float distance = Vector3.Distance(player.transform.position, transform.position);
 
         if (fireDelay > 0)
         {
@@ -59,7 +64,7 @@ public class EnemyDamage : MonoBehaviour
 
         if (colorChangeTimer <= 0)
         {
-            gameObject.GetComponent<SpriteRenderer>().color = white;
+            spriteRenderer.color = white;
         }
 
 
@@ -107,7 +112,7 @@ public class EnemyDamage : MonoBehaviour
             Destroy(attackLine2);
             isAttacking = false;
 
-            gameObject.GetComponent<SpriteRenderer>().color = attackColor;
+            spriteRenderer.color = attackColor;
             colorChangeTimer = 0.2f;
         }
         
@@ -121,16 +126,14 @@ public class EnemyDamage : MonoBehaviour
 
     void Attack()
     {
-        player.GetComponent<PlayerHealth>().Damage(attackDamage);
+        playerHealth.Damage(attackDamage);
         fireDelay = attackSpeed;
     }
 
-    // Rank all corners by closeness to the player. Return the corner with the given rank
     private Vector3 GetCorner(int closenessRank)
     {
-        SortedList<float, Transform> cornerDistances = new SortedList<float, Transform>();
+        cornerDistances.Clear();
 
-        // This strange little bit of code is because the first element is the parent's transform
         for (int i = 1; i < corners.Length; i++)
         {
             cornerDistances.Add(Vector3.Distance(player.transform.position, corners[i].position), corners[i]);

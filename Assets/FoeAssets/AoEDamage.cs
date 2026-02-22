@@ -16,7 +16,7 @@ public class AoEDamage : MonoBehaviour
     {
         if (collision != null)
         {
-            if (collision.gameObject.tag == "Player")
+            if (collision.gameObject.CompareTag("Player"))
             {
                 collision.gameObject.GetComponent<PlayerHealth>().Damage(damagePerSecond * Time.deltaTime);
 

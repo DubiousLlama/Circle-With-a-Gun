@@ -15,11 +15,13 @@ public class TooltipScript : MonoBehaviour
     public bool flip = false;
 
     private Vector2 offset;
+    private Transform tooltipChild;
+    private Canvas cachedCanvas;
+    private RectTransform cachedCanvasRect;
 
     void Start()
     {
-        // Find the Tooltip child
-        Transform tooltipChild = transform.Find("Tooltip");
+        tooltipChild = transform.Find("Tooltip");
         if (tooltipChild == null)
         {
             Debug.LogError("TooltipScript: No 'Tooltip' child found on " + gameObject.name);
@@ -37,6 +39,12 @@ public class TooltipScript : MonoBehaviour
             return;
         }
 
+        cachedCanvas = GetComponentInParent<Canvas>();
+        if (cachedCanvas != null)
+        {
+            cachedCanvasRect = cachedCanvas.GetComponent<RectTransform>();
+        }
+
         offset = new Vector2(displayRect.rect.width + 50f - displayRect.anchoredPosition.x, -displayRect.rect.height / 2 - 20f);
 
         if (flip)
@@ -44,16 +52,10 @@ public class TooltipScript : MonoBehaviour
             offset = new Vector2(-displayRect.rect.width - 50f - displayRect.anchoredPosition.x, -displayRect.rect.height / 2 - 20f);
         }
 
-        // Store the original position of the tooltip
         originalPosition = tooltipRect.localPosition;
-
-        // Initially hide the tooltip
         tooltipChild.gameObject.SetActive(false);
-
-        // Disable raycasting on the tooltip and all its children so they don't block pointer events
         DisableRaycastingRecursive(tooltipChild);
 
-        // Add event triggers for mouse hover on the Display element
         EventTrigger trigger = gameObject.AddComponent<EventTrigger>();
         AddEventTrigger(trigger, EventTriggerType.PointerEnter, OnPointerEnter);
         AddEventTrigger(trigger, EventTriggerType.PointerExit, OnPointerExit);
@@ -105,17 +107,15 @@ public class TooltipScript : MonoBehaviour
 
     private void UpdateTooltipVisibility()
     {
-        GameObject tooltipChild = transform.Find("Tooltip").gameObject;
+        GameObject tooltipGO = tooltipChild.gameObject;
 
         if (isUsingGamepad)
         {
-            // Controller mode: Show tooltip only if the parent Unlocked component's character is selected
-            HandleControllerTooltip(tooltipChild);
+            HandleControllerTooltip(tooltipGO);
         }
         else
         {
-            // Mouse mode: Show tooltip when hovering over this Display element
-            HandleMouseTooltip(tooltipChild);
+            HandleMouseTooltip(tooltipGO);
         }
     }
 
@@ -177,28 +177,20 @@ public class TooltipScript : MonoBehaviour
 
     private void PositionTooltipAtMouse()
     {
-        // Convert mouse position to canvas space
         Vector2 mousePos = Mouse.current.position.ReadValue();
         
-        // Get the canvas
-        Canvas canvas = GetComponentInParent<Canvas>();
-        if (canvas == null)
+        if (cachedCanvas == null || cachedCanvasRect == null)
         {
-            Debug.LogWarning("TooltipScript: No Canvas found in parents");
             return;
         }
 
-        RectTransform canvasRect = canvas.GetComponent<RectTransform>();
-
-        // Convert screen position to canvas rect position
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
-            canvasRect,
+            cachedCanvasRect,
             mousePos,
-            canvas.worldCamera,
+            cachedCanvas.worldCamera,
             out Vector2 localPoint
         );
 
-        // Offset to bottom-right of mouse
         tooltipRect.anchoredPosition = localPoint + offset;
     }
 

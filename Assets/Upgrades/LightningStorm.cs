@@ -170,7 +170,7 @@ public class LightningStorm : Weapon
         Collider2D[] foes = Physics2D.OverlapCircleAll(destination, 0.5f, enemyLayer);
         foreach (Collider2D foe in foes)
         {
-            if (foe.tag == "Foe")
+            if (foe.CompareTag("Foe"))
             {
                 foe.GetComponentInParent<EnemyHealth>().TakeDamage(damage);
             }
@@ -187,7 +187,7 @@ public class LightningStorm : Weapon
         Collider2D[] foes = Physics2D.OverlapCircleAll(destination, 1.5f, enemyLayer);
         foreach (Collider2D foe in foes)
         {
-            if (foe.tag == "Foe")
+            if (foe.CompareTag("Foe"))
             {
                 foe.GetComponentInParent<EnemyHealth>().TakeDamage(aoeDamage);
             }

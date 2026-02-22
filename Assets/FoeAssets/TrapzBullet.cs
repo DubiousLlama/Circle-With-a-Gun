@@ -9,13 +9,13 @@ public class TrapzBullet : MonoBehaviour
     // On collision with player, deal damage
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.CompareTag("Player"))
         {
             collision.gameObject.GetComponent<PlayerHealth>().Damage(damage);
             Debug.Log("Bullet player");
             Destroy(gameObject);
         }
-        else if (collision.gameObject.tag == "Foe" || collision.gameObject.tag == "Wall")
+        else if (collision.gameObject.CompareTag("Foe") || collision.gameObject.CompareTag("Wall"))
         {
             Debug.Log("Bullet hit wall or foe");
             // Destroy(gameObject);

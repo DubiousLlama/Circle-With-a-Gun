@@ -68,8 +68,8 @@ public class BulletScript : MonoBehaviour
         {
             rb.mass = 0.001f; // Ultra-light mass to minimize force on enemies
             rb.gravityScale = 0f; // Ensure no gravity affects the bullet
-            rb.drag = 0f; // No linear drag to maintain momentum
-            rb.angularDrag = 0f; // No angular drag to prevent unwanted rotation
+            rb.linearDamping = 0f; // No linear drag to maintain momentum
+            rb.angularDamping = 0f; // No angular drag to prevent unwanted rotation
             rb.freezeRotation = true; // Prevent spinning completely
         }
     }
@@ -136,7 +136,7 @@ public class BulletScript : MonoBehaviour
 
             Rigidbody2D rb = GetComponent<Rigidbody2D>();
 
-            float angle = Mathf.Atan2(rb.velocity.y, rb.velocity.x) * Mathf.Rad2Deg;
+            float angle = Mathf.Atan2(rb.linearVelocity.y, rb.linearVelocity.x) * Mathf.Rad2Deg;
             rb.rotation = angle - 90f;
 
 

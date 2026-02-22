@@ -21,6 +21,7 @@ public class OctoController : MonoBehaviour
     GameObject player;
     AudioManager audioManager;
     Pathfinding.AIPath pathfinding;
+    SpriteRenderer spriteRenderer;
     private string state;
     private float attackRecharge = 0;
     private float attackingFor = 0;
@@ -32,6 +33,7 @@ public class OctoController : MonoBehaviour
     {
         player = GameObject.Find("PC");
         pathfinding = GetComponent<Pathfinding.AIPath>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         state = "pathfinding";
         audioManager = AudioManager.instance;
 
@@ -56,7 +58,7 @@ public class OctoController : MonoBehaviour
         if (playerDistance < range && state == "pathfinding" && attackRecharge >= attackCooldown)
         {
             state = "windup";
-            gameObject.GetComponent<SpriteRenderer>().color = new Color(0.8f, 0.8f, 0.8f);
+            spriteRenderer.color = new Color(0.8f, 0.8f, 0.8f);
 
             Invoke("ResetOcto", attackWindup + 0.2f);
             
@@ -113,7 +115,7 @@ public class OctoController : MonoBehaviour
 
     private void ResetOcto()
     {
-        gameObject.GetComponent<SpriteRenderer>().color = Color.white;
+        spriteRenderer.color = Color.white;
     }
 
     private Vector3 GetOctoTarget()
@@ -122,7 +124,7 @@ public class OctoController : MonoBehaviour
         Vector3 playerPos = player.transform.position;
 
         // Get the player's velocity
-        Vector3 playerVel = player.GetComponent<Rigidbody2D>().velocity;
+        Vector3 playerVel = player.GetComponent<Rigidbody2D>().linearVelocity;
 
         playerVel = playerVel.normalized;
         

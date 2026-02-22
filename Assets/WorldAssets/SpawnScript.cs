@@ -138,19 +138,17 @@ public class SpawnScript : MonoBehaviour
         //Generate a random float between -2 and 5
         float spawnDistVariation = UnityEngine.Random.Range(-2f, 5f);
 
-        // Get the player's position in 2d space
-        Vector2 playerPos = player.GetComponent<Transform>().position;
+        Vector2 playerPos = player.transform.position;
 
-        // Spawn an enemy at a random position appoximately SpawnRange units away from the player
         if (close) {spawnDistVariation = -2f; }
         Vector2 spawnPosition =  playerPos + UnityEngine.Random.insideUnitCircle * (spawnRange + spawnDistVariation);
 
-        // Check if the spawn position intersects with any other colliders
         Collider2D hitCollider = Physics2D.OverlapPoint(spawnPosition);
-        if (hitCollider != null && hitCollider.gameObject.tag != "Item")
+        if (hitCollider != null && !hitCollider.gameObject.CompareTag("Item"))
         {
             return SpawnEnemy(enemy, i + 1, close);
         }
+
 
         // Check if the enemy is within the play area
         if (!playArea.rect.Contains(spawnPosition - (Vector2)playArea.position))
@@ -163,15 +161,9 @@ public class SpawnScript : MonoBehaviour
         Vector3 v3 = spawnPosition;
         GameObject spawnedEnemy = Spawn(v3, enemy);
 
-        // Get the EnemyTracker component from the GameObject this script is attached to
-        EnemyTracker enemyTracker = GetComponent<EnemyTracker>();
         if (enemyTracker != null)
         {
             enemyTracker.RegisterEnemy(spawnedEnemy);
-        }
-        else
-        {
-            Debug.LogWarning("EnemyTracker component not found on SpawnScript GameObject.");
         }
 
         return spawnedEnemy;
@@ -188,10 +180,8 @@ public class SpawnScript : MonoBehaviour
         //Generate a random float between 4 and 6
         float spawnDistVariation = UnityEngine.Random.Range(4f, 6f);
 
-        // Get the player's position in 2d space
-        Vector2 playerPos = player.GetComponent<Transform>().position;
+        Vector2 playerPos = player.transform.position;
 
-        // Generate the group spawn position
         Vector2 spawnPosition = playerPos + UnityEngine.Random.insideUnitCircle * (spawnRange + spawnDistVariation);
 
         Vector2[] spawnPositions = new Vector2[numFoes];
@@ -201,7 +191,7 @@ public class SpawnScript : MonoBehaviour
         // Check if the spawn position intersects with any other colliders
         Collider2D hitCollider = Physics2D.OverlapPoint(spawnPosition);
         
-        if (hitCollider != null && hitCollider.gameObject.tag != "Item")
+        if (hitCollider != null && !hitCollider.gameObject.CompareTag("Item"))
         {
             SpawnEnemyGroup(enemy, numFoes, j+1);
             return;
@@ -224,7 +214,7 @@ public class SpawnScript : MonoBehaviour
                 hitCollider = Physics2D.OverlapPoint(spawnPosition);
                 l += 1;
 
-                if ((hitCollider == null ||  hitCollider.gameObject.tag == "Item") && playArea.rect.Contains(spawnPosition - (Vector2)playArea.position))
+                if ((hitCollider == null ||  hitCollider.gameObject.CompareTag("Item")) && playArea.rect.Contains(spawnPosition - (Vector2)playArea.position))
                 {
                     break;
                 }
@@ -264,8 +254,7 @@ public class SpawnScript : MonoBehaviour
             return null;
         }
 
-        // Second, check if the spawn position is within 5 units of the player
-        if (Vector3.Distance(spawnPosition, player.GetComponent<Transform>().position) < 5f)
+        if (Vector3.Distance(spawnPosition, player.transform.position) < 5f)
         {
             Debug.Log("Spawn too close.");
             return null;

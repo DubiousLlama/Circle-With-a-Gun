@@ -77,7 +77,7 @@ public class ZuesError : MonoBehaviour
         Collider2D[] foes = Physics2D.OverlapCircleAll(targetPos, 0.5f, enemyLayer);
         foreach (Collider2D foe in foes)
         {
-            if (foe.tag == "Foe")
+            if (foe.CompareTag("Foe"))
             {
                 foe.GetComponentInParent<EnemyHealth>().TakeDamage(damage);
             }
@@ -92,7 +92,7 @@ public class ZuesError : MonoBehaviour
         Collider2D[] foes = Physics2D.OverlapCircleAll(targetPos, 2.4f, enemyLayer);
         foreach (Collider2D foe in foes)
         {
-            if (foe.tag == "Foe")
+            if (foe.CompareTag("Foe"))
             {
                 foe.GetComponentInParent<EnemyHealth>().TakeDamage(aoeDamage);
             }
