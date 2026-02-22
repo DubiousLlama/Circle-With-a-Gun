@@ -13,6 +13,7 @@ public class Platform
         Unset
     }
 
+# pragma warning disable CS0414
     private static PlatformType platformCache = PlatformType.Unset;
 
     // Method to determine the platform
