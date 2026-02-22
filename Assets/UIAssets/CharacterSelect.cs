@@ -68,11 +68,13 @@ public class CharacterSelect : MonoBehaviour
 
     private void updateChars()
     {
+        bool steamInitialized = false;
         bool MMUnlocked = false;
         try
         {
             if (SteamManager.Initialized)
             {
+                steamInitialized = true;
                 MMUnlocked = SteamApps.BIsDlcInstalled((AppId_t)4137050);
             }
         }
@@ -109,10 +111,21 @@ public class CharacterSelect : MonoBehaviour
             string unlockedPrefName = ch.prefName + "Unlocked";
             string questPrefName = ch.prefName + "Quest";
             bool unlocked = SaveManager.instance.GetInt(unlockedPrefName, 0) == 1;
+
             if (unlocked)
             {
-                bool success = SteamUserStats.SetAchievement(questPrefName);
-                Debug.Log($"Setting achievement for {ch.name} ({questPrefName}): {success}");
+                try
+                {
+                    if (SteamManager.Initialized)
+                    {
+                        bool success = SteamUserStats.SetAchievement(questPrefName);
+                        Debug.Log($"Setting achievement for {ch.name} ({questPrefName}): {success}");
+                    }
+                }
+                catch (System.Exception e)
+                {
+                    Debug.LogWarning($"Steam achievement set failed for {questPrefName}: {e.Message}");
+                }
             }
             int questProgress = SaveManager.instance.GetInt(questPrefName, 0);
             int questMaximum = ch.unlockQuest != null ? ch.unlockQuest.questCompletionThreshold : 1;
@@ -162,11 +175,25 @@ public class CharacterSelect : MonoBehaviour
             }
 
             Transform buyButton = characterGameObjects[i].transform.Find("BuyButton");
+            Transform errorChild = characterGameObjects[i].transform.Find("Error");
+            if (errorChild != null) {
+                errorChild.gameObject.SetActive(false);
+            }
+
             if (buyButton != null)
-            {   // check if user owns miss microtransaction DLC
+            {
+                // Miss Microtransaction (index 8): show Buy when unlocked via DLC, or Error when Steam not initialized
                 if (unlocked)
                 {
                     buyButton.gameObject.SetActive(false);
+                }
+                else if (i == 8 && !steamInitialized)
+                {
+                    buyButton.gameObject.SetActive(false);
+                    if (errorChild != null) {
+
+                        errorChild.gameObject.SetActive(true);
+                    }
                 }
                 else
                 {
