@@ -58,6 +58,7 @@ public class CharacterSelect : MonoBehaviour
     private void ToggleMystery(GameObject chGo, bool state)
     {
         chGo.transform.Find("Mystery")?.gameObject.SetActive(state);
+        chGo.transform.Find("ComingSoon")?.gameObject.SetActive(state);
 
         chGo.transform.Find("Image")?.gameObject.SetActive(!state);
         chGo.transform.Find("Name")?.gameObject.SetActive(!state);
