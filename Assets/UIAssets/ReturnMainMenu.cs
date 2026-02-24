@@ -121,7 +121,9 @@ public class ReturnMainMenu : MonoBehaviour
         // Check if this is a new high score using the Steam leaderboard (only for the specific character)
         if (SteamLeaderboardManager.Instance != null && 
             SteamLeaderboardManager.Instance.IsNewHighScore(finalScore, characterUsed))
-        {   
+        {
+            // Upload to Steam immediately so the score is saved even if the animation never completes
+            SteamLeaderboardManager.Instance.UploadScore(finalScore, characterUsed);
             // Save to GameManager to trigger animation in high scores scene
             if (GameManager.Instance != null)
             {

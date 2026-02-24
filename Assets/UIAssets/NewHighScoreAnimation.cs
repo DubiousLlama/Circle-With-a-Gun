@@ -6,6 +6,9 @@ using UnityEngine.UI;
 
 public class NewHighScoreAnimation : MonoBehaviour
 {
+    /// <summary>True while the new-high-score animation is running or about to run. LeaderboardView skips refreshing content when this is set to avoid wiping the new score row.</summary>
+    public static bool SuppressLeaderboardRefresh { get; private set; }
+
     public bool playing = false;
 
     public GameObject content;
@@ -26,6 +29,8 @@ public class NewHighScoreAnimation : MonoBehaviour
     private float accelFactor = 1f;
     
     private ScoreData pendingScore = null;
+    /// <summary>True when pendingScore came from GameManager (we uploaded before loading this scene). We still play the animation without re-checking the friends list, which may already contain the uploaded score.</summary>
+    private bool pendingScoreFromGameManager = false;
     private bool friendsDataReady = false;
 
     private void OnEnable()
@@ -56,7 +61,7 @@ public class NewHighScoreAnimation : MonoBehaviour
             }
             
             ScoreData newScore = new ScoreData(score, playerName, characterUsed);
-            NewHighScore(newScore);
+            NewHighScore(newScore, fromGameManager: true);
             
             // Clear the flag so it doesn't trigger again
             GameManager.Instance.NewHighScore = false;
@@ -66,33 +71,40 @@ public class NewHighScoreAnimation : MonoBehaviour
     private void OnFriendsDataReady()
     {
         friendsDataReady = true;
-        
-        // If we have a pending score, check if it's a high score and play the animation
+
+        // If we have a pending score, play the animation if it's a new high score OR it came from GameManager (score was already uploaded; friends list may already contain it).
         if (pendingScore != null && !playing)
         {
-            if (IsNewHighScore(pendingScore))
+            bool shouldPlay = pendingScoreFromGameManager || IsNewHighScore(pendingScore);
+            if (shouldPlay)
             {
+                SuppressLeaderboardRefresh = true; // Prevent LeaderboardView from wiping content when it receives the same event
                 StartCoroutine(PlayNewHighScoreAnimation(pendingScore));
             }
             pendingScore = null;
+            pendingScoreFromGameManager = false;
         }
     }
 
-    public void NewHighScore(ScoreData newScore)
+    /// <param name="fromGameManager">True when this score was set by ReturnMainMenu (score already uploaded). We play the animation without re-checking the friends list, which may already include the uploaded score.</param>
+    public void NewHighScore(ScoreData newScore, bool fromGameManager = false)
     {
         if (playing) return;
-        
-        // If friends data is ready, check if it's a high score and play immediately if so; otherwise, queue it
+
+        // If friends data is ready, play immediately if it's a new high score OR from GameManager; otherwise queue it
         if (friendsDataReady)
         {
-            if (IsNewHighScore(newScore))
+            bool shouldPlay = fromGameManager || IsNewHighScore(newScore);
+            if (shouldPlay)
             {
+                SuppressLeaderboardRefresh = true;
                 StartCoroutine(PlayNewHighScoreAnimation(newScore));
             }
         }
         else
         {
             pendingScore = newScore;
+            pendingScoreFromGameManager = fromGameManager;
         }
     }
 
@@ -119,7 +131,8 @@ public class NewHighScoreAnimation : MonoBehaviour
     {
         playing = true;
         accelFactor = 1f; // Reset acceleration factor
-        
+        try
+        {
         yield return null; // Wait one frame for UI to update
         
         // Get the friends score list
@@ -160,7 +173,7 @@ public class NewHighScoreAnimation : MonoBehaviour
         // Create new score GameObject
         GameObject newScoreObject = Instantiate(scoreDisplayPrefab, content.transform);
         UpdateScoreDisplay(newScoreObject, newScore);
-        
+
         // Add CanvasGroup for visual effects
         CanvasGroup newScoreCG = newScoreObject.GetComponent<CanvasGroup>();
         if (newScoreCG == null)
@@ -252,9 +265,13 @@ public class NewHighScoreAnimation : MonoBehaviour
         
         AudioManager.instance.PlaySfx("Victory");
 
-
-        SteamLeaderboardManager.Instance.UploadScore(newScore.score, newScore.characterUsed);
-        playing = false;
+        // Score was already uploaded when the new high score was detected (ReturnMainMenu); no need to upload again.
+        }
+        finally
+        {
+            playing = false;
+            SuppressLeaderboardRefresh = false;
+        }
     }
 
     IEnumerator ScrollToChild(RectTransform target, float duration)

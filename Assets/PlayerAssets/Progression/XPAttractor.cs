@@ -18,6 +18,7 @@ public class XPAttractor : MonoBehaviour
     void Start()
     {
         xpContactFilter.SetLayerMask(LayerMask.GetMask("XP"));
+        xpContactFilter.useTriggers = true;
     }
 
     void FixedUpdate()

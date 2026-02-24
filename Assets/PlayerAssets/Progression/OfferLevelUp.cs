@@ -38,7 +38,7 @@ public class OfferLevelUp : MonoBehaviour
     public static event Action LevelUpSelected;
 
 #if UNITY_EDITOR
-    private string forceUpgrade = "";
+    private string forceUpgrade = "Attractor";
 #endif
 
     // Start is called before the first frame update

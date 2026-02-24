@@ -284,6 +284,8 @@ public class LeaderboardView : MonoBehaviour
 
     private void OnLeaderboardsReady()
     {
+        if (NewHighScoreAnimation.SuppressLeaderboardRefresh)
+            return;
         CheckAndDisplayScores();
     }
 

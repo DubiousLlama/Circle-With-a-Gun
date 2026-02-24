@@ -32,7 +32,7 @@ public class TutorialScript : MonoBehaviour
         spawner = GameObject.Find("Spawner").GetComponent<EnemyTracker>();
         spawner.GetComponent<EnemyTracker>().enableSpawning = false;
 
-        if (SaveManager.instance.GetInt("doTutorial", 1) == 0)
+        if (PlayerPrefs.GetInt("doTutorial", 1) == 0)
         {
             spawner.GetComponent<EnemyTracker>().enableSpawning = true;
             Destroy(gameObject);

@@ -95,6 +95,17 @@ public class ScoreTracker : MonoBehaviour
         return score;
     }
 
+#if UNITY_EDITOR
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F8) && textObject != null)
+        {
+            IncreaseScore(100000);
+            Debug.Log($"Editor shortcut: score +100,000 (now {score})");
+        }
+    }
+#endif
+
     public void GameOver()
     {
         gameOver = true;

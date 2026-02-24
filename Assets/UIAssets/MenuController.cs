@@ -52,6 +52,8 @@ public class MenuController : MonoBehaviour
 
     public void PlayGame()
     {
+        PlayerPrefs.SetInt("doTutorial", tutorialToggle.GetComponent<Toggle>().isOn ? 1 : 0);
+
         if (PlayerPrefs.GetInt("doTutorial") == 1)
         {
             // Tutorial mode: set character to Kevin (index 0) and load directly

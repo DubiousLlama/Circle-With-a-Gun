@@ -33,6 +33,7 @@ public class SaveManager : MonoBehaviour
                     _instance = singletonObject.AddComponent<SaveManager>();
                 }
             }
+            _instance.EnsureInitialized();
             return _instance;
         }
     }
@@ -62,13 +63,22 @@ public class SaveManager : MonoBehaviour
         // Ensure this object persists across scene loads
         DontDestroyOnLoad(gameObject);
 
-        // Set the save path
-        _savePath = Path.Combine(Application.persistentDataPath, saveFileName);
+        EnsureInitialized();
+    }
 
-        // Load the game data
+    /// <summary>
+    /// Ensures _savePath and _saveData are initialized. Safe to call multiple times.
+    /// Handles the case where SaveManager is used before Awake (e.g. on a disabled GameObject).
+    /// </summary>
+    private void EnsureInitialized()
+    {
+        if (_saveData != null)
+            return;
+
+        if (string.IsNullOrEmpty(_savePath))
+            _savePath = Path.Combine(Application.persistentDataPath, saveFileName);
+
         LoadGame();
-        
-        // Invoke the event when save data is ready
         OnSaveDataReady?.Invoke();
     }
 
@@ -82,11 +92,13 @@ public class SaveManager : MonoBehaviour
 
     public void SetInt(string key, int value)
     {
+        EnsureInitialized();
         _saveData.intData[key] = value;
     }
 
     public int GetInt(string key, int defaultValue = 0)
     {
+        EnsureInitialized();
         if (_saveData.intData.TryGetValue(key, out int value))
         {
             return value;
@@ -96,11 +108,13 @@ public class SaveManager : MonoBehaviour
 
     public void SetString(string key, string value)
     {
+        EnsureInitialized();
         _saveData.stringData[key] = value;
     }
 
     public string GetString(string key, string defaultValue = "")
     {
+        EnsureInitialized();
         if (_saveData.stringData.TryGetValue(key, out string value))
         {
             return value;
@@ -110,11 +124,13 @@ public class SaveManager : MonoBehaviour
 
     public void SetFloat(string key, float value)
     {
+        EnsureInitialized();
         _saveData.floatData[key] = value;
     }
 
     public float GetFloat(string key, float defaultValue = 0.0f)
     {
+        EnsureInitialized();
         Debug.Log($"Getting float for key: {key}");
         if (_saveData.floatData.TryGetValue(key, out float value))
         {
@@ -125,6 +141,7 @@ public class SaveManager : MonoBehaviour
 
     public bool HasKey(string key)
     {
+        EnsureInitialized();
         return _saveData.intData.ContainsKey(key) ||
                _saveData.stringData.ContainsKey(key) ||
                _saveData.floatData.ContainsKey(key);
@@ -132,6 +149,7 @@ public class SaveManager : MonoBehaviour
 
     public void DeleteKey(string key)
     {
+        EnsureInitialized();
         _saveData.intData.Remove(key);
         _saveData.stringData.Remove(key);
         _saveData.floatData.Remove(key);
@@ -139,6 +157,7 @@ public class SaveManager : MonoBehaviour
 
     public void DeleteAll()
     {
+        EnsureInitialized();
         _saveData = new SaveData();
         Debug.Log("All save data deleted from memory. Call Save() to commit changes to disk.");
     }
@@ -191,6 +210,8 @@ public class SaveManager : MonoBehaviour
 
     private void SaveGame()
     {
+        if (_saveData == null)
+            return;
         try
         {
             string json = JsonUtility.ToJson(_saveData, true); // 'true' for pretty print
