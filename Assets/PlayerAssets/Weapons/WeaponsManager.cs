@@ -25,6 +25,8 @@ public class WeaponsManager : MonoBehaviour
 
     private PlayerInputActions inputActions;
 
+    private bool wasPaused;
+
     void Awake()
     {
         weapons[WeaponSlot.One] = null;
@@ -79,6 +81,8 @@ public class WeaponsManager : MonoBehaviour
 
     private void OnFirePerformed(InputAction.CallbackContext context)
     {
+        if (GameManager.Instance != null && GameManager.Instance.IsPaused())
+            return;
         OnPrimaryDown();
     }
 
@@ -89,6 +93,8 @@ public class WeaponsManager : MonoBehaviour
 
     private void OnFireSecondaryPerformed(InputAction.CallbackContext context)
     {
+        if (GameManager.Instance != null && GameManager.Instance.IsPaused())
+            return;
         OnSecondaryDown();
     }
 
@@ -99,6 +105,16 @@ public class WeaponsManager : MonoBehaviour
 
     void Update()
     {
+        // When transitioning from paused to unpaused, clear firing state so a button still held
+        // from the pause menu (e.g. upgrade click) doesn't start firing.
+        bool currentlyPaused = GameManager.Instance != null && GameManager.Instance.IsPaused();
+        if (wasPaused && !currentlyPaused)
+        {
+            OnPrimaryUp();
+            OnSecondaryUp();
+        }
+        wasPaused = currentlyPaused;
+
         if (Time.timeScale == 0f) return;
 
         Weapon secondaryWeapon = GetEquippedWeapon(WeaponType.Secondary);
@@ -167,14 +183,14 @@ public class WeaponsManager : MonoBehaviour
         {
             GameMusic.instance.PlayEventTrack("legendary");
 
-            if (!Platform.IsMobile() && inputActions.Player.Fire.IsPressed())
+            if (!Platform.IsMobile() && (GameManager.Instance == null || !GameManager.Instance.IsPaused()) && inputActions.Player.Fire.IsPressed())
             {
                 OnPrimaryDown();
             }
             isFiring[WeaponType.Primary] = false;
         }
 
-        if (weaponComponent.getFinalType() == WeaponType.Primary && !Platform.IsMobile() && inputActions.Player.Fire.IsPressed())
+        if (weaponComponent.getFinalType() == WeaponType.Primary && !Platform.IsMobile() && (GameManager.Instance == null || !GameManager.Instance.IsPaused()) && inputActions.Player.Fire.IsPressed())
         {
             OnPrimaryDown();
         }

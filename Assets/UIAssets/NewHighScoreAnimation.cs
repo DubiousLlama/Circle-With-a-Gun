@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
+using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class NewHighScoreAnimation : MonoBehaviour
 {
+    private const string DebugLogPath = @"C:\Users\Seamus\Circle With a Gun\debug-f49438.log";
     /// <summary>True while the new-high-score animation is running or about to run. LeaderboardView skips refreshing content when this is set to avoid wiping the new score row.</summary>
     public static bool SuppressLeaderboardRefresh { get; private set; }
 
@@ -139,36 +142,63 @@ public class NewHighScoreAnimation : MonoBehaviour
         List<ScoreData> highScores = leaderboardManager.GetLeaderboard(ScoreLists.Friends);
         if (highScores == null) highScores = new List<ScoreData>();
         
-        // Find old personal best (same player, same character)
-        ScoreData oldPersonalBest = highScores.FindLast(s => 
-            s.playerName == newScore.playerName && s.characterUsed == newScore.characterUsed);
+        // Find old personal best row directly from the UI content, not from the data list.
+        // The data list may have already been refreshed (overwriting the old score on Steam),
+        // but the UI content still shows the pre-upload rows.
+        Sprite newCharSprite = null;
+        Character newCharacter = roster.allCharacters.Find(c => c.prefName == newScore.characterUsed);
+        if (newCharacter != null) newCharSprite = newCharacter.sprite;
+
         GameObject oldPersonalBestObject = null;
-        
-        // Find the GameObject corresponding to the old personal best
-        if (oldPersonalBest != null)
+        int oldPersonalBestScore = 0;
+
+        for (int i = 0; i < content.transform.childCount; i++)
         {
-            for (int i = 0; i < content.transform.childCount; i++)
+            Transform scoreTransform = content.transform.GetChild(i);
+            if (scoreTransform == null) continue;
+
+            Transform hL = scoreTransform.Find("HorizLayout");
+            Transform scoreT = scoreTransform.Find("Score");
+            if (hL == null || hL.childCount <= 2 || scoreT == null) continue;
+
+            TextMeshProUGUI nameText = hL.GetChild(2).GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI scoreText = scoreT.GetComponent<TextMeshProUGUI>();
+            if (nameText == null || scoreText == null) continue;
+            if (nameText.text != newScore.playerName) continue;
+
+            if (newCharSprite != null)
             {
-                Transform scoreTransform = content.transform.GetChild(i);
-                if (scoreTransform != null)
-                {
-                    // Check if this score matches the old personal best
-                    TextMeshProUGUI scoreText = scoreTransform.Find("Score").GetComponent<TextMeshProUGUI>();
-                    if (scoreText != null && scoreText.text == oldPersonalBest.score.ToString("N0"))
-                    {
-                        TextMeshProUGUI playerNameText = scoreTransform.Find("HorizLayout").GetChild(2).GetComponent<TextMeshProUGUI>();
-                        if (playerNameText != null && playerNameText.text == oldPersonalBest.playerName)
-                        {
-                            oldPersonalBestObject = scoreTransform.gameObject;
-                            break;
-                        }
-                    }
-                }
+                Image portrait = hL.GetChild(1).GetComponent<Image>();
+                if (portrait == null || portrait.sprite != newCharSprite) continue;
+            }
+
+            int displayedScore;
+            if (!int.TryParse(scoreText.text.Replace(",", ""), out displayedScore)) continue;
+            if (displayedScore >= newScore.score) continue;
+
+            if (oldPersonalBestObject == null || displayedScore > oldPersonalBestScore)
+            {
+                oldPersonalBestObject = scoreTransform.gameObject;
+                oldPersonalBestScore = displayedScore;
             }
         }
+
+        #region agent log
+        DebugLog(
+            "post-fix",
+            "H1",
+            "NewHighScoreAnimation.PlayNewHighScoreAnimation",
+            "Resolved old personal best from UI content",
+            "{\"newPlayer\":\"" + EscapeJson(newScore.playerName) + "\",\"newCharacter\":\"" + EscapeJson(newScore.characterUsed) + "\",\"newScore\":" + newScore.score + ",\"highScoresCount\":" + highScores.Count + ",\"contentChildCount\":" + content.transform.childCount + ",\"oldBestRowFound\":" + (oldPersonalBestObject != null ? "true" : "false") + ",\"oldBestScore\":" + (oldPersonalBestObject != null ? oldPersonalBestScore.ToString() : "null") + ",\"oldBestRowSibling\":" + (oldPersonalBestObject != null ? oldPersonalBestObject.transform.GetSiblingIndex().ToString() : "null") + "}"
+        );
+        #endregion
         
+        // Exclude our new score from the list if it's already in the leaderboard (e.g. after upload/refresh),
+        // so we don't compare against ourselves and get an off-by-one target position.
+        List<ScoreData> scoresWithoutNew = highScores.FindAll(s =>
+            !(s.playerName == newScore.playerName && s.characterUsed == newScore.characterUsed && s.score == newScore.score));
         // Calculate where the new score should go
-        int targetPosition = CalculateTargetPosition(newScore.score, highScores);
+        int targetPosition = CalculateTargetPosition(newScore.score, scoresWithoutNew);
         
         // Create new score GameObject
         GameObject newScoreObject = Instantiate(scoreDisplayPrefab, content.transform);
@@ -182,8 +212,10 @@ public class NewHighScoreAnimation : MonoBehaviour
         }
         newScoreCG.alpha = 1f;
         
-        // Position new score right below old personal best
-        int startIndex = oldPersonalBestObject != null ? oldPersonalBestObject.transform.GetSiblingIndex() + 1 : highScores.Count;
+        // Always start the new score at the bottom of the leaderboard for the dramatic rise-up animation.
+        // oldPersonalBestObject is only used later to destroy that row so it doesn't fade back in.
+        int startIndex = content.transform.childCount - 1;
+        if (startIndex < 0) startIndex = 0;
         newScoreObject.transform.SetSiblingIndex(startIndex);
         
         // Force layout update
@@ -206,6 +238,18 @@ public class NewHighScoreAnimation : MonoBehaviour
                 }
             }
         }
+
+        string firstSmash = scoresToSmash.Count > 0 ? GetScoreRowSummary(scoresToSmash[0]) : "";
+        string lastSmash = scoresToSmash.Count > 0 ? GetScoreRowSummary(scoresToSmash[scoresToSmash.Count - 1]) : "";
+        #region agent log
+        DebugLog(
+            "pre-fix",
+            "H3",
+            "NewHighScoreAnimation.PlayNewHighScoreAnimation",
+            "Calculated movement range and smash list",
+            "{\"targetPosition\":" + targetPosition + ",\"startIndex\":" + startIndex + ",\"scoresToSmashCount\":" + scoresToSmash.Count + ",\"firstSmash\":\"" + firstSmash + "\",\"lastSmash\":\"" + lastSmash + "\"}"
+        );
+        #endregion
         
         // Smash through each score with animation
         List<GameObject> smashedScores = new List<GameObject>();
@@ -245,12 +289,36 @@ public class NewHighScoreAnimation : MonoBehaviour
             }
         }
         
-        // Separate smashed scores into those to fade in and those to destroy
+        // Separate smashed scores into those to fade in and those to destroy.
+        // Destroy any row that displays our old personal best (by reference or by displayed data)
+        // so it never fades back in.
         List<GameObject> scoresToFadeIn = new List<GameObject>();
+
+        #region agent log
+        DebugLog(
+            "post-fix",
+            "H4",
+            "NewHighScoreAnimation.PlayNewHighScoreAnimation",
+            "Smashed rows matching old personal best",
+            "{\"smashedCount\":" + smashedScores.Count + ",\"oldBestInSmashedByReference\":" + ((oldPersonalBestObject != null && smashedScores.Contains(oldPersonalBestObject)) ? "true" : "false") + "}"
+        );
+        #endregion
+
         foreach (GameObject smashedScore in smashedScores)
         {
-            // If this is the old personal best, destroy it instead of fading it in
-            if (smashedScore == oldPersonalBestObject)
+            bool isOldPersonalBest = oldPersonalBestObject != null && smashedScore == oldPersonalBestObject;
+
+            #region agent log
+            DebugLog(
+                "post-fix",
+                "H2",
+                "NewHighScoreAnimation.PlayNewHighScoreAnimation",
+                "Row destroy-or-fade decision",
+                "{\"row\":\"" + GetScoreRowSummary(smashedScore) + "\",\"matchesByReference\":" + (isOldPersonalBest ? "true" : "false") + "}"
+            );
+            #endregion
+
+            if (isOldPersonalBest)
             {
                 Destroy(smashedScore);
             }
@@ -328,11 +396,12 @@ public class NewHighScoreAnimation : MonoBehaviour
         return Mathf.Clamp01(1f - normalizedScroll);
     }
 
+    /// <summary>Returns the 0-based sibling index where the new score should end up. Uses >= so we place above ties (first among equal scores) and smash all scores less than or equal to us.</summary>
     int CalculateTargetPosition(int score, List<ScoreData> highScores)
     {
         for (int i = 0; i < highScores.Count; i++)
         {
-            if (score > highScores[i].score)
+            if (score >= highScores[i].score)
             {
                 return i;
             }
@@ -380,6 +449,58 @@ public class NewHighScoreAnimation : MonoBehaviour
                 cg.alpha = 1f;
             }
         }
+    }
+
+    /// <summary>Returns true if this score row displays the given player name and score (used to identify old personal best for destroy vs fade-in).</summary>
+    bool ScoreRowDisplaysScore(GameObject scoreRow, string playerName, int score, string characterUsed = null)
+    {
+        if (scoreRow == null) return false;
+        Transform scoreT = scoreRow.transform.Find("Score");
+        Transform hL = scoreRow.transform.Find("HorizLayout");
+        if (scoreT == null || hL == null || hL.childCount <= 2) return false;
+        TextMeshProUGUI scoreText = scoreT.GetComponent<TextMeshProUGUI>();
+        TextMeshProUGUI nameText = hL.GetChild(2).GetComponent<TextMeshProUGUI>();
+        if (scoreText == null || nameText == null) return false;
+        bool basicMatch = nameText.text == playerName && scoreText.text == score.ToString("N0");
+        if (!basicMatch) return false;
+        if (string.IsNullOrEmpty(characterUsed)) return true;
+
+        Character ch = roster != null ? roster.allCharacters.Find(c => c.prefName == characterUsed) : null;
+        if (ch == null) return true; // Fallback when roster lookup is unavailable.
+        Image portrait = hL.GetChild(1).GetComponent<Image>();
+        return portrait != null && portrait.sprite == ch.sprite;
+    }
+
+    string GetScoreRowSummary(GameObject scoreRow)
+    {
+        if (scoreRow == null) return "null";
+        Transform scoreT = scoreRow.transform.Find("Score");
+        Transform hL = scoreRow.transform.Find("HorizLayout");
+        string score = "unknown";
+        string player = "unknown";
+        if (scoreT != null)
+        {
+            TextMeshProUGUI scoreText = scoreT.GetComponent<TextMeshProUGUI>();
+            if (scoreText != null) score = scoreText.text;
+        }
+        if (hL != null && hL.childCount > 2)
+        {
+            TextMeshProUGUI nameText = hL.GetChild(2).GetComponent<TextMeshProUGUI>();
+            if (nameText != null) player = nameText.text;
+        }
+        return EscapeJson($"{scoreRow.transform.GetSiblingIndex()}|{player}|{score}");
+    }
+
+    string EscapeJson(string value)
+    {
+        if (value == null) return "";
+        return value.Replace("\\", "\\\\").Replace("\"", "\\\"");
+    }
+
+    void DebugLog(string runId, string hypothesisId, string location, string message, string dataJson)
+    {
+        string payload = "{\"sessionId\":\"f49438\",\"runId\":\"" + EscapeJson(runId) + "\",\"hypothesisId\":\"" + EscapeJson(hypothesisId) + "\",\"location\":\"" + EscapeJson(location) + "\",\"message\":\"" + EscapeJson(message) + "\",\"data\":" + dataJson + ",\"timestamp\":" + DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + "}";
+        File.AppendAllText(DebugLogPath, payload + Environment.NewLine);
     }
 
     void UpdateScoreDisplay(GameObject scoreObject, ScoreData score)

@@ -308,8 +308,27 @@ public class LeaderboardView : MonoBehaviour
         }
     }
 
+    /// <summary>Returns a list with at most one entry per (playerName, characterUsed), keeping the highest score. Prevents the previous high from reappearing after the new-score animation.</summary>
+    private static List<ScoreData> DeduplicateToBestPerPlayerCharacter(List<ScoreData> highScores)
+    {
+        if (highScores == null || highScores.Count == 0) return highScores;
+        Dictionary<string, ScoreData> best = new Dictionary<string, ScoreData>();
+        foreach (ScoreData s in highScores)
+        {
+            string key = s.playerName + "\n" + s.characterUsed;
+            if (!best.TryGetValue(key, out ScoreData existing) || s.score > existing.score)
+                best[key] = s;
+        }
+        List<ScoreData> list = new List<ScoreData>(best.Values);
+        list.Sort((a, b) => b.score.CompareTo(a.score));
+        return list;
+    }
+
     private void CreateScoreUI(List<ScoreData> highScores)
     {
+        // One row per (player, character): keep only their best score so we never show a previous high after the new-score animation.
+        highScores = DeduplicateToBestPerPlayerCharacter(highScores);
+
         foreach (Transform child in content.transform)
         {
             Destroy(child.gameObject);

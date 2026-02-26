@@ -192,7 +192,11 @@ public class Weapon : MonoBehaviour
 
         if (isFiring)
         {
-            if (CanFire())
+            if (GameManager.Instance != null && GameManager.Instance.IsPaused())
+            {
+                // Don't fire while paused (e.g. level-up menu) so clicks on UI don't trigger a shot
+            }
+            else if (CanFire())
             {
                 if (getFinalType() == WeaponType.Secondary)
                 {
