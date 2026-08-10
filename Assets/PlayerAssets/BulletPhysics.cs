@@ -29,8 +29,8 @@ public class BulletPhysics : MonoBehaviour
             return;
         }
 
-        hitEffect.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
         GameObject he = Instantiate(hitEffect, collision.contacts[0].point, Quaternion.identity);
+        he.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
         Destroy(he, 0.5f);
     }
 }

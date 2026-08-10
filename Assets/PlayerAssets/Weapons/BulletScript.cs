@@ -7,6 +7,9 @@ public class BulletScript : MonoBehaviour
     public GameObject hitEffect;
     public int damage = 20;
 
+    // Apply to the instantiated effect only — mutating hitEffect dirties the shared prefab asset.
+    protected Vector3 hitEffectScale = new Vector3(0.1f, 0.1f, 0.1f);
+
     protected AudioManager audioManager;
     protected HashSet<GameObject> foesHit;
 
@@ -53,8 +56,6 @@ public class BulletScript : MonoBehaviour
         {
             GetComponent<TrailRenderer>().enabled = false;
         }
-
-            hitEffect.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
 
         if (pierceCount > 0)
         {
@@ -142,14 +143,14 @@ public class BulletScript : MonoBehaviour
 
             damage += damage;
             transform.GetChild(1).gameObject.SetActive(true);
-            hitEffect.transform.localScale = new Vector3(0.15f, 0.15f, 0.15f);
+            hitEffectScale = new Vector3(0.15f, 0.15f, 0.15f);
             wallBounce = false;
             return;
         }
 
         NonPhysicsHit(collision.collider);
-        if (hitEffect.transform.localScale.x != 0.15f) { hitEffect.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f); }
         GameObject he = Instantiate(hitEffect, collision.contacts[0].point, Quaternion.identity);
+        he.transform.localScale = hitEffectScale;
         Destroy(he, 0.5f);
     }
 

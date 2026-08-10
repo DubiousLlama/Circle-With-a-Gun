@@ -242,8 +242,8 @@ public class EnemyHealth : MonoBehaviour
         enemyTracker.UnregisterEnemy(gameObject);
 
         dead = true;
-        deathEffect.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
         GameObject effect = Instantiate(deathEffect, transform.position, Quaternion.identity);
+        effect.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
         Destroy(effect, 0.5f);
         Destroy(gameObject);
 

@@ -20,7 +20,7 @@ public class SniperBulletScript : BulletScript
         }
         if (timer >= 0.14f * effectScale)
         {
-            hitEffect.transform.localScale = new Vector3(0.15f, 0.15f, 0.15f);
+            hitEffectScale = new Vector3(0.15f, 0.15f, 0.15f);
         }
     }
 
