@@ -58,7 +58,9 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         MenuInputMode.Tick();
-        if (MenuInputMode.MouseActiveThisFrame)
+        if (CrosshairController.IsReplacingCursor)
+            SetCursorState(false);
+        else if (MenuInputMode.MouseActiveThisFrame)
             SetCursorState(true);
         else if (MenuInputMode.GamepadActiveThisFrame)
             SetCursorState(false);

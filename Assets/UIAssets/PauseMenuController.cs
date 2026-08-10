@@ -10,12 +10,14 @@ public class PauseMenuController : MonoBehaviour
     public ScoreTracker scoreTracker;
     public GameObject musicSlider;
     public GameObject sfxSlider;
+    public GameObject crosshairSlider;
     public MenuMusic menuMusic;
 
     void Start()
     {
         menuMusic = FindAnyObjectByType<MenuMusic>();
         LoadAndApplyVolumes();
+        LoadAndApplyCrosshairOpacity();
     }
 
     private void LoadAndApplyVolumes()
@@ -28,6 +30,16 @@ public class PauseMenuController : MonoBehaviour
         // Load saved SFX volume
         float sfxVol = PlayerPrefs.GetFloat("sfxVol", 1f);
         sfxSlider.GetComponent<UnityEngine.UI.Slider>().value = sfxVol;
+    }
+
+    private void LoadAndApplyCrosshairOpacity()
+    {
+        if (crosshairSlider == null)
+            return;
+
+        float opacity = CrosshairOpacity.Get();
+        crosshairSlider.GetComponent<UnityEngine.UI.Slider>().value = opacity;
+        CrosshairOpacity.Set(opacity);
     }
 
     public void AbandonRun()
@@ -65,6 +77,15 @@ public class PauseMenuController : MonoBehaviour
         float volume = sfxSlider.GetComponent<UnityEngine.UI.Slider>().value;
         PlayerPrefs.SetFloat("sfxVol", volume);
         VolumeFixer.instance.SetSFXVolume(volume);
+    }
+
+    public void OnCrosshairOpacityChange()
+    {
+        if (crosshairSlider == null)
+            return;
+
+        float opacity = crosshairSlider.GetComponent<UnityEngine.UI.Slider>().value;
+        CrosshairOpacity.Set(opacity);
     }
 
     //public static float volTransform(float x)
